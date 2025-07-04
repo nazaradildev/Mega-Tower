@@ -167,14 +167,14 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
         <Button
             variant="outline"
             className={cn(
-                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full sm:w-auto justify-center sm:justify-start",
+                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full justify-center",
                 isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70 border-border",
                 "hover:bg-accent hover:text-accent-foreground rounded-lg"
             )}
             {...props}
         >
             {Icon && <Icon className="h-5 w-5" />}
-            <span className="truncate hidden sm:inline">{getButtonText()}</span>
+            <span className="truncate">{getButtonText()}</span>
         </Button>
     );
 };
@@ -302,7 +302,7 @@ export function Residences() {
         </div>
 
         <div className="bg-white rounded-lg shadow-sm p-3 border mb-12">
-            <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="flex flex-col md:flex-row items-center gap-3">
                 <div className="relative flex-grow w-full flex items-center gap-2 p-1 pl-3 rounded-lg bg-gray-50 border border-gray-200 h-12">
                     <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                     <div className="flex items-center gap-1.5 flex-wrap overflow-x-auto no-scrollbar">
@@ -325,11 +325,11 @@ export function Residences() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <div className="grid w-full grid-cols-2 md:grid-cols-4 lg:flex gap-2">
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                    <div className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:flex gap-2">
                       {filterButtons.map(key => {
                           const trigger = (
-                              <FilterButton filterKey={key} filters={filters} className="w-full" />
+                              <FilterButton filterKey={key} filters={filters} />
                           );
                           const content = renderFilterPopoverContent(key);
 
@@ -355,7 +355,7 @@ export function Residences() {
                       })}
                       <Dialog>
                             <DialogTrigger asChild>
-                                 <FilterButton filterKey="More Filters" filters={filters} className="w-full col-span-2 md:col-span-1 lg:col-auto"/>
+                                 <FilterButton filterKey="More Filters" filters={filters} className="col-span-2 sm:col-span-2 md:col-span-1 lg:col-auto"/>
                             </DialogTrigger>
                             <DialogContent className="max-w-2xl p-0 flex flex-col">
                                 <MoreFiltersModal
@@ -452,6 +452,7 @@ export function Residences() {
 const FilterHeader = ({ title }) => (
   <DialogHeader className="p-4 border-b">
     <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
+    <DialogClose className="absolute right-4 top-1/2 -translate-y-1/2" />
   </DialogHeader>
 );
 
@@ -631,7 +632,8 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
     return (
          <>
             <DialogHeader className="p-6 border-b">
-              <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
+              <DialogTitle className="text-2xl font-headline text-center">More Filters</DialogTitle>
+              <DialogClose className="absolute right-4 top-1/2 -translate-y-1/2" />
             </DialogHeader>
 
             <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
