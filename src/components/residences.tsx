@@ -458,7 +458,7 @@ export function Residences() {
 
 
         {/* --- Unit Listings --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {sortedUnits.length > 0 ? (
             sortedUnits.map((unit, index) => (
               <UnitCard key={index} unit={unit} />
@@ -479,7 +479,7 @@ const UnitCard = ({ unit }) => {
     return (
         <Card className="w-full overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row">
             {/* Left side: Image */}
-            <div className="relative md:w-1/3 lg:w-2/5 flex-shrink-0">
+            <div className="relative md:w-5/12 flex-shrink-0">
                 <Image
                     src={unit.image}
                     alt={unit.title}
@@ -498,16 +498,16 @@ const UnitCard = ({ unit }) => {
                     <Camera className="w-4 h-4" />
                     <span>12</span>
                 </div>
-                <div className="absolute bottom-2 right-2">
+                <div className="absolute top-2 right-2">
                      <Button size="icon" variant="secondary" className="rounded-full h-9 w-9 bg-white/90 hover:bg-white text-gray-700 shadow">
-                        <MapPin className="w-5 h-5" />
+                        <Heart className="w-5 h-5" />
                     </Button>
                 </div>
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                    <span className="h-1.5 w-4 rounded-full bg-white"></span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
+                <div className="absolute bottom-4 left-4 flex gap-2">
+                    <div className="h-2.5 w-2.5 rounded-full bg-primary transition-all"></div>
+                    <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-transparent transition-all"></div>
+                    <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-transparent transition-all"></div>
+                    <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-transparent transition-all"></div>
                 </div>
             </div>
 
@@ -526,8 +526,10 @@ const UnitCard = ({ unit }) => {
                         AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
                     </p>
                     
-                    <p className="text-foreground font-medium truncate">
-                        {unit.furnished ? 'Furnished' : 'Spacious unFurnished'} | {unit.beds} bedroom | {unit.view}
+                    <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
+                    
+                    <p className="text-muted-foreground font-medium truncate mt-1">
+                        {unit.furnished ? 'Furnished' : 'Unfurnished'} | {unit.view}
                     </p>
 
                     <div className="my-3 border-b border-border -mx-4"></div>
@@ -540,11 +542,11 @@ const UnitCard = ({ unit }) => {
                         <div className="flex items-center gap-x-4 gap-y-1 flex-wrap">
                             <div className="flex items-center gap-1.5">
                                 <Bed className="w-4 h-4 text-gray-500" />
-                                <span>{unit.beds}</span>
+                                <span>{unit.beds} Beds</span>
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <Bath className="w-4 h-4 text-gray-500" />
-                                <span>{unit.baths}</span>
+                                <span>{unit.baths} Baths</span>
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <Ruler className="w-4 h-4 text-gray-500" />
@@ -567,7 +569,7 @@ const UnitCard = ({ unit }) => {
                                     <Star className="w-2.5 h-2.5 text-white fill-current" />
                                 </span>
                             </div>
-                            <span className="text-xs text-muted-foreground">Listed 26 days ago</span>
+                            <span className="text-xs text-muted-foreground font-semibold">{unit.status}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <Button variant="outline" size="sm" className="hidden sm:flex rounded-md">
@@ -580,9 +582,6 @@ const UnitCard = ({ unit }) => {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
                                   <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
                                 </svg> WhatsApp
-                            </Button>
-                             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border">
-                                <Heart className="w-4 h-4" />
                             </Button>
                              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border">
                                 <MoreHorizontal className="w-4 h-4" />
@@ -598,9 +597,15 @@ const UnitCard = ({ unit }) => {
 
 // --- Filter Popover Components ---
 
-const FilterHeader = ({ title }) => (
-    <DialogHeader className="p-4 border-b">
-        <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
+const FilterHeader = ({ title, showCloseButton = false }) => (
+    <DialogHeader className="p-4 border-b text-center relative">
+        <DialogTitle className="text-xl font-headline">{title}</DialogTitle>
+        {showCloseButton && (
+            <DialogClose className="absolute right-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+            </DialogClose>
+        )}
     </DialogHeader>
 );
 
@@ -663,13 +668,12 @@ const RentFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, 
     }
     return (
         <>
-        {isMobile && <FilterHeader title={title} />}
+        {isMobile && <FilterHeader title={title} showCloseButton />}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
             </ul>
         </div>
-        {!isMobile && <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />}
       </>
     )
 };
@@ -693,13 +697,12 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobi
     };
     return (
         <>
-        {isMobile && <FilterHeader title={title} />}
+        {isMobile && <FilterHeader title={title} showCloseButton />}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
             </ul>
         </div>
-        {!isMobile && <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />}
       </>
     )
 };
@@ -707,7 +710,7 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobi
 const PriceFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
     return (
       <>
-        {isMobile && <FilterHeader title={title} />}
+        {isMobile && <FilterHeader title={title} showCloseButton />}
         <div className="w-full sm:w-96">
             <div className="p-4 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -734,7 +737,7 @@ const BedBathFilterPopover = ({ onValueChange, values, onApply, onClear, isMobil
     const bathOptions = ['1', '2', '3', '4', '5+'];
     return (
         <>
-            {isMobile && <FilterHeader title={title} />}
+            {isMobile && <FilterHeader title={title} showCloseButton />}
             <div className="w-full sm:w-80">
                 <div className="p-4 space-y-4">
                      <div>
@@ -779,9 +782,9 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
     
     return (
          <>
-            <DialogHeader className="p-6 border-b">
-              <DialogTitle className="text-2xl font-headline text-center">More Filters</DialogTitle>
-                <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <DialogHeader className="p-6 border-b text-center relative">
+              <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
+                <DialogClose className="absolute right-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                     <X className="h-4 w-4" />
                     <span className="sr-only">Close</span>
                 </DialogClose>
@@ -834,3 +837,4 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
+
