@@ -37,8 +37,8 @@ export function Header() {
           </nav>
 
           <div className="hidden md:block ml-6">
-            <Button className="bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">
-                Book a Viewing
+            <Button asChild className="bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">
+                <Link href="#contact">Book a Viewing</Link>
             </Button>
           </div>
           
@@ -69,8 +69,8 @@ export function Header() {
                       ))}
                   </nav>
                   <div className="p-6 mt-auto border-t">
-                      <Button className="w-full bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg" size="lg">
-                          Book a Viewing
+                      <Button asChild className="w-full bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg" size="lg">
+                          <Link href="#contact" onClick={() => setIsOpen(false)}>Book a Viewing</Link>
                       </Button>
                   </div>
               </SheetContent>

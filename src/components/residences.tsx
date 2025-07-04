@@ -4,18 +4,9 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Ruler, Eye, CheckCircle } from 'lucide-react';
+import { Ruler, Eye, CheckCircle, Armchair } from 'lucide-react';
 
 const units = [
-  {
-    type: '1 Bedroom',
-    title: 'One-Bedroom Apartment - Type A',
-    image: 'https://placehold.co/600x400.png',
-    aiHint: 'modern apartment interior',
-    area: '950 sq. ft.',
-    view: 'Canal View',
-    status: 'Available Now',
-  },
   {
     type: '2 Bedroom',
     title: 'Two-Bedroom Apartment - Type C',
@@ -24,6 +15,23 @@ const units = [
     area: '1,450 sq. ft.',
     view: 'Burj Khalifa View',
     status: 'Available Now',
+    rent: 220000,
+    furnished: true,
+    exclusive: true,
+    verified: true,
+  },
+  {
+    type: '1 Bedroom',
+    title: 'One-Bedroom Apartment - Type A',
+    image: 'https://placehold.co/600x400.png',
+    aiHint: 'modern apartment interior',
+    area: '950 sq. ft.',
+    view: 'Canal View',
+    status: 'Available Now',
+    rent: 150000,
+    furnished: false,
+    exclusive: false,
+    verified: true,
   },
   {
     type: '3 Bedroom',
@@ -33,6 +41,10 @@ const units = [
     area: '2,200 sq. ft.',
     view: 'Full Canal View',
     status: 'Available Now',
+    rent: 350000,
+    furnished: true,
+    exclusive: true,
+    verified: true,
   },
   {
     type: '4 Bedroom',
@@ -42,6 +54,10 @@ const units = [
     area: '3,800 sq. ft.',
     view: '360° Panoramic View',
     status: 'Limited Availability',
+    rent: 550000,
+    furnished: true,
+    exclusive: true,
+    verified: true,
   },
   {
     type: '1 Bedroom',
@@ -51,6 +67,10 @@ const units = [
     area: '1,050 sq. ft.',
     view: 'Business Bay View',
     status: 'Available Now',
+    rent: 165000,
+    furnished: true,
+    exclusive: false,
+    verified: true,
   },
   {
     type: '2 Bedroom',
@@ -60,6 +80,10 @@ const units = [
     area: '1,600 sq. ft.',
     view: 'Downtown View',
     status: 'Available Now',
+    rent: 245000,
+    furnished: false,
+    exclusive: false,
+    verified: true,
   },
 ];
 
@@ -108,9 +132,25 @@ export function Residences() {
                     height={400}
                     className="w-full h-auto object-cover"
                   />
+                  <div className="absolute top-3 left-3 flex flex-col gap-2">
+                    {unit.verified && (
+                        <div className="flex items-center gap-1.5 bg-background/80 backdrop-blur-sm text-foreground text-xs font-bold py-1 px-2 rounded-full shadow-md">
+                            <CheckCircle className="w-4 h-4 text-primary" />
+                            <span>eni Verified</span>
+                        </div>
+                    )}
+                    {unit.exclusive && (
+                        <div className="bg-primary-gradient text-primary-foreground text-xs font-bold py-1 px-2 rounded-full shadow-md">
+                            Exclusive
+                        </div>
+                    )}
+                  </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold font-headline mb-3">{unit.title}</h3>
+                  <h3 className="text-xl font-bold font-headline mb-2">{unit.title}</h3>
+                   <p className="text-2xl font-bold font-headline text-primary mb-4">
+                      AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
+                  </p>
                   <div className="space-y-3 text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Ruler className="w-5 h-5 text-primary" />
@@ -119,6 +159,10 @@ export function Residences() {
                     <div className="flex items-center gap-2">
                       <Eye className="w-5 h-5 text-primary" />
                       <span>{unit.view}</span>
+                    </div>
+                     <div className="flex items-center gap-2">
+                      <Armchair className="w-5 h-5 text-primary" />
+                      <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-primary" />

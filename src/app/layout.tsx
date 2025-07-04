@@ -1,11 +1,27 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { Inter, Playfair_Display } from 'next/font/google';
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Churchill Living',
+  title: 'eni | Churchill Towers',
   description: 'Luxury 1, 2, 3, and 4 Bedroom Apartments in the Heart of Business Bay.',
 };
+
+const fontBody = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+});
+
+const fontHeadline = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-headline',
+  weight: '700',
+});
+
 
 export default function RootLayout({
   children,
@@ -14,15 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-body antialiased">
+      <body className={cn("font-body antialiased", fontBody.variable, fontHeadline.variable)}>
         {children}
         <Toaster />
       </body>
