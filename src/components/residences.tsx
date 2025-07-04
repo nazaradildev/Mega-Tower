@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video, Camera, Bed, Bath, Heart, Phone, Mail, ChevronLeft, LayoutDashboard, Armchair, View, Share2, Bookmark, Eye } from 'lucide-react';
+import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video, Camera, Bed, Bath, Heart, Phone, Mail, ChevronLeft, LayoutDashboard, Armchair, View, Share2, Bookmark, Eye, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -429,18 +429,18 @@ export function Residences() {
               <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower, Churchill Towers</h1>
               <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Button variant="outline" className="rounded-lg w-full sm:w-auto justify-center">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <Button variant="outline" className="rounded-lg justify-center">
                 <MapPin className="mr-2 h-4 w-4" />
                 Map view
               </Button>
-              <Button variant="outline" className="rounded-lg w-full sm:w-auto justify-center">
+              <Button variant="outline" className="rounded-lg justify-center">
                 <Eye className="mr-2 h-4 w-4" />
                 Insights
               </Button>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="rounded-lg w-full sm:w-auto justify-center data-[state=open]:bg-accent">
+                    <Button variant="outline" className="rounded-lg justify-center data-[state=open]:bg-accent">
                         Sort by: {sortOption}
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
@@ -566,7 +566,10 @@ const UnitCard = ({ unit }) => {
                     
                     <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
                     
-                    <p className="text-sm text-muted-foreground my-2">{unit.status}</p>
+                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
+                        <Calendar className="h-4 w-4" />
+                        <span>{unit.status}</span>
+                    </div>
 
                     <div className="space-y-3 text-sm mt-4">
                         <div className="flex items-center gap-2 text-muted-foreground">
@@ -602,7 +605,7 @@ const UnitCard = ({ unit }) => {
 
                 {/* Footer section inside the right column */}
                 <div className="p-4 border-t bg-gray-50/50 space-y-4">
-                    <div className="flex items-center flex-wrap justify-start gap-2">
+                     <div className="flex items-center flex-wrap justify-start gap-2">
                          <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span> </Button>
                         <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
                     </div>
@@ -891,4 +894,5 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
     
 
     
+
 
