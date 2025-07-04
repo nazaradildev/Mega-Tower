@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogTrigger } from '@/components/ui/dialog';
-import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Bath, Wallet, SlidersHorizontal, Building2, X, Check } from 'lucide-react';
+import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Bath, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, CalendarDays, KeyRound } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -127,6 +127,7 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
         const data = filters[filterKey];
         if (!data || Object.keys(data).length === 0) {
             if (filterKey === 'Apartment') return 'Property Type';
+            if (filterKey === 'Rent') return 'Rent';
             return filterKey;
         }
 
@@ -152,20 +153,28 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
     };
 
     const isActive = filters[filterKey] && Object.keys(filters[filterKey]).length > 0;
+    
+    const iconMap = {
+      'Rent': KeyRound,
+      'Apartment': Building2,
+      'Beds & Baths': BedDouble,
+      'Price': Wallet,
+      'More Filters': SlidersHorizontal
+    }
+    const Icon = iconMap[filterKey];
 
     return (
         <Button
             variant="outline"
             className={cn(
-                "h-11 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full sm:w-auto justify-between",
+                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full sm:w-auto justify-center sm:justify-start",
                 isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70 border-border",
-                "hover:bg-accent hover:text-accent-foreground rounded-md",
-                props.className
+                "hover:bg-accent hover:text-accent-foreground rounded-lg"
             )}
             {...props}
         >
-            <span className="truncate">{getButtonText()}</span>
-            <ChevronDown className="h-4 w-4 text-foreground/40 ml-auto sm:ml-1 flex-shrink-0" />
+            {Icon && <Icon className="h-5 w-5" />}
+            <span className="truncate hidden sm:inline">{getButtonText()}</span>
         </Button>
     );
 };
@@ -175,7 +184,8 @@ export function Residences() {
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
     const [openPopovers, setOpenPopovers] = useState({});
     const isMobile = useIsMobile();
-    const [searchTags, setSearchTags] = useState(['Churchill Towers']);
+    const [searchTags, setSearchTags] = useState(['Churchill Towers', 'Business Bay']);
+    const [inputValue, setInputValue] = useState('');
 
     const handlePopoverOpenChange = (filterKey, isOpen) => {
         setOpenPopovers(prev => ({ ...prev, [filterKey]: isOpen }));
@@ -207,6 +217,14 @@ export function Residences() {
     
     const removeSearchTag = (tagToRemove) => {
         setSearchTags(prev => prev.filter(tag => tag !== tagToRemove));
+    }
+    
+    const addSearchTag = (e) => {
+        if (e.key === 'Enter' && inputValue.trim() !== '') {
+            setSearchTags(prev => [...prev, inputValue.trim()]);
+            setInputValue('');
+            e.preventDefault();
+        }
     }
 
     const filteredUnits = useMemo(() => units.filter(unit => {
@@ -283,35 +301,33 @@ export function Residences() {
           </p>
         </div>
 
-        {/* --- Search Bar --- */}
-        <div className="bg-white rounded-lg shadow-sm p-2 border mb-12">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-                {/* Search Input Area */}
-                <div className="relative flex-grow w-full flex items-center gap-2 px-3 h-12">
+        <div className="bg-white rounded-lg shadow-sm p-3 border mb-12">
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+                <div className="relative flex-grow w-full flex items-center gap-2 p-1 pl-3 rounded-lg bg-gray-50 border border-gray-200 h-12">
                     <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="flex items-center gap-1.5 flex-wrap overflow-x-auto no-scrollbar">
                         {searchTags.map(tag => (
-                            <div key={tag} className="flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/50 rounded-md px-2 py-0.5 text-sm font-medium">
+                            <div key={tag} className="flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/20 rounded-md px-2 py-0.5 text-sm font-medium shrink-0">
                                 <span>{tag}</span>
                                 <button onClick={() => removeSearchTag(tag)}>
-                                    <X className="h-3 w-3" />
+                                    <X className="h-3.5 w-3.5" />
                                 </button>
                             </div>
                         ))}
                         <input
                             type="text"
-                            placeholder="City, community..."
-                            className="bg-transparent focus:ring-0 border-0 p-0 h-10 flex-grow w-32 outline-none"
+                            placeholder={searchTags.length === 0 ? "Search by City, Community, or Building" : ""}
+                            className="bg-transparent focus:ring-0 border-0 p-0 h-10 flex-grow w-32 outline-none text-sm"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={addSearchTag}
                         />
                     </div>
                 </div>
-                
-                <div className="hidden lg:block h-8 w-px bg-border"></div>
 
-                {/* Filters and Find Button Container */}
-                <div className="flex items-center gap-2 w-full lg:w-auto flex-col lg:flex-row">
-                    <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5 lg:flex">
-                        {filterButtons.map(key => {
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="grid w-full grid-cols-2 md:grid-cols-4 lg:flex gap-2">
+                      {filterButtons.map(key => {
                           const trigger = (
                               <FilterButton filterKey={key} filters={filters} className="w-full" />
                           );
@@ -339,7 +355,7 @@ export function Residences() {
                       })}
                       <Dialog>
                             <DialogTrigger asChild>
-                                 <FilterButton filterKey="More Filters" filters={filters} className="w-full col-span-2 sm:col-span-1 md:col-span-2 lg:col-auto"/>
+                                 <FilterButton filterKey="More Filters" filters={filters} className="w-full col-span-2 md:col-span-1 lg:col-auto"/>
                             </DialogTrigger>
                             <DialogContent className="max-w-2xl p-0 flex flex-col">
                                 <MoreFiltersModal
@@ -354,10 +370,6 @@ export function Residences() {
                             </DialogContent>
                         </Dialog>
                     </div>
-                    
-                    <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity flex-shrink-0 w-full lg:w-auto">
-                        Find
-                    </Button>
                 </div>
             </div>
         </div>
@@ -440,10 +452,6 @@ export function Residences() {
 const FilterHeader = ({ title }) => (
   <DialogHeader className="p-4 border-b">
     <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
-    <DialogClose className="absolute right-4 top-3.5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-        <X className="h-5 w-5" />
-        <span className="sr-only">Close</span>
-    </DialogClose>
   </DialogHeader>
 );
 
@@ -624,10 +632,6 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
          <>
             <DialogHeader className="p-6 border-b">
               <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
-              <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close</span>
-              </DialogClose>
             </DialogHeader>
 
             <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
