@@ -15,7 +15,7 @@ export default function Home() {
         <section className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center">
           <div className="absolute inset-0 z-0">
             <Image
-              src="/hero.jpg"
+              src="/image1.jpg"
               alt="Hero image of Churchill Towers in Business Bay, Dubai"
               data-ai-hint="dubai cityscape"
               fill
