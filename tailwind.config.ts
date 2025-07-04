@@ -100,7 +100,7 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'zoom-in-ken-burns': 'zoom-in-ken-burns 5s ease-out forwards',
+        'zoom-in-ken-burns': 'zoom-in-ken-burns 5s linear forwards',
       },
     },
   },
