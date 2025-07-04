@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/header';
+import { Residences } from '@/components/residences';
+import { ImmersiveExperience } from '@/components/immersive-experience';
 
 export default function Home() {
   return (
@@ -34,10 +36,11 @@ export default function Home() {
           </div>
         </section>
 
-        <div id="residences" className="h-screen bg-background p-8"><h2 className="text-3xl font-bold font-headline">Available Residences (Coming Soon)</h2></div>
-        <div id="amenities" className="h-screen bg-secondary p-8"><h2 className="text-3xl font-bold font-headline">World-Class Amenities (Coming Soon)</h2></div>
-        <div id="location" className="h-screen bg-background p-8"><h2 className="text-3xl font-bold font-headline">Location Advantage (Coming Soon)</h2></div>
-        <div id="contact" className="h-screen bg-secondary p-8"><h2 className="text-3xl font-bold font-headline">Contact & Booking (Coming Soon)</h2></div>
+        <Residences />
+        <ImmersiveExperience />
+        
+        <div id="location" className="py-16 md:py-24 bg-background p-8 text-center"><h2 className="text-3xl font-bold font-headline">Location Advantage (Coming Soon)</h2></div>
+        <div id="contact" className="py-16 md:py-24 bg-secondary p-8 text-center"><h2 className="text-3xl font-bold font-headline">Contact & Booking (Coming Soon)</h2></div>
       </main>
     </div>
   );
