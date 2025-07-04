@@ -15,7 +15,7 @@ export default function Home() {
         <section className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center">
           <div className="absolute inset-0 z-0">
             <Image
-              src="/hero.jpg"
+              src="https://placehold.co/1920x1080.png"
               alt="View of Churchill Towers from Business Bay"
               data-ai-hint="dubai skyline"
               fill
