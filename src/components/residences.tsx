@@ -440,7 +440,7 @@ export function Residences() {
               </Button>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="rounded-lg justify-center data-[state=open]:bg-accent">
+                    <Button variant="outline" className="rounded-lg justify-center data-[state=open]:bg-accent w-full sm:w-auto">
                         Sort by: {sortOption}
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
@@ -514,17 +514,17 @@ const UnitCard = ({ unit }) => {
     }
     
     return (
-        <Card className="w-full overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row">
-            {/* Left side: Image */}
-            <div className="relative w-full md:w-1/2 lg:w-5/12 flex-shrink-0 group/image">
+        <Card className="w-full max-w-4xl mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
+            {/* Image Section */}
+            <div className="relative w-full group/image">
                 <Image
                     key={currentImageIndex} 
                     src={images[currentImageIndex]}
                     alt={`${unit.title} - Image ${currentImageIndex + 1}`}
                     data-ai-hint={unit.aiHint}
-                    width={400}
-                    height={300}
-                    className="w-full h-full object-cover aspect-[4/3]"
+                    width={800}
+                    height={450}
+                    className="w-full h-full object-cover aspect-video"
                 />
                 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
@@ -552,90 +552,87 @@ const UnitCard = ({ unit }) => {
                 </div>
             </div>
 
-            {/* Right side: Details & Actions */}
-            <div className="flex-1 flex flex-col">
-                <div className="p-4 flex-grow">
-                    <div className="flex justify-between items-start">
-                        <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
-                        <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
-                    </div>
+            {/* Main Content */}
+            <div className="p-4 flex-grow">
+                 <div className="flex justify-between items-start">
+                    <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
+                    <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
+                </div>
 
-                    <p className="text-2xl font-bold text-foreground my-1">
-                        AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
-                    </p>
-                    
-                    <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
-                    
-                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
-                        <Calendar className="h-4 w-4" />
-                        <span>{unit.status}</span>
-                    </div>
+                <p className="text-2xl font-bold text-foreground my-1">
+                    AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
+                </p>
+                
+                <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
+                
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
+                    <Calendar className="h-4 w-4" />
+                    <span>{unit.status}</span>
+                </div>
 
-                    <div className="space-y-3 text-sm mt-4">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                            <MapPin className="w-4 h-4 flex-shrink-0" />
-                            <span>Churchill Residency Tower, Churchill Towers, Business Bay</span>
+                <div className="space-y-3 text-sm mt-4">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <MapPin className="w-4 h-4 flex-shrink-0" />
+                        <span>Churchill Residency Tower, Churchill Towers, Business Bay</span>
+                    </div>
+                     <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+                        <div className="flex items-center gap-1.5">
+                            <Bed className="w-4 h-4" />
+                            <span>{unit.beds} Beds</span>
                         </div>
-                         <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                                <Bed className="w-4 h-4" />
-                                <span>{unit.beds} Beds</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <Bath className="w-4 h-4" />
-                                <span>{unit.baths} Baths</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <Ruler className="w-4 h-4" />
-                                <span>{unit.area.toLocaleString()} sqft</span>
-                            </div>
+                        <div className="flex items-center gap-1.5">
+                            <Bath className="w-4 h-4" />
+                            <span>{unit.baths} Baths</span>
                         </div>
-                        <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                                <Armchair className="w-4 h-4" />
-                                <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <View className="w-4 h-4" />
-                                <span>{unit.view}</span>
-                            </div>
+                        <div className="flex items-center gap-1.5">
+                            <Ruler className="w-4 h-4" />
+                            <span>{unit.area.toLocaleString()} sqft</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+                        <div className="flex items-center gap-1.5">
+                            <Armchair className="w-4 h-4" />
+                            <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <View className="w-4 h-4" />
+                            <span>{unit.view}</span>
                         </div>
                     </div>
                 </div>
 
-                {/* Footer section inside the right column */}
-                <div className="p-4 border-t bg-gray-50/50 space-y-4">
-                     <div className="flex items-center flex-wrap justify-start gap-2">
-                         <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span> </Button>
-                        <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
+                <div className="mt-4 flex items-center flex-wrap justify-start gap-2">
+                     <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span> </Button>
+                    <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
+                </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div className="p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3 flex-shrink-0">
+                    <Avatar className="h-10 w-10">
+                        <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
+                        <AvatarFallback>EN</AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <p className="text-xs text-muted-foreground">Marketing by</p>
+                        <p className="font-semibold text-foreground text-sm">Prime Properties</p>
                     </div>
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                            <Avatar className="h-10 w-10">
-                                <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
-                                <AvatarFallback>EN</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="text-xs text-muted-foreground">Marketing by</p>
-                                <p className="font-semibold text-foreground text-sm">eni Real Estate</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center flex-wrap justify-start gap-1 sm:gap-2">
-                            <Button variant="outline" size="sm" className="rounded-md"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span>Call</span> </Button>
-                            <Button variant="outline" size="sm" className="rounded-md"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span>Email</span> </Button>
-                            <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
-                                  <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
-                                </svg>
-                                <span>WhatsApp</span>
-                            </Button>
-                             <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden lg:block" />
-                            <div className="flex items-center gap-0">
-                                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Share2 className="w-5 h-5 text-muted-foreground" /> </Button>
-                                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Bookmark className="w-5 h-5 text-muted-foreground" /> </Button>
-                                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Heart className="w-5 h-5 text-muted-foreground" /> </Button>
-                            </div>
-                        </div>
+                </div>
+                <div className="flex items-center flex-wrap justify-start gap-1 sm:gap-2">
+                    <Button variant="outline" size="sm" className="rounded-md"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span>Call</span> </Button>
+                    <Button variant="outline" size="sm" className="rounded-md"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span>Email</span> </Button>
+                    <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
+                          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
+                        </svg>
+                        <span>WhatsApp</span>
+                    </Button>
+                     <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden lg:block" />
+                    <div className="flex items-center gap-0">
+                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Share2 className="w-5 h-5 text-muted-foreground" /> </Button>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Bookmark className="w-5 h-5 text-muted-foreground" /> </Button>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Heart className="w-5 h-5 text-muted-foreground" /> </Button>
                     </div>
                 </div>
             </div>
@@ -650,9 +647,11 @@ const FilterHeader = ({ title, onClear }) => (
     <DialogHeader className="p-4 border-b text-left relative flex-row justify-between items-center">
         <DialogTitle className="text-xl font-headline text-center flex-grow">{title}</DialogTitle>
         <Button variant="link" onClick={onClear} className="text-primary p-0 h-auto">Clear</Button>
-        <DialogClose className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
+        <DialogClose asChild>
+            <Button variant="ghost" size="icon" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+            </Button>
         </DialogClose>
     </DialogHeader>
 );
@@ -837,9 +836,11 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
          <>
             <DialogHeader className="p-6 border-b text-center relative">
               <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
-                <DialogClose className="absolute right-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                    <X className="h-4 w-4" />
-                    <span className="sr-only">Close</span>
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </Button>
                 </DialogClose>
             </DialogHeader>
 
@@ -896,3 +897,6 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
     
 
 
+
+
+    
