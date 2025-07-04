@@ -16,6 +16,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const units = [
   {
     type: '2 Bedroom',
+    propertyType: 'Apartment',
     beds: 2,
     baths: 3,
     title: 'Two-Bedroom Apartment - Type C',
@@ -32,6 +33,7 @@ const units = [
   },
   {
     type: '1 Bedroom',
+    propertyType: 'Apartment',
     beds: 1,
     baths: 2,
     title: 'One-Bedroom Apartment - Type A',
@@ -48,6 +50,7 @@ const units = [
   },
   {
     type: '3 Bedroom',
+    propertyType: 'Apartment',
     beds: 3,
     baths: 4,
     title: 'Three-Bedroom Sky Villa',
@@ -64,6 +67,7 @@ const units = [
   },
   {
     type: '4 Bedroom',
+    propertyType: 'Penthouse',
     beds: 4,
     baths: 5,
     title: 'Four-Bedroom Penthouse',
@@ -80,6 +84,7 @@ const units = [
   },
   {
     type: '1 Bedroom',
+    propertyType: 'Apartment',
     beds: 1,
     baths: 1,
     title: 'One-Bedroom Apartment - Type B',
@@ -96,6 +101,7 @@ const units = [
   },
   {
     type: '2 Bedroom',
+    propertyType: 'Apartment',
     beds: 2,
     baths: 2,
     title: 'Two-Bedroom Apartment - Type D',
@@ -116,19 +122,15 @@ const units = [
 const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
 
 const FilterButton = ({ filterKey, filters, ...props }) => {
-    const filterConfig = {
-        'Unit Type': { icon: Building2 },
-        'Price': { icon: Wallet },
-        'Beds & Baths': { icon: BedDouble },
-        'More Filters': { icon: SlidersHorizontal },
-    };
-
+    
     const getButtonText = () => {
         const data = filters[filterKey];
         if (!data || Object.keys(data).length === 0) return filterKey;
 
         switch (filterKey) {
-            case 'Unit Type':
+            case 'Apartment':
+                return data.type || filterKey;
+            case 'Rent':
                 return data.type || filterKey;
             case 'Price':
                 const parts = [];
@@ -147,23 +149,19 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
     };
 
     const isActive = filters[filterKey] && Object.keys(filters[filterKey]).length > 0;
-    const Icon = filterConfig[filterKey]?.icon || ChevronDown;
 
     return (
         <Button
             variant="outline"
             className={cn(
-                "h-12 px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full sm:w-auto justify-between",
-                isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70",
-                "hover:bg-accent hover:text-accent-foreground"
+                "h-11 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full sm:w-auto justify-between",
+                isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70 border-border",
+                "hover:bg-accent hover:text-accent-foreground rounded-md"
             )}
             {...props}
         >
-            <div className="flex items-center gap-2">
-              <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-foreground/50")} />
-              <span className="truncate">{getButtonText()}</span>
-            </div>
-            <ChevronDown className="h-4 w-4 text-foreground/40 ml-auto flex-shrink-0" />
+            <span className="truncate">{getButtonText()}</span>
+            <ChevronDown className="h-4 w-4 text-foreground/40 ml-auto sm:ml-1 flex-shrink-0" />
         </Button>
     );
 };
@@ -173,6 +171,7 @@ export function Residences() {
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
     const [openPopovers, setOpenPopovers] = useState({});
     const isMobile = useIsMobile();
+    const [searchTags, setSearchTags] = useState(['Churchill Towers']);
 
     const handlePopoverOpenChange = (filterKey, isOpen) => {
         setOpenPopovers(prev => ({ ...prev, [filterKey]: isOpen }));
@@ -201,12 +200,18 @@ export function Residences() {
             return updated;
         });
     }
+    
+    const removeSearchTag = (tagToRemove) => {
+        setSearchTags(prev => prev.filter(tag => tag !== tagToRemove));
+    }
 
     const filteredUnits = useMemo(() => units.filter(unit => {
-        const { 'Unit Type': unitTypeFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters } = filters;
+        const { 'Rent': rentFilter, 'Apartment': apartmentFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters } = filters;
 
-        if (unitTypeFilter && unitTypeFilter.type && unit.type !== unitTypeFilter.type) return false;
+        if (rentFilter?.type === 'Buy') return false; // Simple example: all units are for rent
         
+        if (apartmentFilter?.type && unit.propertyType !== apartmentFilter.type) return false;
+
         if (priceFilter) {
             if (priceFilter.min_price && unit.rent < parseInt(priceFilter.min_price, 10)) return false;
             if (priceFilter.max_price && unit.rent > parseInt(priceFilter.max_price, 10)) return false;
@@ -249,8 +254,10 @@ export function Residences() {
         };
 
         switch (filterKey) {
-            case 'Unit Type':
-                return <UnitTypeFilterPopover {...contentProps} />;
+            case 'Rent':
+                return <RentFilterPopover {...contentProps} />;
+            case 'Apartment':
+                return <ApartmentTypeFilterPopover {...contentProps} />;
             case 'Price':
                 return <PriceFilterPopover {...contentProps} />;
             case 'Beds & Baths':
@@ -259,9 +266,11 @@ export function Residences() {
                 return null;
         }
     };
+
+    const filterButtons = ['Rent', 'Apartment', 'Beds & Baths', 'Price'];
     
     return (
-    <section id="residences" className="w-full py-16 md:py-24 bg-background">
+    <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-headline">Find Your Perfect Home</h2>
@@ -271,24 +280,44 @@ export function Residences() {
         </div>
 
         {/* --- Search Bar --- */}
-        <div className="bg-background rounded-full shadow-lg p-2 border mb-12">
-            <div className="flex items-center gap-2 flex-wrap md:flex-nowrap">
-                <div className="relative flex-grow flex items-center w-full md:w-auto">
-                     <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
-                    <Input type="text" placeholder="Search by location (e.g. Churchill Towers)" className="w-full h-12 pl-12 pr-4 bg-transparent border-0 focus:ring-0" />
+        <div className="bg-white rounded-lg shadow-sm p-1.5 border mb-12">
+            <div className="flex items-center gap-1 md:gap-2 flex-wrap md:flex-nowrap">
+                <div className="relative flex-grow flex items-center gap-2 px-3 h-12">
+                    <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                        {searchTags.map(tag => (
+                            <div key={tag} className="flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/50 rounded-md px-2 py-0.5 text-sm font-medium">
+                                <span>{tag}</span>
+                                <button onClick={() => removeSearchTag(tag)}>
+                                    <X className="h-3 w-3" />
+                                </button>
+                            </div>
+                        ))}
+                        <input
+                            type="text"
+                            placeholder="City, community..."
+                            className="bg-transparent focus:ring-0 border-0 p-0 h-10 flex-grow w-32 outline-none"
+                        />
+                    </div>
                 </div>
-                <div className="hidden md:block h-8 w-px bg-border"></div>
                 
-                <div className="flex items-center gap-2 flex-col sm:flex-row w-full sm:w-auto">
-                  {['Unit Type', 'Price', 'Beds & Baths'].map(key => {
-                      const trigger = <FilterButton filterKey={key} filters={filters} />;
+                <div className="hidden md:block h-8 w-px bg-border mx-1"></div>
+                
+                <div className="flex items-center gap-1 md:gap-2 w-full md:w-auto px-2 md:px-0">
+                    {filterButtons.map(key => {
+                      const trigger = (
+                        <div key={key} className={cn("relative", key === 'Rent' && "pr-2")}>
+                          <FilterButton filterKey={key} filters={filters} className="w-full"/>
+                          {key === 'Rent' && <span className="absolute -top-1.5 -right-0.5 text-[10px] bg-primary text-primary-foreground font-bold px-1.5 py-0.5 rounded-full z-10 select-none">NEW</span>}
+                        </div>
+                      );
                       const content = renderFilterPopoverContent(key);
 
                       if (isMobile) {
                           return (
                               <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
                                   <DialogTrigger asChild>{trigger}</DialogTrigger>
-                                  <DialogContent className="p-0 max-w-md w-[90%]">
+                                  <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
                                       {content}
                                   </DialogContent>
                               </Dialog>
@@ -309,7 +338,7 @@ export function Residences() {
                       <DialogTrigger asChild>
                            <FilterButton filterKey="More Filters" filters={filters} />
                       </DialogTrigger>
-                      <DialogContent className="max-w-2xl p-0">
+                      <DialogContent className="max-w-2xl p-0 flex flex-col">
                           <MoreFiltersModal
                               onApply={(values) => {
                                 handleFilterChange('More Filters', values);
@@ -323,8 +352,8 @@ export function Residences() {
                   </Dialog>
                 </div>
 
-                <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-full hover:opacity-90 transition-opacity flex-shrink-0 w-full md:w-auto">
-                    <Search className="w-5 h-5 mr-2"/>Find
+                <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity flex-shrink-0 w-full md:w-auto">
+                    Find
                 </Button>
             </div>
         </div>
@@ -334,7 +363,7 @@ export function Residences() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredUnits.length > 0 ? (
             filteredUnits.map((unit, index) => (
-              <Card key={index} className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+              <Card key={index} className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-background">
                 <CardContent className="p-0">
                   <div className="relative">
                     <Image
@@ -431,8 +460,8 @@ const ControlButton = ({ value, selectedValue, onSelect, children, className }) 
     <Button
         variant="outline"
         className={cn(
-          "h-10 transition-colors duration-200 ease-in-out", 
-          selectedValue === value && "bg-primary-gradient border-primary text-primary-foreground shadow-md",
+          "h-10 transition-colors duration-200 ease-in-out border-border", 
+          selectedValue === value && "bg-primary-gradient border-transparent text-primary-foreground shadow-sm",
           className
         )}
         onClick={() => onSelect(value)}
@@ -441,8 +470,8 @@ const ControlButton = ({ value, selectedValue, onSelect, children, className }) 
     </Button>
 );
 
-const UnitTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
-    const types = ['1 Bedroom', '2 Bedroom', '3 Bedroom', '4 Bedroom'];
+const RentFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
+    const types = ['Rent', 'Buy'];
     return (
         <>
         {isMobile && <FilterHeader title={title} />}
@@ -458,11 +487,38 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title
                           {isSelected && <Check className="h-4 w-4" />}
                         </button>
                     );
-                    return (
-                         <li key={type}>
-                           {isMobile ? <DialogClose asChild>{button}</DialogClose> : button}
-                         </li>
-                    )
+                    if (isMobile) {
+                        return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
+                    }
+                    return <li key={type}>{button}</li>;
+                })}
+            </ul>
+        </div>
+      </>
+    )
+};
+
+const ApartmentTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
+    const types = ['Apartment', 'Penthouse', 'Villa', 'Townhouse'];
+    return (
+        <>
+        {isMobile && <FilterHeader title={title} />}
+        <div className="p-2 w-64">
+             <ul className="max-h-60 overflow-y-auto">
+                {types.map(type => {
+                    const isSelected = values.type === type;
+                    const button = (
+                         <button
+                          onClick={() => { onValueChange({ type }); onApply(); }} 
+                          className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+                          <span>{type}</span> 
+                          {isSelected && <Check className="h-4 w-4" />}
+                        </button>
+                    );
+                    if (isMobile) {
+                        return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
+                    }
+                    return <li key={type}>{button}</li>
                 })}
             </ul>
         </div>
@@ -548,7 +604,7 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
             <DialogHeader className="p-6 border-b">
               <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
               <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                  <X className="h-4 w-4" />
+                  <X className="h-5 w-5" />
                   <span className="sr-only">Close</span>
               </DialogClose>
             </DialogHeader>
@@ -600,3 +656,5 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
+
+    
