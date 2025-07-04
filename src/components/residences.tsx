@@ -24,7 +24,20 @@ const units = [
     beds: 2,
     baths: 3,
     title: 'Two-Bedroom Apartment - Type C',
-    image: 'https://placehold.co/600x400.png',
+    images: [
+        'https://www.propertyfinder.ae/property/1841ae8e8c256855ce7d0e30ef6ef82f/1312/894/MODE/ad484c/14446875-0682co.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/cf729a31177dd42be68fe373c5cdb16b/1312/894/MODE/dcd8c0/14446875-646c3o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/3febfbc30013bad43391f176d80332fd/1312/894/MODE/8c6c29/14446875-f72c5o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/9deb7fe0efa08a4ea926b38d35a24092/1312/894/MODE/17f7bd/14446875-cce66o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/965bba2759e1ad0eaa75be43a18352d3/1312/894/MODE/54e2e7/14446875-ed417o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/8162edffa729667a0f10b6d3bb34e6e6/1312/894/MODE/342c4e/14446875-3ad89o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/ae59bc5c9f3ebe26155b7a8bd9db9741/1312/894/MODE/cf6f80/14446875-ce281o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/31a94f8fa3dd1793e320d8e1deae3196/1312/894/MODE/19e637/14446875-f7ca1o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/dcd1783f07629cbce735f5793012bb53/1312/894/MODE/1595d8/14446875-4751ao.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/e493249482f5b48555b6425c37170bd1/1312/894/MODE/4e1059/14446875-92927o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/012571b5c67710829530f313ee90c40e/1312/894/MODE/679eb1/14446875-dd0e7o.jpg?ctr=ae',
+        'https://www.propertyfinder.ae/property/2d8384c5a9b78a4404f7f1758f82f3df/1312/894/MODE/8833d6/14446875-c093ao.jpg?ctr=ae'
+    ],
     aiHint: 'luxury living room',
     area: 1450,
     view: 'Burj Khalifa View',
@@ -41,7 +54,7 @@ const units = [
     beds: 1,
     baths: 2,
     title: 'One-Bedroom Apartment - Type A',
-    image: 'https://placehold.co/600x400.png',
+    images: ['https://placehold.co/600x400.png'],
     aiHint: 'modern apartment interior',
     area: 950,
     view: 'Canal View',
@@ -58,7 +71,7 @@ const units = [
     beds: 3,
     baths: 4,
     title: 'Three-Bedroom Sky Villa',
-    image: 'https://placehold.co/600x400.png',
+    images: ['https://placehold.co/600x400.png'],
     aiHint: 'spacious apartment kitchen',
     area: 2200,
     view: 'Full Canal View',
@@ -75,7 +88,7 @@ const units = [
     beds: 4,
     baths: 5,
     title: 'Four-Bedroom Penthouse',
-    image: 'https://placehold.co/600x400.png',
+    images: ['https://placehold.co/600x400.png'],
     aiHint: 'penthouse apartment view',
     area: 3800,
     view: '360° Panoramic View',
@@ -92,7 +105,7 @@ const units = [
     beds: 1,
     baths: 1,
     title: 'One-Bedroom Apartment - Type B',
-    image: 'https://placehold.co/600x400.png',
+    images: ['https://placehold.co/600x400.png'],
     aiHint: 'cozy bedroom apartment',
     area: 1050,
     view: 'Business Bay View',
@@ -109,7 +122,7 @@ const units = [
     beds: 2,
     baths: 2,
     title: 'Two-Bedroom Apartment - Type D',
-    image: 'https://placehold.co/600x400.png',
+    images: ['https://placehold.co/600x400.png'],
     aiHint: 'minimalist apartment design',
     area: 1600,
     view: 'Downtown View',
@@ -324,7 +337,7 @@ export function Residences() {
     
     return (
     <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-2 md:px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-headline">Find Your Perfect Home</h2>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
@@ -492,13 +505,7 @@ const Icon360 = (props) => (
 
 const UnitCard = ({ unit }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    // Mocking extra images for the carousel
-    const images = [
-        unit.image,
-        'https://placehold.co/600x400.png',
-        'https://placehold.co/600x400.png',
-        'https://placehold.co/600x400.png'
-    ];
+    const images = unit.images;
 
     const nextImage = (e) => {
         e.stopPropagation();

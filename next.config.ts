@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.propertyfinder.ae',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   allowedDevOrigins: [
