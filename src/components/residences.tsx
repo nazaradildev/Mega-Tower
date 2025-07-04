@@ -9,11 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video, Star, Camera, Bed, Bath, Heart, MoreHorizontal, Phone, Mail, ChevronLeft, LayoutDashboard } from 'lucide-react';
+import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video, Camera, Bed, Bath, Heart, Phone, Mail, ChevronLeft, LayoutDashboard, Armchair, View, Share2, Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 
 const units = [
@@ -505,7 +506,7 @@ const UnitCard = ({ unit }) => {
         <Card className="w-full overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
             <div className="flex flex-col md:flex-row">
                 {/* Left side: Image */}
-                <div className="relative md:w-5/12 flex-shrink-0 group/image">
+                <div className="relative w-full md:w-5/12 flex-shrink-0 group/image">
                      <Image
                         key={currentImageIndex} 
                         src={images[currentImageIndex]}
@@ -517,23 +518,7 @@ const UnitCard = ({ unit }) => {
                     />
                     
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
-
-                    {unit.exclusive && (
-                        <div className="absolute top-3 left-3 bg-indigo-700 text-white text-xs font-bold py-1 px-3 rounded-md flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-current" />
-                            <span>SUPERAGENT</span>
-                        </div>
-                    )}
                     
-                    <div className="absolute top-3 right-3 flex flex-col gap-2">
-                         <Button variant="secondary" size="sm" className="rounded-md bg-black/60 text-white h-8 hover:bg-black/80">
-                             <Video className="w-4 h-4 mr-2" /> Virtual Tour
-                         </Button>
-                         <Button variant="secondary" size="sm" className="rounded-md bg-black/60 text-white h-8 hover:bg-black/80">
-                             <LayoutDashboard className="w-4 h-4 mr-2" /> Floor Plan
-                         </Button>
-                    </div>
-
                     <Button onClick={prevImage} size="icon" variant="secondary" className="absolute top-1/2 -translate-y-1/2 left-3 rounded-full h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity">
                         <ChevronLeft className="w-5 h-5" />
                     </Button>
@@ -555,11 +540,6 @@ const UnitCard = ({ unit }) => {
                         <Camera className="w-4 h-4" />
                         <span>{images.length}</span>
                     </div>
-                     <div className="absolute top-3 right-[calc(100%-120px)] sm:right-auto sm:top-auto sm:bottom-3 sm:right-3">
-                        <Button size="icon" variant="secondary" className="rounded-full h-9 w-9 bg-white/90 hover:bg-white text-gray-700 shadow">
-                            <Heart className="w-5 h-5" />
-                        </Button>
-                    </div>
                 </div>
 
                 {/* Right side: Details */}
@@ -567,10 +547,7 @@ const UnitCard = ({ unit }) => {
                     <div>
                         <div className="flex justify-between items-start">
                             <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
-                            <div className="text-right">
-                               {unit.exclusive && <span className="text-xs font-bold text-amber-600">PREMIUM</span>}
-                               <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
-                            </div>
+                           <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
                         </div>
 
                         <p className="text-2xl font-bold text-foreground my-1">
@@ -579,29 +556,35 @@ const UnitCard = ({ unit }) => {
                         
                         <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
                         
-                        <p className="text-muted-foreground font-medium truncate mt-1">
-                            {unit.furnished ? 'Furnished' : 'Unfurnished'} | {unit.view}
-                        </p>
+                        <div className="my-4 border-b border-border -mx-4"></div>
 
-                        <div className="my-3 border-b border-border -mx-4"></div>
-
-                        <div className="text-sm text-muted-foreground space-y-3">
-                            <div className="flex items-center gap-2">
-                                <MapPin className="w-4 h-4 text-gray-500" />
+                        <div className="space-y-3 text-sm">
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                                <MapPin className="w-4 h-4 flex-shrink-0" />
                                 <span>Churchill Residency Tower, Churchill Towers, Business Bay</span>
                             </div>
-                            <div className="flex items-center gap-x-4 gap-y-1 flex-wrap">
+                             <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
                                 <div className="flex items-center gap-1.5">
-                                    <Bed className="w-4 h-4 text-gray-500" />
+                                    <Bed className="w-4 h-4" />
                                     <span>{unit.beds} Beds</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                    <Bath className="w-4 h-4 text-gray-500" />
+                                    <Bath className="w-4 h-4" />
                                     <span>{unit.baths} Baths</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                    <Ruler className="w-4 h-4 text-gray-500" />
+                                    <Ruler className="w-4 h-4" />
                                     <span>{unit.area.toLocaleString()} sqft</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+                                <div className="flex items-center gap-1.5">
+                                    <Armchair className="w-4 h-4" />
+                                    <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                    <View className="w-4 h-4" />
+                                    <span>{unit.view}</span>
                                 </div>
                             </div>
                         </div>
@@ -610,35 +593,35 @@ const UnitCard = ({ unit }) => {
             </div>
             
             {/* Footer */}
-            <div className="p-3 border-t border-border bg-gray-50/50">
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <div className="relative">
-                            <Avatar className="h-9 w-9">
-                                <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
-                                <AvatarFallback>EN</AvatarFallback>
-                            </Avatar>
-                            <span className="absolute -bottom-1 -right-1 bg-indigo-700 rounded-full p-0.5 border-2 border-background">
-                                <Star className="w-2.5 h-2.5 text-white fill-current" />
-                            </span>
+            <div className="p-4 border-t bg-gray-50/50">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                        <Avatar className="h-10 w-10">
+                            <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
+                            <AvatarFallback>EN</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="font-semibold text-foreground text-sm">eni Real Estate</p>
+                            <p className="text-xs text-muted-foreground">{unit.status}</p>
                         </div>
-                        <span className="text-xs text-muted-foreground font-semibold">{unit.status}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <Button variant="outline" size="sm" className="hidden sm:flex rounded-md">
-                            <Phone className="mr-1.5 h-3.5 w-3.5" /> Call
-                        </Button>
-                         <Button variant="outline" size="sm" className="hidden sm:flex rounded-md">
-                            <Mail className="mr-1.5 h-3.5 w-3.5" /> Email
-                        </Button>
-                         <Button variant="outline" size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] hidden sm:flex rounded-md">
+                    <div className="flex items-center flex-wrap justify-start -ml-2 sm:justify-end sm:ml-0 gap-1">
+                        <Button variant="outline" size="sm" className="rounded-md"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden md:inline">Call</span> </Button>
+                        <Button variant="outline" size="sm" className="rounded-md"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden md:inline">Email</span> </Button>
+                         <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
                               <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
-                            </svg> WhatsApp
+                            </svg>
+                            <span className="hidden md:inline">WhatsApp</span>
                         </Button>
-                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border">
-                            <MoreHorizontal className="w-4 h-4" />
-                        </Button>
+                         <Button variant="outline" size="sm" className="rounded-md"> <Video className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden md:inline">Tour</span> </Button>
+                        <Button variant="outline" size="sm" className="rounded-md"> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden md:inline">Plan</span> </Button>
+                        <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden sm:block" />
+                        <div className="hidden sm:flex items-center gap-1">
+                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Share2 className="w-5 h-5 text-muted-foreground" /> </Button>
+                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Bookmark className="w-5 h-5 text-muted-foreground" /> </Button>
+                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Heart className="w-5 h-5 text-muted-foreground" /> </Button>
+                        </div>
                     </div>
                 </div>
             </div>
