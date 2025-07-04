@@ -39,6 +39,7 @@ const units = [
         'https://www.propertyfinder.ae/property/012571b5c67710829530f313ee90c40e/1312/894/MODE/679eb1/14446875-dd0e7o.jpg?ctr=ae',
         'https://www.propertyfinder.ae/property/2d8384c5a9b78a4404f7f1758f82f3df/1312/894/MODE/8833d6/14446875-c093ao.jpg?ctr=ae'
     ],
+    floorPlanImage: 'https://placehold.co/800x1100.png',
     aiHint: 'luxury living room',
     area: 781,
     view: 'Burj Khalifa & Canal View',
@@ -56,6 +57,7 @@ const units = [
     baths: 2,
     title: 'One-Bedroom Apartment - Type A',
     images: ['https://placehold.co/600x400.png'],
+    floorPlanImage: 'https://placehold.co/800x1100.png',
     aiHint: 'modern apartment interior',
     area: 950,
     view: 'Canal View',
@@ -73,6 +75,7 @@ const units = [
     baths: 4,
     title: 'Three-Bedroom Sky Villa',
     images: ['https://placehold.co/600x400.png'],
+    floorPlanImage: 'https://placehold.co/800x1100.png',
     aiHint: 'spacious apartment kitchen',
     area: 2200,
     view: 'Full Canal View',
@@ -90,6 +93,7 @@ const units = [
     baths: 5,
     title: 'Four-Bedroom Penthouse',
     images: ['https://placehold.co/600x400.png'],
+    floorPlanImage: 'https://placehold.co/800x1100.png',
     aiHint: 'penthouse apartment view',
     area: 3800,
     view: '360° Panoramic View',
@@ -107,6 +111,7 @@ const units = [
     baths: 1,
     title: 'One-Bedroom Apartment - Type B',
     images: ['https://placehold.co/600x400.png'],
+    floorPlanImage: 'https://placehold.co/800x1100.png',
     aiHint: 'cozy bedroom apartment',
     area: 1050,
     view: 'Business Bay View',
@@ -124,6 +129,7 @@ const units = [
     baths: 2,
     title: 'Two-Bedroom Apartment - Type D',
     images: ['https://placehold.co/600x400.png'],
+    floorPlanImage: 'https://placehold.co/800x1100.png',
     aiHint: 'minimalist apartment design',
     area: 1600,
     view: 'Downtown View',
@@ -338,7 +344,7 @@ export function Residences() {
     
     return (
     <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
-      <div className="container mx-auto px-1 md:px-6">
+      <div className="container mx-auto px-1 sm:px-2 md:px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-headline">Find Your Perfect Home</h2>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
@@ -526,99 +532,121 @@ const UnitCard = ({ unit }) => {
 
     return (
         <Card className="w-full max-w-4xl mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
-            {/* Image Section */}
-            <Carousel setApi={setApi} className="relative w-full group/image">
-                <CarouselContent>
-                    {unit.images.map((imgSrc, index) => (
-                         <CarouselItem key={index}>
-                            <Image
-                                src={imgSrc}
-                                alt={`${unit.title} - Image ${index + 1}`}
-                                data-ai-hint={unit.aiHint}
-                                width={800}
-                                height={450}
-                                className="w-full h-full object-cover aspect-[4/3] sm:aspect-video"
-                            />
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
-                <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+            <div className="md:grid md:grid-cols-2">
+                <div className="relative w-full group/image">
+                    <Carousel setApi={setApi} className="w-full">
+                        <CarouselContent>
+                            {unit.images.map((imgSrc, index) => (
+                                <CarouselItem key={index}>
+                                    <div className="aspect-[4/3] w-full">
+                                        <Image
+                                            src={imgSrc}
+                                            alt={`${unit.title} - Image ${index + 1}`}
+                                            data-ai-hint={unit.aiHint}
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
+                        <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
+                        
+                        <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10 pointer-events-none">
+                            {unit.images.map((_, index) => (
+                                <button key={index} onClick={() => api?.scrollTo(index)} className="p-1 pointer-events-auto" aria-label={`Go to image ${index + 1}`}>
+                                    <div className={cn("w-2 h-2 rounded-full border-2 transition-all", 
+                                        currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80 bg-black/30'
+                                    )}></div>
+                                </button>
+                            ))}
+                        </div>
 
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-2 z-10">
-                    {unit.images.map((_, index) => (
-                        <button key={index} onClick={() => api?.scrollTo(index)} className="p-1" aria-label={`Go to image ${index + 1}`}>
-                             <div className={cn("w-2 h-2 rounded-full border-2 transition-all", 
-                                currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80 bg-black/30'
-                            )}></div>
-                        </button>
-                    ))}
+                        <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
+                            <Camera className="w-4 h-4" />
+                            <span>{unit.images.length}</span>
+                        </div>
+                    </Carousel>
                 </div>
 
-                <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
-                    <Camera className="w-4 h-4" />
-                    <span>{unit.images.length}</span>
-                </div>
-            </Carousel>
-
-            {/* Main Content */}
-            <div className="p-4 flex-grow">
-                 <div className="flex justify-between items-start">
-                    <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
-                    <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
-                </div>
-
-                <p className="text-2xl font-bold text-foreground my-1">
-                    AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
-                </p>
-                
-                <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
-                
-                <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>{unit.status}</span>
-                </div>
-
-                <div className="space-y-3 text-sm mt-4">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                        <MapPin className="w-4 h-4 flex-shrink-0" />
-                        <span>Churchill Residency Tower, Churchill Towers, Business Bay</span>
+                <div className="p-4 flex flex-col">
+                    <div className="flex justify-between items-start">
+                        <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
+                        <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
                     </div>
-                     <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                        <div className="flex items-center gap-1.5">
-                            <Bed className="w-4 h-4" />
-                            <span>{unit.beds} Beds</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <Bath className="w-4 h-4" />
-                            <span>{unit.baths} Baths</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <Ruler className="w-4 h-4" />
-                            <span>{unit.area.toLocaleString()} sqft</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                        <div className="flex items-center gap-1.5">
-                            <Armchair className="w-4 h-4" />
-                            <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <View className="w-4 h-4" />
-                            <span>{unit.view}</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div className="mt-4 flex items-center flex-wrap justify-start gap-2">
-                     <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span> </Button>
-                    <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
+                    <p className="text-2xl font-bold text-foreground my-1">
+                        AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
+                    </p>
+                    
+                    <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
+                    
+                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
+                        <Calendar className="h-4 w-4" />
+                        <span>{unit.status}</span>
+                    </div>
+
+                    <div className="space-y-3 text-sm mt-4">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                            <MapPin className="w-4 h-4 flex-shrink-0" />
+                            <span>Churchill Residency Tower, Churchill Towers, Business Bay</span>
+                        </div>
+                        <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+                            <div className="flex items-center gap-1.5">
+                                <Bed className="w-4 h-4" />
+                                <span>{unit.beds} Beds</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <Bath className="w-4 h-4" />
+                                <span>{unit.baths} Baths</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <Ruler className="w-4 h-4" />
+                                <span>{unit.area.toLocaleString()} sqft</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+                            <div className="flex items-center gap-1.5">
+                                <Armchair className="w-4 h-4" />
+                                <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <View className="w-4 h-4" />
+                                <span>{unit.view}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center flex-wrap justify-start gap-2">
+                        <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span> </Button>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none" disabled={!unit.floorPlanImage}> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
+                            </DialogTrigger>
+                            {unit.floorPlanImage && (
+                                <DialogContent className="max-w-[95vw] w-full sm:max-w-lg p-2">
+                                    <DialogHeader className="p-2">
+                                        <DialogTitle className="text-base sm:text-lg truncate">Floor Plan: {unit.title}</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="max-h-[80vh] overflow-y-auto">
+                                        <Image
+                                            src={unit.floorPlanImage}
+                                            alt={`Floor plan for ${unit.title}`}
+                                            data-ai-hint="apartment floor plan"
+                                            width={800}
+                                            height={1100}
+                                            className="w-full h-auto object-contain rounded-md"
+                                        />
+                                    </div>
+                                </DialogContent>
+                            )}
+                        </Dialog>
+                    </div>
                 </div>
             </div>
 
-            {/* Footer Actions */}
             <div className="p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-3 flex-shrink-0">
                     <Avatar className="h-10 w-10">
@@ -906,7 +934,3 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
-
-    
-
-    
