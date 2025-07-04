@@ -40,6 +40,8 @@ const units = [
         'https://www.propertyfinder.ae/property/2d8384c5a9b78a4404f7f1758f82f3df/1312/894/MODE/8833d6/14446875-c093ao.jpg?ctr=ae'
     ],
     floorPlanImage: '/1-bed-type-1.png',
+    floorPlanImage3d: 'https://placehold.co/800x1100.png',
+    virtualTourUrl: 'https://my.matterport.com/show/?m=69UUKm16w39',
     aiHint: 'luxury living room',
     area: 781,
     view: 'Burj Khalifa & Canal View',
@@ -58,6 +60,8 @@ const units = [
     title: 'One-Bedroom Apartment - Type A',
     images: ['https://placehold.co/600x400.png'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
+    floorPlanImage3d: null,
+    virtualTourUrl: null,
     aiHint: 'modern apartment interior',
     area: 950,
     view: 'Canal View',
@@ -76,6 +80,8 @@ const units = [
     title: 'Three-Bedroom Sky Villa',
     images: ['https://placehold.co/600x400.png'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
+    floorPlanImage3d: null,
+    virtualTourUrl: null,
     aiHint: 'spacious apartment kitchen',
     area: 2200,
     view: 'Full Canal View',
@@ -94,6 +100,8 @@ const units = [
     title: 'Four-Bedroom Penthouse',
     images: ['https://placehold.co/600x400.png'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
+    floorPlanImage3d: null,
+    virtualTourUrl: null,
     aiHint: 'penthouse apartment view',
     area: 3800,
     view: '360° Panoramic View',
@@ -112,6 +120,8 @@ const units = [
     title: 'One-Bedroom Apartment - Type B',
     images: ['https://placehold.co/600x400.png'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
+    floorPlanImage3d: null,
+    virtualTourUrl: null,
     aiHint: 'cozy bedroom apartment',
     area: 1050,
     view: 'Business Bay View',
@@ -130,6 +140,8 @@ const units = [
     title: 'Two-Bedroom Apartment - Type D',
     images: ['https://placehold.co/600x400.png'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
+    floorPlanImage3d: null,
+    virtualTourUrl: null,
     aiHint: 'minimalist apartment design',
     area: 1600,
     view: 'Downtown View',
@@ -513,6 +525,7 @@ const Icon360 = (props) => (
 const UnitCard = ({ unit }) => {
     const [api, setApi] = useState<CarouselApi>()
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
+    const [planView, setPlanView] = useState('2D');
 
     useEffect(() => {
         if (!api) {
@@ -620,25 +633,65 @@ const UnitCard = ({ unit }) => {
                     </div>
 
                     <div className="mt-4 flex items-center flex-wrap justify-start gap-2">
-                        <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none"> <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span> </Button>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none" disabled={!unit.floorPlanImage}> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
+                                <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none" disabled={!unit.virtualTourUrl}>
+                                    <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span>
+                                </Button>
+                            </DialogTrigger>
+                             {unit.virtualTourUrl && (
+                                <DialogContent className="p-0 w-[95vw] h-[90vh] max-w-7xl border-0">
+                                     <DialogHeader className="absolute top-2 right-2 z-10 p-0 m-0">
+                                         <DialogClose asChild>
+                                            <Button variant="default" size="icon" className="bg-black/50 hover:bg-black/70 text-white rounded-full h-10 w-10">
+                                                <X className="h-5 w-5" />
+                                                <span className="sr-only">Close</span>
+                                            </Button>
+                                        </DialogClose>
+                                    </DialogHeader>
+                                    <iframe
+                                        src={unit.virtualTourUrl}
+                                        width="100%"
+                                        height="100%"
+                                        allow="fullscreen"
+                                        className="rounded-lg"
+                                    />
+                                </DialogContent>
+                            )}
+                        </Dialog>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none" disabled={!unit.floorPlanImage}>
+                                    <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span>
+                                </Button>
                             </DialogTrigger>
                             {unit.floorPlanImage && (
-                                <DialogContent className="p-2 w-[95vw] max-w-lg">
-                                    <DialogHeader className="p-2">
-                                        <DialogTitle className="text-base sm:text-lg truncate">Floor Plan: {unit.title}</DialogTitle>
-                                    </DialogHeader>
-                                    <div className="max-h-[80vh] overflow-y-auto">
-                                        <Image
-                                            src={unit.floorPlanImage}
-                                            alt={`Floor plan for ${unit.title}`}
-                                            data-ai-hint="apartment floor plan"
-                                            width={800}
-                                            height={1100}
-                                            className="w-full h-auto object-contain rounded-md"
-                                        />
+                                <DialogContent className="p-0 max-w-4xl">
+                                    <div className="flex items-center justify-between p-4 border-b">
+                                        <DialogTitle className="text-lg font-semibold truncate pr-4">Floor Plan: {unit.title}</DialogTitle>
+                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                            <div className="p-1 bg-muted rounded-lg flex gap-1">
+                                                <Button size="sm" variant={planView === '2D' ? 'default' : 'ghost'} onClick={() => setPlanView('2D')} className="h-8 rounded-md">2D</Button>
+                                                <Button size="sm" variant={planView === '3D' ? 'default' : 'ghost'} onClick={() => setPlanView('3D')} className="h-8 rounded-md" disabled={!unit.floorPlanImage3d}>3D</Button>
+                                            </div>
+                                            <DialogClose asChild>
+                                                <Button variant="ghost" size="icon" className="rounded-full -mr-2">
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </DialogClose>
+                                        </div>
+                                    </div>
+                                    <div className="bg-muted/50 max-h-[80vh] overflow-auto">
+                                        <div className="flex justify-center items-center p-4">
+                                            <Image
+                                                src={planView === '2D' ? unit.floorPlanImage : (unit.floorPlanImage3d || '')}
+                                                alt={`Floor plan for ${unit.title} (${planView})`}
+                                                data-ai-hint="apartment floor plan"
+                                                width={1000}
+                                                height={1400}
+                                                className="w-auto h-auto max-w-none"
+                                            />
+                                        </div>
                                     </div>
                                 </DialogContent>
                             )}
