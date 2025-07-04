@@ -1,212 +1,253 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Ruler, Eye, CheckCircle, Armchair, ChevronDown } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Slider } from '@/components/ui/slider';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Bath, Wallet, SlidersHorizontal, Building2, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const units = [
   {
     type: '2 Bedroom',
+    beds: 2,
+    baths: 3,
     title: 'Two-Bedroom Apartment - Type C',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'luxury living room',
-    area: '1,450 sq. ft.',
+    area: 1450,
     view: 'Burj Khalifa View',
     status: 'Available Now',
     rent: 220000,
     furnished: true,
     exclusive: true,
     verified: true,
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark']
   },
   {
     type: '1 Bedroom',
+    beds: 1,
+    baths: 2,
     title: 'One-Bedroom Apartment - Type A',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'modern apartment interior',
-    area: '950 sq. ft.',
+    area: 950,
     view: 'Canal View',
     status: 'Available Now',
     rent: 150000,
     furnished: false,
     exclusive: false,
     verified: true,
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water']
   },
   {
     type: '3 Bedroom',
+    beds: 3,
+    baths: 4,
     title: 'Three-Bedroom Sky Villa',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'spacious apartment kitchen',
-    area: '2,200 sq. ft.',
+    area: 2200,
     view: 'Full Canal View',
     status: 'Available Now',
     rent: 350000,
     furnished: true,
     exclusive: true,
     verified: true,
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Walk-in Closet']
   },
   {
     type: '4 Bedroom',
+    beds: 4,
+    baths: 5,
     title: 'Four-Bedroom Penthouse',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'penthouse apartment view',
-    area: '3,800 sq. ft.',
+    area: 3800,
     view: '360° Panoramic View',
     status: 'Limited Availability',
     rent: 550000,
     furnished: true,
     exclusive: true,
     verified: true,
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Private Jacuzzi', 'Study']
   },
   {
     type: '1 Bedroom',
+    beds: 1,
+    baths: 1,
     title: 'One-Bedroom Apartment - Type B',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'cozy bedroom apartment',
-    area: '1,050 sq. ft.',
+    area: 1050,
     view: 'Business Bay View',
     status: 'Available Now',
     rent: 165000,
     furnished: true,
     exclusive: false,
     verified: true,
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking']
   },
   {
     type: '2 Bedroom',
+    beds: 2,
+    baths: 2,
     title: 'Two-Bedroom Apartment - Type D',
     image: 'https://placehold.co/600x400.png',
     aiHint: 'minimalist apartment design',
-    area: '1,600 sq. ft.',
+    area: 1600,
     view: 'Downtown View',
     status: 'Available Now',
     rent: 245000,
     furnished: false,
     exclusive: false,
     verified: true,
+    amenities: ['Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark']
   },
 ];
 
-const unitTypes = ['All', '1 Bedroom', '2 Bedroom', '3 Bedroom', '4 Bedroom'];
-const furnishedStatusOptions = ['Any', 'Furnished', 'Unfurnished'];
 
-const SearchBar = ({ onFilterChange }: { onFilterChange: (filters: any) => void }) => {
-  const [unitType, setUnitType] = useState('All');
-  const [priceRange, setPriceRange] = useState([100000, 600000]);
-  const [furnishedStatus, setFurnishedStatus] = useState('Any');
+const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
 
-  const handleFilterChange = (newFilters: any) => {
-    onFilterChange({
-      type: unitType,
-      priceRange: priceRange,
-      furnished: furnishedStatus,
-      ...newFilters,
-    });
-  };
+const FilterButton = ({ filterKey, filters, ...props }) => {
+    const filterConfig = {
+        'Unit Type': { icon: Building2 },
+        'Price': { icon: Wallet },
+        'Beds & Baths': { icon: BedDouble },
+        'More Filters': { icon: SlidersHorizontal },
+    };
 
-  const handleUnitTypeChange = (type: string) => {
-    setUnitType(type);
-    handleFilterChange({ type });
-  };
+    const getButtonText = () => {
+        const data = filters[filterKey];
+        if (!data || Object.keys(data).length === 0) return filterKey;
 
-  const handlePriceChange = (newRange: number[]) => {
-    setPriceRange(newRange);
-    handleFilterChange({ priceRange: newRange });
-  };
+        switch (filterKey) {
+            case 'Unit Type':
+                return data.type || filterKey;
+            case 'Price':
+                const parts = [];
+                if (data.min_price || data.max_price) parts.push(`AED ${data.min_price || 'Any'} - ${data.max_price || 'Any'}`);
+                if (data.period) parts.push(data.period);
+                return parts.join(' ') || filterKey;
+            case 'Beds & Baths':
+                const bedParts = [];
+                if (data.beds) bedParts.push(`${data.beds} ${data.beds === 'Studio' ? '' : 'Bed'}`);
+                if (data.baths) bedParts.push(`${data.baths} Bath`);
+                return bedParts.join(', ') || filterKey;
+            default:
+                return filterKey;
+        }
+    };
 
-  const handleFurnishedChange = (status: string) => {
-    setFurnishedStatus(status);
-    handleFilterChange({ furnished: status });
-  };
+    const isActive = filters[filterKey] && Object.keys(filters[filterKey]).length > 0;
+    const Icon = filterConfig[filterKey]?.icon || ChevronDown;
 
-  const formatCurrency = (value: number) => `AED ${new Intl.NumberFormat().format(value)}`;
-
-  return (
-    <div className="bg-background rounded-lg shadow-md p-4 mb-12 border">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-muted-foreground">Unit Type</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-between text-base">
-                <span>{unitType}</span> <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-              {unitTypes.map(type => (
-                <div key={type} onClick={() => handleUnitTypeChange(type)} className={`p-2 text-sm rounded-md cursor-pointer hover:bg-accent ${unitType === type ? 'bg-accent font-semibold text-primary' : ''}`}>
-                  {type}
-                </div>
-              ))}
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-muted-foreground">Price (per year)</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-between text-base">
-                <span>{formatCurrency(priceRange[0])} - {formatCurrency(priceRange[1])}</span> <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-4">
-              <Slider
-                value={priceRange}
-                min={100000}
-                max={600000}
-                step={10000}
-                onValueChange={handlePriceChange}
-              />
-              <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                <span>{formatCurrency(priceRange[0])}</span>
-                <span>{formatCurrency(priceRange[1])}</span>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-muted-foreground">Furnishing</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full justify-between text-base">
-                <span>{furnishedStatus}</span> <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-              {furnishedStatusOptions.map(status => (
-                <div key={status} onClick={() => handleFurnishedChange(status)} className={`p-2 text-sm rounded-md cursor-pointer hover:bg-accent ${furnishedStatus === status ? 'bg-accent font-semibold text-primary' : ''}`}>
-                  {status}
-                </div>
-              ))}
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-    </div>
-  );
+    return (
+        <Button
+            variant="outline"
+            className={cn(
+                "h-12 px-4 text-sm font-medium flex items-center gap-2 transition-colors",
+                isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70",
+                "hover:bg-accent hover:text-accent-foreground"
+            )}
+            {...props}
+        >
+            <Icon className={cn("h-4 w-4", isActive ? "text-primary" : "text-foreground/50")} />
+            <span>{getButtonText()}</span>
+            <ChevronDown className="h-4 w-4 text-foreground/40 ml-auto" />
+        </Button>
+    );
 };
 
-
 export function Residences() {
-  const [filters, setFilters] = useState({
-    type: 'All',
-    priceRange: [100000, 600000],
-    furnished: 'Any',
-  });
+    const [filters, setFilters] = useState({});
+    const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
 
-  const filteredUnits = units.filter(unit => {
-    const typeMatch = filters.type === 'All' || unit.type === filters.type;
-    const priceMatch = unit.rent >= filters.priceRange[0] && unit.rent <= filters.priceRange[1];
-    const furnishedMatch = filters.furnished === 'Any' || (filters.furnished === 'Furnished' && unit.furnished) || (filters.furnished === 'Unfurnished' && !unit.furnished);
+    const handleFilterChange = (filterKey, newValues) => {
+        setFilters(prev => {
+            const updated = { ...prev };
+            if (newValues && Object.keys(newValues).length > 0) {
+                updated[filterKey] = { ...(updated[filterKey] || {}), ...newValues };
+            } else {
+                delete updated[filterKey];
+            }
+            return updated;
+        });
+    };
+    
+    const handleSingleValueChange = (filterKey, value) => {
+        setFilters(prev => ({ ...prev, [filterKey]: { ...prev[filterKey], ...value } }));
+    };
 
-    return typeMatch && priceMatch && furnishedMatch;
-  });
+    const clearFilter = (filterKey) => {
+        setFilters(prev => {
+            const updated = { ...prev };
+            delete updated[filterKey];
+            return updated;
+        });
+    }
 
-  return (
+    const filteredUnits = useMemo(() => units.filter(unit => {
+        const { 'Unit Type': unitTypeFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters } = filters;
+
+        if (unitTypeFilter && unitTypeFilter.type && unit.type !== unitTypeFilter.type) return false;
+        
+        if (priceFilter) {
+            if (priceFilter.min_price && unit.rent < parseInt(priceFilter.min_price)) return false;
+            if (priceFilter.max_price && unit.rent > parseInt(priceFilter.max_price)) return false;
+        }
+
+        if (bedBathFilter) {
+            if (bedBathFilter.beds && bedBathFilter.beds !== 'Any') {
+                 if (bedBathFilter.beds === 'Studio' && unit.type !== 'Studio') return false;
+                 if (bedBathFilter.beds !== 'Studio' && unit.beds < parseInt(bedBathFilter.beds)) return false;
+            }
+            if (bedBathFilter.baths && bedBathFilter.baths !== 'Any' && unit.baths < parseInt(bedBathFilter.baths)) return false;
+        }
+        
+        if (moreFilters) {
+            if (moreFilters.furnishing && moreFilters.furnishing !== 'Any' && (moreFilters.furnishing === 'Furnished' ? !unit.furnished : unit.furnished)) return false;
+            if (moreFilters.min_area && unit.area < parseInt(moreFilters.min_area)) return false;
+            if (moreFilters.max_area && unit.area > parseInt(moreFilters.max_area)) return false;
+            if (moreFilters.amenities && moreFilters.amenities.length > 0) {
+                if (!moreFilters.amenities.every(amenity => unit.amenities.includes(amenity))) return false;
+            }
+        }
+        
+        return true;
+    }), [filters]);
+    
+    const renderFilterPopoverContent = (filterKey, close) => {
+        const currentValues = filters[filterKey] || {};
+
+        const contentProps = {
+            onValueChange: (value) => handleSingleValueChange(filterKey, value),
+            onApply: () => close(),
+            onClear: () => {
+                clearFilter(filterKey);
+                close();
+            },
+            values: currentValues
+        };
+
+        switch (filterKey) {
+            case 'Unit Type':
+                return <UnitTypeFilterPopover {...contentProps} />;
+            case 'Price':
+                return <PriceFilterPopover {...contentProps} />;
+            case 'Beds & Baths':
+                return <BedBathFilterPopover {...contentProps} />;
+            default:
+                return null;
+        }
+    };
+    
+    return (
     <section id="residences" className="w-full py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
@@ -216,8 +257,49 @@ export function Residences() {
           </p>
         </div>
 
-        <SearchBar onFilterChange={setFilters} />
+        {/* --- Search Bar --- */}
+        <div className="bg-background rounded-full shadow-lg p-2 border mb-12">
+            <div className="flex items-center gap-2 flex-wrap md:flex-nowrap">
+                <div className="relative flex-grow flex items-center w-full md:w-auto">
+                     <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
+                    <Input type="text" placeholder="Search by location (e.g. Churchill Towers)" className="w-full h-12 pl-12 pr-4 bg-transparent border-0 focus:ring-0" />
+                </div>
+                <div className="hidden md:block h-8 w-px bg-border"></div>
+                
+                {['Unit Type', 'Price', 'Beds & Baths'].map(key => (
+                    <Popover key={key}>
+                        <PopoverTrigger asChild>
+                            <FilterButton filterKey={key} filters={filters} />
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                            {({ close }) => renderFilterPopoverContent(key, close)}
+                        </PopoverContent>
+                    </Popover>
+                ))}
 
+                <Dialog>
+                    <DialogTrigger asChild>
+                         <FilterButton filterKey="More Filters" filters={filters} />
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl p-0">
+                        <MoreFiltersModal
+                            onApply={(values) => handleFilterChange('More Filters', values)}
+                            onClear={() => clearFilter('More Filters')}
+                            initialValues={filters['More Filters']}
+                            isExpanded={isAmenitiesExpanded}
+                            setIsExpanded={setIsAmenitiesExpanded}
+                        />
+                    </DialogContent>
+                </Dialog>
+
+                <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-full hover:opacity-90 transition-opacity flex-shrink-0 w-full md:w-auto">
+                    <Search className="w-5 h-5 mr-2"/>Find
+                </Button>
+            </div>
+        </div>
+
+
+        {/* --- Unit Listings --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredUnits.length > 0 ? (
             filteredUnits.map((unit, index) => (
@@ -254,7 +336,7 @@ export function Residences() {
                     <div className="space-y-3 text-muted-foreground">
                       <div className="flex items-center gap-2">
                         <Ruler className="w-5 h-5 text-primary" />
-                        <span>{unit.area}</span>
+                        <span>{unit.area.toLocaleString()} sq. ft.</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Eye className="w-5 h-5 text-primary" />
@@ -288,3 +370,168 @@ export function Residences() {
     </section>
   );
 }
+
+// --- Filter Popover Components ---
+
+const FilterPopoverFooter = ({ onApply, onClear }) => (
+    <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+        <Button variant="ghost" onClick={onClear}>Clear</Button>
+        <Button className="bg-primary-gradient text-primary-foreground" onClick={onApply}>Apply</Button>
+    </div>
+);
+
+const ControlButton = ({ value, selectedValue, onSelect, children, className }) => (
+    <Button
+        variant="outline"
+        className={cn("h-10", selectedValue === value && "bg-primary/10 border-primary text-primary", className)}
+        onClick={() => onSelect(value)}
+    >
+        {children || value}
+    </Button>
+);
+
+const UnitTypeFilterPopover = ({ onValueChange, values, onApply }) => {
+    const types = ['1 Bedroom', '2 Bedroom', '3 Bedroom', '4 Bedroom'];
+    return (
+        <div className="p-2 w-64">
+             <ul className="max-h-60 overflow-y-auto">
+                {types.map(type => {
+                    const isSelected = values.type === type;
+                    return (
+                         <li key={type}>
+                            <a href="#" onClick={(e) => { e.preventDefault(); onValueChange({ type }); onApply(); }} 
+                               className={cn('flex justify-between items-center p-2 text-sm rounded-md', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+                                <span>{type}</span> 
+                                {isSelected && <Check className="h-4 w-4" />}
+                            </a>
+                        </li>
+                    )
+                })}
+            </ul>
+        </div>
+    )
+};
+
+const PriceFilterPopover = ({ onValueChange, values, onApply, onClear }) => {
+    return (
+        <div className="w-96">
+            <div className="p-4 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                     <Input type="number" name="min_price" placeholder="Min. Price (AED)" value={values.min_price || ''} onChange={(e) => onValueChange({ min_price: e.target.value })} />
+                     <Input type="number" name="max_price" placeholder="Max. Price (AED)" value={values.max_price || ''} onChange={(e) => onValueChange({ max_price: e.target.value })} />
+                </div>
+                 <div>
+                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Rental Period</label>
+                    <div className="flex flex-wrap gap-2">
+                        {['Yearly', 'Monthly'].map(period => (
+                            <ControlButton key={period} value={period} selectedValue={values.period} onSelect={(val) => onValueChange({ period: val })}>{period}</ControlButton>
+                        ))}
+                    </div>
+                 </div>
+            </div>
+            <FilterPopoverFooter onApply={onApply} onClear={onClear} />
+        </div>
+    )
+}
+
+const BedBathFilterPopover = ({ onValueChange, values, onApply, onClear }) => {
+    const bedOptions = ['Studio', '1', '2', '3', '4+'];
+    const bathOptions = ['1', '2', '3', '4', '5+'];
+    return (
+        <div className="w-80">
+            <div className="p-4 space-y-4">
+                 <div>
+                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Bedrooms</label>
+                    <div className="flex flex-wrap gap-2">
+                        {bedOptions.map(o => <ControlButton key={o} value={o} selectedValue={values.beds} onSelect={(val) => onValueChange({ beds: val })}>{o}</ControlButton>)}
+                    </div>
+                 </div>
+                 <div>
+                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Bathrooms</label>
+                    <div className="flex flex-wrap gap-2">
+                        {bathOptions.map(o => <ControlButton key={o} value={o} selectedValue={values.baths} onSelect={(val) => onValueChange({ baths: val })}>{o}</ControlButton>)}
+                    </div>
+                 </div>
+            </div>
+            <FilterPopoverFooter onApply={onApply} onClear={onClear} />
+        </div>
+    )
+}
+
+
+const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsExpanded }) => {
+    const [localFilters, setLocalFilters] = useState(initialValues || {});
+
+    const handleValueChange = (key, value) => {
+        setLocalFilters(prev => ({...prev, [key]: value}));
+    }
+    
+    const handleAmenityChange = (amenity, checked) => {
+        const currentAmenities = localFilters.amenities || [];
+        const newAmenities = checked
+            ? [...currentAmenities, amenity]
+            : currentAmenities.filter(a => a !== amenity);
+        handleValueChange('amenities', newAmenities);
+    }
+    
+    const amenitiesToShow = isExpanded ? allAmenities : allAmenities.slice(0, 9);
+    
+    return (
+         <>
+            <DialogHeader className="p-6 border-b">
+              <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
+              <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+              </DialogClose>
+            </DialogHeader>
+
+            <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
+                 <div>
+                    <h4 className="font-semibold text-foreground mb-3">Furnishing</h4>
+                    <div className="flex flex-wrap gap-2">
+                         {['Any', 'Furnished', 'Unfurnished'].map(o => <ControlButton key={o} value={o} selectedValue={localFilters.furnishing || 'Any'} onSelect={(val) => handleValueChange('furnishing', val)}>{o}</ControlButton>)}
+                    </div>
+                </div>
+
+                <div>
+                    <h4 className="font-semibold text-foreground mb-3">Property Size (sq. ft.)</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                       <Input type="number" name="min_area" placeholder="Min. Area" value={localFilters.min_area || ''} onChange={e => handleValueChange('min_area', e.target.value)} />
+                       <Input type="number" name="max_area" placeholder="Max. Area" value={localFilters.max_area || ''} onChange={e => handleValueChange('max_area', e.target.value)} />
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 className="font-semibold text-foreground mb-3">Amenities</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                         {amenitiesToShow.map(o => (
+                             <label key={o} className="flex items-center gap-3 p-1 rounded-md hover:bg-accent cursor-pointer">
+                                 <Checkbox 
+                                     id={`amenity-${o}`}
+                                     checked={localFilters.amenities?.includes(o) || false}
+                                     onCheckedChange={(checked) => handleAmenityChange(o, checked)}
+                                 />
+                                 <span className="text-sm">{o}</span>
+                             </label>
+                         ))}
+                    </div>
+                    <Button variant="link" className="text-primary p-0 h-auto mt-4" onClick={() => setIsExpanded(!isExpanded)}>
+                        {isExpanded ? 'Show less' : 'Show more'}
+                    </Button>
+                </div>
+            </div>
+            
+            <div className="p-4 bg-secondary/50 border-t flex justify-end gap-2">
+                 <DialogClose asChild>
+                    <Button variant="ghost" onClick={() => { setLocalFilters({}); onClear(); }}>Clear All</Button>
+                 </DialogClose>
+                 <DialogClose asChild>
+                    <Button className="bg-primary-gradient text-primary-foreground" onClick={() => onApply(localFilters)}>Show Results</Button>
+                 </DialogClose>
+            </div>
+        </>
+    )
+}
+
+    
