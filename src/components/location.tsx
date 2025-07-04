@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
+import { useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, TowerControl, Train, Plane, MapPin } from 'lucide-react';
 
@@ -12,10 +13,10 @@ const destinations = [
 ]
 
 export function Location() {
-    const Map = dynamic(() => import('@/components/map'), {
+    const Map = useMemo(() => dynamic(() => import('@/components/map'), {
         ssr: false,
         loading: () => <div className="bg-muted w-full h-full flex items-center justify-center rounded-lg"><p>Loading map...</p></div>,
-    });
+    }), []);
 
     return (
         <section id="location" className="w-full py-16 md:py-24 bg-background">
