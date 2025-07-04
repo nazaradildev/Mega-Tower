@@ -285,7 +285,7 @@ export function Residences() {
 
         {/* --- Search Bar --- */}
         <div className="bg-white rounded-lg shadow-sm p-2 border mb-12">
-            <div className="flex flex-col md:flex-row items-center gap-2">
+            <div className="flex flex-col lg:flex-row items-center gap-2">
                 {/* Search Input Area */}
                 <div className="relative flex-grow w-full flex items-center gap-2 px-3 h-12">
                     <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
@@ -306,11 +306,11 @@ export function Residences() {
                     </div>
                 </div>
                 
-                <div className="hidden md:block h-8 w-px bg-border"></div>
+                <div className="hidden lg:block h-8 w-px bg-border"></div>
 
                 {/* Filters and Find Button Container */}
-                <div className="flex items-center gap-2 w-full md:w-auto flex-col sm:flex-row">
-                    <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full">
+                <div className="flex items-center gap-2 w-full lg:w-auto flex-col lg:flex-row">
+                    <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5 lg:flex">
                         {filterButtons.map(key => {
                           const trigger = (
                               <FilterButton filterKey={key} filters={filters} className="w-full" />
@@ -339,7 +339,7 @@ export function Residences() {
                       })}
                       <Dialog>
                             <DialogTrigger asChild>
-                                 <FilterButton filterKey="More Filters" filters={filters} className="w-full col-span-2"/>
+                                 <FilterButton filterKey="More Filters" filters={filters} className="w-full col-span-2 sm:col-span-1 md:col-span-2 lg:col-auto"/>
                             </DialogTrigger>
                             <DialogContent className="max-w-2xl p-0 flex flex-col">
                                 <MoreFiltersModal
@@ -355,7 +355,7 @@ export function Residences() {
                         </Dialog>
                     </div>
                     
-                    <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity flex-shrink-0 w-full sm:w-auto">
+                    <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity flex-shrink-0 w-full lg:w-auto">
                         Find
                     </Button>
                 </div>
@@ -487,7 +487,7 @@ const ControlButton = ({ value, selectedValue, onSelect, children, className }) 
     </Button>
 );
 
-const RentFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
+const RentFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
     const types = ['Rent', 'Buy'];
     const buttonContent = (type) => {
         const isSelected = values.type === type;
@@ -512,11 +512,12 @@ const RentFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) 
                 {types.map(buttonContent)}
             </ul>
         </div>
+        {!isMobile && <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />}
       </>
     )
 };
 
-const UnitTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
+const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
     const types = ['Apartment', 'Penthouse', 'Villa', 'Townhouse'];
     const buttonContent = (type) => {
         const isSelected = values.type === type;
@@ -528,19 +529,20 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title
               {isSelected && <Check className="h-4 w-4" />}
             </button>
         );
-        if (isMobile) {
-            return <li key={type}>{isMobile ? <DialogClose asChild>{button}</DialogClose> : button}</li>;
+         if (isMobile) {
+            return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
         }
         return <li key={type}>{button}</li>;
     };
     return (
         <>
-        {isMobile && <FilterHeader title="Property Type" />}
+        {isMobile && <FilterHeader title={title} />}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
             </ul>
         </div>
+        {!isMobile && <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />}
       </>
     )
 };
@@ -675,5 +677,7 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
+
+    
 
     
