@@ -414,16 +414,18 @@ const FilterHeader = ({ title }) => (
   </DialogHeader>
 );
 
-const FilterPopoverFooter = ({ onApply, onClear }) => (
-    <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-        <DialogClose asChild>
-            <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
-        </DialogClose>
-        <DialogClose asChild>
-            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
-        </DialogClose>
-    </div>
-);
+const FilterPopoverFooter = ({ onApply, onClear, isMobile }) => {
+    const clearButton = <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>;
+    const applyButton = <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>;
+
+    return (
+        <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+            {isMobile ? <DialogClose asChild>{clearButton}</DialogClose> : clearButton}
+            {isMobile ? <DialogClose asChild>{applyButton}</DialogClose> : applyButton}
+        </div>
+    );
+};
+
 
 const ControlButton = ({ value, selectedValue, onSelect, children, className }) => (
     <Button
@@ -448,17 +450,18 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(type => {
                     const isSelected = values.type === type;
+                    const button = (
+                         <button
+                          onClick={() => { onValueChange({ type }); onApply(); }} 
+                          className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+                          <span>{type}</span> 
+                          {isSelected && <Check className="h-4 w-4" />}
+                        </button>
+                    );
                     return (
                          <li key={type}>
-                            <DialogClose asChild={isMobile}>
-                                <button
-                                  onClick={() => { onValueChange({ type }); onApply(); }} 
-                                  className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
-                                  <span>{type}</span> 
-                                  {isSelected && <Check className="h-4 w-4" />}
-                                </button>
-                            </DialogClose>
-                        </li>
+                           {isMobile ? <DialogClose asChild>{button}</DialogClose> : button}
+                         </li>
                     )
                 })}
             </ul>
@@ -486,7 +489,7 @@ const PriceFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile,
                     </div>
                  </div>
             </div>
-            <FilterPopoverFooter onApply={onApply} onClear={onClear} />
+            <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
         </div>
       </>
     )
@@ -516,7 +519,7 @@ const BedBathFilterPopover = ({ onValueChange, values, onApply, onClear, isMobil
                         </div>
                      </div>
                 </div>
-                <FilterPopoverFooter onApply={onApply} onClear={onClear} />
+                <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
             </div>
         </>
     )
@@ -597,5 +600,3 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
-
-    
