@@ -30,7 +30,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-1">
-        <section className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center">
+        <section className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             {heroImages.map((image, index) => (
                <Image
@@ -39,7 +39,9 @@ export default function Home() {
                 alt={image.alt}
                 data-ai-hint={image.hint}
                 fill
-                className={`object-cover transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                className={`object-cover transition-opacity duration-1000 ease-in-out ${
+                  index === currentImageIndex ? 'opacity-100 animate-zoom-in-ken-burns' : 'opacity-0'
+                }`}
                 priority={index === 0}
               />
             ))}
