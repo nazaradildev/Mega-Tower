@@ -1,7 +1,5 @@
 "use client";
 
-import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, TowerControl, Train, Plane, MapPin } from 'lucide-react';
 
@@ -13,11 +11,6 @@ const destinations = [
 ]
 
 export function Location() {
-    const Map = useMemo(() => dynamic(() => import('@/components/map'), {
-        ssr: false,
-        loading: () => <div className="bg-muted w-full h-full flex items-center justify-center rounded-lg"><p>Loading map...</p></div>,
-    }), []);
-
     return (
         <section id="location" className="w-full py-16 md:py-24 bg-background">
             <div className="container mx-auto px-4 md:px-6">
@@ -46,8 +39,8 @@ export function Location() {
                            ))}
                         </div>
                     </div>
-                    <div className="h-96 lg:h-[500px] w-full">
-                       <Map />
+                    <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg flex items-center justify-center">
+                       <p className="text-muted-foreground">Map feature is temporarily disabled.</p>
                     </div>
                 </div>
             </div>
