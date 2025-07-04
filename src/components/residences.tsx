@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
-import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Bath, Wallet, SlidersHorizontal, Building2, X } from 'lucide-react';
+import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Bath, Wallet, SlidersHorizontal, Building2, X, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -140,6 +140,7 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
                 if (data.baths) bedParts.push(`${data.baths} Bath`);
                 return bedParts.join(', ') || filterKey;
             default:
+                if (data && Object.keys(data).length > 0) return `More Filters (${Object.keys(data).length})`
                 return filterKey;
         }
     };
@@ -167,6 +168,11 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
 export function Residences() {
     const [filters, setFilters] = useState({});
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
+    const [openPopovers, setOpenPopovers] = useState({});
+
+    const handlePopoverOpenChange = (filterKey, isOpen) => {
+        setOpenPopovers(prev => ({ ...prev, [filterKey]: isOpen }));
+    };
 
     const handleFilterChange = (filterKey, newValues) => {
         setFilters(prev => {
@@ -198,22 +204,22 @@ export function Residences() {
         if (unitTypeFilter && unitTypeFilter.type && unit.type !== unitTypeFilter.type) return false;
         
         if (priceFilter) {
-            if (priceFilter.min_price && unit.rent < parseInt(priceFilter.min_price)) return false;
-            if (priceFilter.max_price && unit.rent > parseInt(priceFilter.max_price)) return false;
+            if (priceFilter.min_price && unit.rent < parseInt(priceFilter.min_price, 10)) return false;
+            if (priceFilter.max_price && unit.rent > parseInt(priceFilter.max_price, 10)) return false;
         }
 
         if (bedBathFilter) {
             if (bedBathFilter.beds && bedBathFilter.beds !== 'Any') {
                  if (bedBathFilter.beds === 'Studio' && unit.type !== 'Studio') return false;
-                 if (bedBathFilter.beds !== 'Studio' && unit.beds < parseInt(bedBathFilter.beds)) return false;
+                 if (bedBathFilter.beds !== 'Studio' && !isNaN(parseInt(bedBathFilter.beds, 10)) && unit.beds < parseInt(bedBathFilter.beds, 10)) return false;
             }
-            if (bedBathFilter.baths && bedBathFilter.baths !== 'Any' && unit.baths < parseInt(bedBathFilter.baths)) return false;
+            if (bedBathFilter.baths && bedBathFilter.baths !== 'Any' && !isNaN(parseInt(bedBathFilter.baths, 10)) && unit.baths < parseInt(bedBathFilter.baths, 10)) return false;
         }
         
         if (moreFilters) {
             if (moreFilters.furnishing && moreFilters.furnishing !== 'Any' && (moreFilters.furnishing === 'Furnished' ? !unit.furnished : unit.furnished)) return false;
-            if (moreFilters.min_area && unit.area < parseInt(moreFilters.min_area)) return false;
-            if (moreFilters.max_area && unit.area > parseInt(moreFilters.max_area)) return false;
+            if (moreFilters.min_area && unit.area < parseInt(moreFilters.min_area, 10)) return false;
+            if (moreFilters.max_area && unit.area > parseInt(moreFilters.max_area, 10)) return false;
             if (moreFilters.amenities && moreFilters.amenities.length > 0) {
                 if (!moreFilters.amenities.every(amenity => unit.amenities.includes(amenity))) return false;
             }
@@ -222,15 +228,16 @@ export function Residences() {
         return true;
     }), [filters]);
     
-    const renderFilterPopoverContent = (filterKey, close) => {
+    const renderFilterPopoverContent = (filterKey) => {
+        const closePopover = () => handlePopoverOpenChange(filterKey, false);
         const currentValues = filters[filterKey] || {};
 
         const contentProps = {
             onValueChange: (value) => handleSingleValueChange(filterKey, value),
-            onApply: () => close(),
+            onApply: closePopover,
             onClear: () => {
                 clearFilter(filterKey);
-                close();
+                closePopover();
             },
             values: currentValues
         };
@@ -267,12 +274,12 @@ export function Residences() {
                 <div className="hidden md:block h-8 w-px bg-border"></div>
                 
                 {['Unit Type', 'Price', 'Beds & Baths'].map(key => (
-                    <Popover key={key}>
+                    <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
                         <PopoverTrigger asChild>
                             <FilterButton filterKey={key} filters={filters} />
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
-                            {({ close }) => renderFilterPopoverContent(key, close)}
+                            {renderFilterPopoverContent(key)}
                         </PopoverContent>
                     </Popover>
                 ))}
@@ -399,11 +406,12 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply }) => {
                     const isSelected = values.type === type;
                     return (
                          <li key={type}>
-                            <a href="#" onClick={(e) => { e.preventDefault(); onValueChange({ type }); onApply(); }} 
-                               className={cn('flex justify-between items-center p-2 text-sm rounded-md', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+                            <button
+                               onClick={() => { onValueChange({ type }); onApply(); }} 
+                               className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
                                 <span>{type}</span> 
                                 {isSelected && <Check className="h-4 w-4" />}
-                            </a>
+                            </button>
                         </li>
                     )
                 })}
@@ -510,7 +518,7 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
                                  <Checkbox 
                                      id={`amenity-${o}`}
                                      checked={localFilters.amenities?.includes(o) || false}
-                                     onCheckedChange={(checked) => handleAmenityChange(o, checked)}
+                                     onCheckedChange={(checked) => handleAmenityChange(o, !!checked)}
                                  />
                                  <span className="text-sm">{o}</span>
                              </label>
@@ -533,5 +541,3 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
-
-    
