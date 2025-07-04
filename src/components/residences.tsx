@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,15 +15,16 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 
 
 const units = [
   {
-    type: '2 Bedroom',
+    type: '1 Bedroom',
     propertyType: 'Apartment',
-    beds: 2,
-    baths: 3,
-    title: 'Two-Bedroom Apartment - Type C',
+    beds: 1,
+    baths: 2,
+    title: 'One-Bedroom with Burj & Canal View',
     images: [
         'https://www.propertyfinder.ae/property/1841ae8e8c256855ce7d0e30ef6ef82f/1312/894/MODE/ad484c/14446875-0682co.jpg?ctr=ae',
         'https://www.propertyfinder.ae/property/cf729a31177dd42be68fe373c5cdb16b/1312/894/MODE/dcd8c0/14446875-646c3o.jpg?ctr=ae',
@@ -39,10 +40,10 @@ const units = [
         'https://www.propertyfinder.ae/property/2d8384c5a9b78a4404f7f1758f82f3df/1312/894/MODE/8833d6/14446875-c093ao.jpg?ctr=ae'
     ],
     aiHint: 'luxury living room',
-    area: 1450,
-    view: 'Burj Khalifa View',
+    area: 781,
+    view: 'Burj Khalifa & Canal View',
     status: 'Available Now',
-    rent: 220000,
+    rent: 88000,
     furnished: true,
     exclusive: true,
     verified: true,
@@ -337,7 +338,7 @@ export function Residences() {
     
     return (
     <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
-      <div className="container mx-auto px-2 md:px-6">
+      <div className="container mx-auto px-1 md:px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-headline">Find Your Perfect Home</h2>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
@@ -504,51 +505,51 @@ const Icon360 = (props) => (
 );
 
 const UnitCard = ({ unit }) => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const images = unit.images;
+    const [api, setApi] = useState<CarouselApi>()
+    const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-    const nextImage = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    };
-
-    const prevImage = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    };
-
-    const goToImage = (index) => {
-        setCurrentImageIndex(index);
-    }
+    useEffect(() => {
+        if (!api) {
+          return
+        }
     
+        setCurrentImageIndex(api.selectedScrollSnap())
+        const onSelect = () => {
+          setCurrentImageIndex(api.selectedScrollSnap())
+        }
+        api.on("select", onSelect)
+    
+        return () => {
+          api.off("select", onSelect)
+        }
+    }, [api])
+
     return (
         <Card className="w-full max-w-4xl mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
             {/* Image Section */}
-            <div className="relative w-full group/image">
-                <Image
-                    key={currentImageIndex} 
-                    src={images[currentImageIndex]}
-                    alt={`${unit.title} - Image ${currentImageIndex + 1}`}
-                    data-ai-hint={unit.aiHint}
-                    width={800}
-                    height={450}
-                    className="w-full h-full object-cover aspect-[4/3] sm:aspect-video"
-                />
+            <Carousel setApi={setApi} className="relative w-full group/image">
+                <CarouselContent>
+                    {unit.images.map((imgSrc, index) => (
+                         <CarouselItem key={index}>
+                            <Image
+                                src={imgSrc}
+                                alt={`${unit.title} - Image ${index + 1}`}
+                                data-ai-hint={unit.aiHint}
+                                width={800}
+                                height={450}
+                                className="w-full h-full object-cover aspect-[4/3] sm:aspect-video"
+                            />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
+                <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
                 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
-                
-                <Button onClick={prevImage} size="icon" variant="secondary" className="absolute top-1/2 -translate-y-1/2 left-3 rounded-full h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10">
-                    <ChevronLeft className="w-5 h-5" />
-                </Button>
-                <Button onClick={nextImage} size="icon" variant="secondary" className="absolute top-1/2 -translate-y-1/2 right-3 rounded-full h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10">
-                    <ChevronRight className="w-5 h-5" />
-                </Button>
 
                 <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-2 z-10">
-                    {images.map((_, index) => (
-                        <button key={index} onClick={() => goToImage(index)} className="p-1" aria-label={`Go to image ${index + 1}`}>
+                    {unit.images.map((_, index) => (
+                        <button key={index} onClick={() => api?.scrollTo(index)} className="p-1" aria-label={`Go to image ${index + 1}`}>
                              <div className={cn("w-2 h-2 rounded-full border-2 transition-all", 
                                 currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80 bg-black/30'
                             )}></div>
@@ -558,9 +559,9 @@ const UnitCard = ({ unit }) => {
 
                 <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
                     <Camera className="w-4 h-4" />
-                    <span>{images.length}</span>
+                    <span>{unit.images.length}</span>
                 </div>
-            </div>
+            </Carousel>
 
             {/* Main Content */}
             <div className="p-4 flex-grow">
@@ -631,13 +632,13 @@ const UnitCard = ({ unit }) => {
                 </div>
                 <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2 w-full sm:w-auto">
                     <div className="grid grid-cols-3 gap-2">
-                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span>Call</span> </Button>
-                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span>Email</span> </Button>
+                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden sm:inline">Call</span> </Button>
+                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden sm:inline">Email</span> </Button>
                         <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
                               <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
                             </svg>
-                            <span>WhatsApp</span>
+                            <span className="hidden sm:inline">WhatsApp</span>
                         </Button>
                     </div>
                     <div className="flex items-center justify-center gap-0">
@@ -905,5 +906,7 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
+
+    
 
     
