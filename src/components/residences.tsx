@@ -39,7 +39,7 @@ const units = [
         'https://www.propertyfinder.ae/property/012571b5c67710829530f313ee90c40e/1312/894/MODE/679eb1/14446875-dd0e7o.jpg?ctr=ae',
         'https://www.propertyfinder.ae/property/2d8384c5a9b78a4404f7f1758f82f3df/1312/894/MODE/8833d6/14446875-c093ao.jpg?ctr=ae'
     ],
-    floorPlanImage: 'https://placehold.co/800x1100.png',
+    floorPlanImage: '/1-bed-type-1.png',
     aiHint: 'luxury living room',
     area: 781,
     view: 'Burj Khalifa & Canal View',
@@ -574,7 +574,7 @@ const UnitCard = ({ unit }) => {
                 <div className="p-4 flex flex-col">
                     <div className="flex justify-between items-start">
                         <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
-                        <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
+                        
                     </div>
 
                     <p className="text-2xl font-bold text-foreground my-1">
@@ -626,7 +626,7 @@ const UnitCard = ({ unit }) => {
                                 <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none" disabled={!unit.floorPlanImage}> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
                             </DialogTrigger>
                             {unit.floorPlanImage && (
-                                <DialogContent className="max-w-[95vw] w-full sm:max-w-lg p-2">
+                                <DialogContent className="p-2 w-[95vw] max-w-lg">
                                     <DialogHeader className="p-2">
                                         <DialogTitle className="text-base sm:text-lg truncate">Floor Plan: {unit.title}</DialogTitle>
                                     </DialogHeader>
