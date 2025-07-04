@@ -15,9 +15,9 @@ export default function Home() {
         <section className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center">
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://placehold.co/1920x1080.png"
-              alt="Luxury apartment building in Dubai with a clear blue sky"
-              data-ai-hint="luxury apartment building"
+              src="/hero-background.jpg"
+              alt="Dubai cityscape at night"
+              data-ai-hint="dubai cityscape night"
               fill
               className="object-cover"
               priority
