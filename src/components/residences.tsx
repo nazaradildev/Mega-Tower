@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogTrigger } from '@/components/ui/dialog';
-import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Bell } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -183,6 +184,7 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
 
 export function Residences() {
     const [filters, setFilters] = useState({});
+    const [sortOption, setSortOption] = useState('Newest');
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
     const [openPopovers, setOpenPopovers] = useState({});
     const isMobile = useIsMobile();
@@ -260,6 +262,29 @@ export function Residences() {
         
         return true;
     }), [filters]);
+
+    const sortedUnits = useMemo(() => {
+        const unitsToSort = [...filteredUnits];
+        switch (sortOption) {
+            case 'Price (low to high)':
+                unitsToSort.sort((a, b) => a.rent - b.rent);
+                break;
+            case 'Price (high to low)':
+                unitsToSort.sort((a, b) => b.rent - a.rent);
+                break;
+            case 'Beds (most to least)':
+                unitsToSort.sort((a, b) => b.beds - a.beds);
+                break;
+            case 'Beds (least to most)':
+                unitsToSort.sort((a, b) => a.beds - b.beds);
+                break;
+            case 'Newest':
+            default:
+                // The original order is assumed to be 'Newest'.
+                break;
+        }
+        return unitsToSort;
+    }, [filteredUnits, sortOption]);
     
     const renderFilterPopoverContent = (filterKey) => {
         const closePopover = () => handlePopoverOpenChange(filterKey, false);
@@ -407,9 +432,24 @@ export function Residences() {
                 Map view
               </Button>
               <Button variant="outline" className="rounded-lg w-full sm:w-auto justify-center">
-                <Bell className="mr-2 h-4 w-4" />
-                Create alert
+                <Video className="mr-2 h-4 w-4" />
+                Virtual tour
               </Button>
+               <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="rounded-lg w-full sm:w-auto justify-center data-[state=open]:bg-accent">
+                        Sort by: {sortOption}
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
@@ -417,8 +457,8 @@ export function Residences() {
 
         {/* --- Unit Listings --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredUnits.length > 0 ? (
-            filteredUnits.map((unit, index) => (
+          {sortedUnits.length > 0 ? (
+            sortedUnits.map((unit, index) => (
               <Card key={index} className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-background">
                 <CardContent className="p-0">
                   <div className="relative">
@@ -492,6 +532,10 @@ export function Residences() {
 const FilterHeader = ({ title }) => (
     <DialogHeader className="p-4 border-b">
         <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
+        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+      </DialogClose>
     </DialogHeader>
 );
 
@@ -672,6 +716,10 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
          <>
             <DialogHeader className="p-6 border-b">
               <DialogTitle className="text-2xl font-headline text-center">More Filters</DialogTitle>
+                <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                    <X className="h-4 w-4" />
+                    <span className="sr-only">Close</span>
+                </DialogClose>
             </DialogHeader>
 
             <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
@@ -728,5 +776,7 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
 
 
 
+
+    
 
     
