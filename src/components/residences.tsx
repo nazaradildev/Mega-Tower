@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogTrigger } from '@/components/ui/dialog';
-import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Bath, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, CalendarDays, KeyRound } from 'lucide-react';
+import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -128,7 +128,9 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
         if (!data || Object.keys(data).length === 0) {
             if (filterKey === 'Apartment') return 'Property Type';
             if (filterKey === 'Rent') return 'Rent';
-            return filterKey;
+            if (filterKey === 'Beds & Baths') return 'Beds & Baths';
+            if (filterKey === 'Price') return 'Price';
+            return 'More Filters';
         }
 
         switch (filterKey) {
@@ -145,14 +147,14 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
                 const bedParts = [];
                 if (data.beds) bedParts.push(`${data.beds} ${data.beds === 'Studio' ? '' : 'Bed'}`);
                 if (data.baths) bedParts.push(`${data.baths} Bath`);
-                return bedParts.join(', ') || filterKey;
+                return bedParts.join(', ') || 'Beds & Baths';
             default:
                 if (data && Object.values(data).flat().length > 0) return `More Filters (${Object.values(data).flat().length})`
-                return filterKey;
+                return 'More Filters';
         }
     };
 
-    const isActive = filters[filterKey] && Object.keys(filters[filterKey]).length > 0;
+    const isActive = filters[filterKey] && Object.values(filters[filterKey]).some(v => v && (Array.isArray(v) ? v.length > 0 : true));
     
     const iconMap = {
       'Rent': KeyRound,
@@ -167,7 +169,7 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
         <Button
             variant="outline"
             className={cn(
-                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full justify-center",
+                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full justify-start md:justify-center",
                 isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70 border-border",
                 "hover:bg-accent hover:text-accent-foreground rounded-lg"
             )}
@@ -213,11 +215,11 @@ export function Residences() {
             delete updated[filterKey];
             return updated;
         });
-    }
+    };
     
     const removeSearchTag = (tagToRemove) => {
         setSearchTags(prev => prev.filter(tag => tag !== tagToRemove));
-    }
+    };
     
     const addSearchTag = (e) => {
         if (e.key === 'Enter' && inputValue.trim() !== '') {
@@ -225,7 +227,7 @@ export function Residences() {
             setInputValue('');
             e.preventDefault();
         }
-    }
+    };
 
     const filteredUnits = useMemo(() => units.filter(unit => {
         const { 'Rent': rentFilter, 'Apartment': apartmentFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters } = filters;
@@ -301,7 +303,7 @@ export function Residences() {
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-3 border mb-12">
+        <div className="bg-white rounded-lg shadow-sm p-3 border mb-8">
             <div className="flex flex-col md:flex-row items-center gap-3">
                 <div className="relative flex-grow w-full flex items-center gap-2 p-1 pl-3 rounded-lg bg-gray-50 border border-gray-200 h-12">
                     <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
@@ -326,7 +328,7 @@ export function Residences() {
                 </div>
 
                 <div className="flex items-center gap-2 w-full md:w-auto">
-                    <div className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:flex gap-2">
+                    <div className="grid w-full grid-cols-2 md:grid-cols-none md:flex gap-2">
                       {filterButtons.map(key => {
                           const trigger = (
                               <FilterButton filterKey={key} filters={filters} />
@@ -355,7 +357,7 @@ export function Residences() {
                       })}
                       <Dialog>
                             <DialogTrigger asChild>
-                                 <FilterButton filterKey="More Filters" filters={filters} className="col-span-2 sm:col-span-2 md:col-span-1 lg:col-auto"/>
+                                 <FilterButton filterKey="More Filters" filters={filters}/>
                             </DialogTrigger>
                             <DialogContent className="max-w-2xl p-0 flex flex-col">
                                 <MoreFiltersModal
@@ -372,6 +374,44 @@ export function Residences() {
                     </div>
                 </div>
             </div>
+        </div>
+
+        {/* --- Results Header --- */}
+        <div className="mb-8">
+          <nav aria-label="Breadcrumb" className="mb-4">
+            <ol className="flex items-center gap-1.5 text-sm text-muted-foreground flex-wrap">
+              <li>
+                <a href="#" className="flex items-center gap-1 hover:text-primary transition-colors">
+                  <Home className="h-4 w-4" />
+                </a>
+              </li>
+              <li><ChevronRight className="h-4 w-4" /></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Apartments for rent in Dubai</a></li>
+              <li><ChevronRight className="h-4 w-4" /></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Business Bay</a></li>
+              <li><ChevronRight className="h-4 w-4" /></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Churchill Towers</a></li>
+              <li><ChevronRight className="h-4 w-4" /></li>
+              <li><span className="font-medium text-foreground truncate">Apartments for rent in Churchill Residency Tower, Churchill Towers</span></li>
+            </ol>
+          </nav>
+
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower, Churchill Towers</h1>
+              <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Button variant="outline" className="rounded-lg w-full sm:w-auto justify-center">
+                <MapPin className="mr-2 h-4 w-4" />
+                Map view
+              </Button>
+              <Button variant="outline" className="rounded-lg w-full sm:w-auto justify-center">
+                <Bell className="mr-2 h-4 w-4" />
+                Create alert
+              </Button>
+            </div>
+          </div>
         </div>
 
 
@@ -450,9 +490,9 @@ export function Residences() {
 // --- Filter Popover Components ---
 
 const FilterHeader = ({ title }) => (
-  <DialogHeader className="p-4 border-b">
-    <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
-  </DialogHeader>
+    <DialogHeader className="p-4 border-b">
+        <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
+    </DialogHeader>
 );
 
 const FilterPopoverFooter = ({ onApply, onClear, isMobile }) => {
@@ -686,3 +726,7 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
 
     
 
+
+
+
+    
