@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogTrigger } from '@/components/ui/dialog';
 import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Bath, Wallet, SlidersHorizontal, Building2, X, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -125,11 +125,14 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
     
     const getButtonText = () => {
         const data = filters[filterKey];
-        if (!data || Object.keys(data).length === 0) return filterKey;
+        if (!data || Object.keys(data).length === 0) {
+            if (filterKey === 'Apartment') return 'Property Type';
+            return filterKey;
+        }
 
         switch (filterKey) {
             case 'Apartment':
-                return data.type || filterKey;
+                return data.type || 'Property Type';
             case 'Rent':
                 return data.type || filterKey;
             case 'Price':
@@ -143,7 +146,7 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
                 if (data.baths) bedParts.push(`${data.baths} Bath`);
                 return bedParts.join(', ') || filterKey;
             default:
-                if (data && Object.keys(data).length > 0) return `More Filters (${Object.values(data).flat().length})`
+                if (data && Object.values(data).flat().length > 0) return `More Filters (${Object.values(data).flat().length})`
                 return filterKey;
         }
     };
@@ -156,7 +159,8 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
             className={cn(
                 "h-11 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full sm:w-auto justify-between",
                 isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70 border-border",
-                "hover:bg-accent hover:text-accent-foreground rounded-md"
+                "hover:bg-accent hover:text-accent-foreground rounded-md",
+                props.className
             )}
             {...props}
         >
@@ -208,7 +212,7 @@ export function Residences() {
     const filteredUnits = useMemo(() => units.filter(unit => {
         const { 'Rent': rentFilter, 'Apartment': apartmentFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters } = filters;
 
-        if (rentFilter?.type === 'Buy') return false; // Simple example: all units are for rent
+        if (rentFilter?.type && rentFilter.type !== 'Rent') return false;
         
         if (apartmentFilter?.type && unit.propertyType !== apartmentFilter.type) return false;
 
@@ -257,7 +261,7 @@ export function Residences() {
             case 'Rent':
                 return <RentFilterPopover {...contentProps} />;
             case 'Apartment':
-                return <ApartmentTypeFilterPopover {...contentProps} />;
+                return <UnitTypeFilterPopover {...contentProps} />;
             case 'Price':
                 return <PriceFilterPopover {...contentProps} />;
             case 'Beds & Baths':
@@ -280,9 +284,10 @@ export function Residences() {
         </div>
 
         {/* --- Search Bar --- */}
-        <div className="bg-white rounded-lg shadow-sm p-1.5 border mb-12">
-            <div className="flex items-center gap-1 md:gap-2 flex-wrap md:flex-nowrap">
-                <div className="relative flex-grow flex items-center gap-2 px-3 h-12">
+        <div className="bg-white rounded-lg shadow-sm p-2 border mb-12">
+            <div className="flex flex-col md:flex-row items-center gap-2">
+                {/* Search Input Area */}
+                <div className="relative flex-grow w-full flex items-center gap-2 px-3 h-12">
                     <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                     <div className="flex items-center gap-1.5 flex-wrap">
                         {searchTags.map(tag => (
@@ -301,60 +306,59 @@ export function Residences() {
                     </div>
                 </div>
                 
-                <div className="hidden md:block h-8 w-px bg-border mx-1"></div>
-                
-                <div className="flex items-center gap-1 md:gap-2 w-full md:w-auto px-2 md:px-0">
-                    {filterButtons.map(key => {
-                      const trigger = (
-                        <div key={key} className={cn("relative", key === 'Rent' && "pr-2")}>
-                          <FilterButton filterKey={key} filters={filters} className="w-full"/>
-                          {key === 'Rent' && <span className="absolute -top-1.5 -right-0.5 text-[10px] bg-primary text-primary-foreground font-bold px-1.5 py-0.5 rounded-full z-10 select-none">NEW</span>}
-                        </div>
-                      );
-                      const content = renderFilterPopoverContent(key);
+                <div className="hidden md:block h-8 w-px bg-border"></div>
 
-                      if (isMobile) {
-                          return (
-                              <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                                  <DialogTrigger asChild>{trigger}</DialogTrigger>
-                                  <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
-                                      {content}
-                                  </DialogContent>
-                              </Dialog>
+                {/* Filters and Find Button Container */}
+                <div className="flex items-center gap-2 w-full md:w-auto flex-col sm:flex-row">
+                    <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full">
+                        {filterButtons.map(key => {
+                          const trigger = (
+                              <FilterButton filterKey={key} filters={filters} className="w-full" />
                           );
-                      }
+                          const content = renderFilterPopoverContent(key);
 
-                      return (
-                          <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                              <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
-                                  {content}
-                              </PopoverContent>
-                          </Popover>
-                      );
-                  })}
+                          if (isMobile) {
+                              return (
+                                  <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                                      <DialogTrigger asChild>{trigger}</DialogTrigger>
+                                      <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
+                                          {content}
+                                      </DialogContent>
+                                  </Dialog>
+                              );
+                          }
 
-                  <Dialog>
-                      <DialogTrigger asChild>
-                           <FilterButton filterKey="More Filters" filters={filters} />
-                      </DialogTrigger>
-                      <DialogContent className="max-w-2xl p-0 flex flex-col">
-                          <MoreFiltersModal
-                              onApply={(values) => {
-                                handleFilterChange('More Filters', values);
-                              }}
-                              onClear={() => clearFilter('More Filters')}
-                              initialValues={filters['More Filters']}
-                              isExpanded={isAmenitiesExpanded}
-                              setIsExpanded={setIsAmenitiesExpanded}
-                          />
-                      </DialogContent>
-                  </Dialog>
+                          return (
+                              <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                                  <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+                                  <PopoverContent className="w-auto p-0" align="start">
+                                      {content}
+                                  </PopoverContent>
+                              </Popover>
+                          );
+                      })}
+                      <Dialog>
+                            <DialogTrigger asChild>
+                                 <FilterButton filterKey="More Filters" filters={filters} className="w-full col-span-2"/>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl p-0 flex flex-col">
+                                <MoreFiltersModal
+                                    onApply={(values) => {
+                                      handleFilterChange('More Filters', values);
+                                    }}
+                                    onClear={() => clearFilter('More Filters')}
+                                    initialValues={filters['More Filters']}
+                                    isExpanded={isAmenitiesExpanded}
+                                    setIsExpanded={setIsAmenitiesExpanded}
+                                />
+                            </DialogContent>
+                        </Dialog>
+                    </div>
+                    
+                    <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity flex-shrink-0 w-full sm:w-auto">
+                        Find
+                    </Button>
                 </div>
-
-                <Button size="lg" className="h-12 px-8 bg-primary-gradient text-primary-foreground font-bold rounded-lg hover:opacity-90 transition-opacity flex-shrink-0 w-full md:w-auto">
-                    Find
-                </Button>
             </div>
         </div>
 
@@ -447,10 +451,23 @@ const FilterPopoverFooter = ({ onApply, onClear, isMobile }) => {
     const clearButton = <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>;
     const applyButton = <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>;
 
+    if (isMobile) {
+        return (
+             <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+                <DialogClose asChild>
+                    <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
+                </DialogClose>
+                <DialogClose asChild>
+                    <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+                </DialogClose>
+            </div>
+        )
+    }
+
     return (
         <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-            {isMobile ? <DialogClose asChild>{clearButton}</DialogClose> : clearButton}
-            {isMobile ? <DialogClose asChild>{applyButton}</DialogClose> : applyButton}
+            {clearButton}
+            {applyButton}
         </div>
     );
 };
@@ -472,54 +489,56 @@ const ControlButton = ({ value, selectedValue, onSelect, children, className }) 
 
 const RentFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
     const types = ['Rent', 'Buy'];
+    const buttonContent = (type) => {
+        const isSelected = values.type === type;
+        const button = (
+            <button
+              onClick={() => { onValueChange({ type }); onApply(); }} 
+              className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+              <span>{type}</span> 
+              {isSelected && <Check className="h-4 w-4" />}
+            </button>
+        );
+        if (isMobile) {
+            return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
+        }
+        return <li key={type}>{button}</li>;
+    }
     return (
         <>
         {isMobile && <FilterHeader title={title} />}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
-                {types.map(type => {
-                    const isSelected = values.type === type;
-                    const button = (
-                         <button
-                          onClick={() => { onValueChange({ type }); onApply(); }} 
-                          className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
-                          <span>{type}</span> 
-                          {isSelected && <Check className="h-4 w-4" />}
-                        </button>
-                    );
-                    if (isMobile) {
-                        return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
-                    }
-                    return <li key={type}>{button}</li>;
-                })}
+                {types.map(buttonContent)}
             </ul>
         </div>
       </>
     )
 };
 
-const ApartmentTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
+const UnitTypeFilterPopover = ({ onValueChange, values, onApply, isMobile, title }) => {
     const types = ['Apartment', 'Penthouse', 'Villa', 'Townhouse'];
+    const buttonContent = (type) => {
+        const isSelected = values.type === type;
+        const button = (
+            <button
+              onClick={() => { onValueChange({ type }); onApply(); }} 
+              className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+              <span>{type}</span> 
+              {isSelected && <Check className="h-4 w-4" />}
+            </button>
+        );
+        if (isMobile) {
+            return <li key={type}>{isMobile ? <DialogClose asChild>{button}</DialogClose> : button}</li>;
+        }
+        return <li key={type}>{button}</li>;
+    };
     return (
         <>
-        {isMobile && <FilterHeader title={title} />}
+        {isMobile && <FilterHeader title="Property Type" />}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
-                {types.map(type => {
-                    const isSelected = values.type === type;
-                    const button = (
-                         <button
-                          onClick={() => { onValueChange({ type }); onApply(); }} 
-                          className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
-                          <span>{type}</span> 
-                          {isSelected && <Check className="h-4 w-4" />}
-                        </button>
-                    );
-                    if (isMobile) {
-                        return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
-                    }
-                    return <li key={type}>{button}</li>
-                })}
+                {types.map(buttonContent)}
             </ul>
         </div>
       </>
