@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Header } from '@/components/header';
 import { Residences } from '@/components/residences';
 import { ImmersiveExperience } from '@/components/immersive-experience';
+import { Amenities } from '@/components/amenities';
+import { Location } from '@/components/location';
+import { Contact } from '@/components/contact';
 
 export default function Home() {
   return (
@@ -38,9 +41,9 @@ export default function Home() {
 
         <Residences />
         <ImmersiveExperience />
-        
-        <div id="location" className="py-16 md:py-24 bg-background p-8 text-center"><h2 className="text-3xl font-bold font-headline">Location Advantage (Coming Soon)</h2></div>
-        <div id="contact" className="py-16 md:py-24 bg-secondary p-8 text-center"><h2 className="text-3xl font-bold font-headline">Contact & Booking (Coming Soon)</h2></div>
+        <Amenities />
+        <Location />
+        <Contact />
       </main>
     </div>
   );
