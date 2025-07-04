@@ -429,7 +429,7 @@ export function Residences() {
               <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower, Churchill Towers</h1>
               <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button variant="outline" className="rounded-lg justify-center">
                 <MapPin className="mr-2 h-4 w-4" />
                 Map view
@@ -619,17 +619,19 @@ const UnitCard = ({ unit }) => {
                         <p className="font-semibold text-foreground text-sm">Prime Properties</p>
                     </div>
                 </div>
-                <div className="flex items-center flex-wrap justify-start gap-1 sm:gap-2">
-                    <Button variant="outline" size="sm" className="rounded-md"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span>Call</span> </Button>
-                    <Button variant="outline" size="sm" className="rounded-md"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span>Email</span> </Button>
-                    <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
-                          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
-                        </svg>
-                        <span>WhatsApp</span>
-                    </Button>
-                     <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden lg:block" />
-                    <div className="flex items-center gap-0">
+                <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2 w-full sm:w-auto">
+                    <div className="grid grid-cols-3 gap-2">
+                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span>Call</span> </Button>
+                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span>Email</span> </Button>
+                        <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
+                              <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
+                            </svg>
+                            <span>WhatsApp</span>
+                        </Button>
+                    </div>
+                    <div className="flex items-center justify-center gap-0">
+                         <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden sm:block" />
                         <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Share2 className="w-5 h-5 text-muted-foreground" /> </Button>
                         <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Bookmark className="w-5 h-5 text-muted-foreground" /> </Button>
                         <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Heart className="w-5 h-5 text-muted-foreground" /> </Button>
@@ -643,16 +645,18 @@ const UnitCard = ({ unit }) => {
 
 // --- Filter Popover Components ---
 
-const FilterHeader = ({ title, onClear }) => (
+const FilterHeader = ({ title, onClear, isMobile }) => (
     <DialogHeader className="p-4 border-b text-left relative flex-row justify-between items-center">
+        {isMobile && 
+          <DialogClose asChild>
+              <Button variant="ghost" size="icon" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+              </Button>
+          </DialogClose>
+        }
         <DialogTitle className="text-xl font-headline text-center flex-grow">{title}</DialogTitle>
         <Button variant="link" onClick={onClear} className="text-primary p-0 h-auto">Clear</Button>
-        <DialogClose asChild>
-            <Button variant="ghost" size="icon" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-            </Button>
-        </DialogClose>
     </DialogHeader>
 );
 
@@ -715,7 +719,7 @@ const RentFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, 
     }
     return (
         <>
-        {isMobile && <FilterHeader title={title} onClear={onClear}/>}
+        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile}/>}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
@@ -744,7 +748,7 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobi
     };
     return (
         <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} />}
+        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
@@ -757,7 +761,7 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobi
 const PriceFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
     return (
       <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} />}
+        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
         <div className="w-full sm:w-96">
             <div className="p-4 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -784,7 +788,7 @@ const BedBathFilterPopover = ({ onValueChange, values, onApply, onClear, isMobil
     const bathOptions = ['1', '2', '3', '4', '5+'];
     return (
         <>
-            {isMobile && <FilterHeader title={title} onClear={onClear} />}
+            {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
             <div className="w-full sm:w-80">
                 <div className="p-4 space-y-4">
                      <div>
@@ -891,12 +895,3 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
-
-    
-
-    
-
-
-
-
-    
