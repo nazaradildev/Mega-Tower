@@ -305,7 +305,7 @@ export function Residences() {
             <div className="flex flex-col md:flex-row items-center gap-3">
                 <div className="relative flex-grow w-full flex items-center gap-2 p-1 pl-3 rounded-lg bg-gray-50 border border-gray-200 h-12">
                     <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <div className="flex items-center gap-1.5 flex-wrap overflow-x-auto no-scrollbar">
+                    <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto no-scrollbar">
                         {searchTags.map(tag => (
                             <div key={tag} className="flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/20 rounded-md px-2 py-0.5 text-sm font-medium shrink-0">
                                 <span>{tag}</span>
@@ -326,7 +326,7 @@ export function Residences() {
                 </div>
 
                 <div className="flex items-center gap-2 w-full md:w-auto">
-                    <div className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:flex gap-2">
+                    <div className="grid w-full grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:flex gap-2">
                       {filterButtons.map(key => {
                           const trigger = (
                               <FilterButton filterKey={key} filters={filters} />
@@ -452,7 +452,6 @@ export function Residences() {
 const FilterHeader = ({ title }) => (
   <DialogHeader className="p-4 border-b">
     <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
-    <DialogClose className="absolute right-4 top-1/2 -translate-y-1/2" />
   </DialogHeader>
 );
 
@@ -633,7 +632,6 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
          <>
             <DialogHeader className="p-6 border-b">
               <DialogTitle className="text-2xl font-headline text-center">More Filters</DialogTitle>
-              <DialogClose className="absolute right-4 top-1/2 -translate-y-1/2" />
             </DialogHeader>
 
             <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
@@ -687,3 +685,4 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
     
 
     
+
