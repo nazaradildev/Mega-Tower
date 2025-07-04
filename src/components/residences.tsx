@@ -9,10 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video } from 'lucide-react';
+import { Ruler, Eye, CheckCircle, Armchair, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video, Star, Camera, Bed, Bath, Heart, MoreHorizontal, Phone, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 
 const units = [
   {
@@ -170,7 +172,7 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
         <Button
             variant="outline"
             className={cn(
-                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full justify-start md:justify-center",
+                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full justify-start",
                 isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70 border-border",
                 "hover:bg-accent hover:text-accent-foreground rounded-lg"
             )}
@@ -417,7 +419,7 @@ export function Residences() {
               <li><ChevronRight className="h-4 w-4" /></li>
               <li><a href="#" className="hover:text-primary transition-colors">Churchill Towers</a></li>
               <li><ChevronRight className="h-4 w-4" /></li>
-              <li><span className="font-medium text-foreground truncate">Apartments for rent in Churchill Residency Tower, Churchill Towers</span></li>
+              <li className="font-medium text-foreground truncate">Apartments for rent in Churchill Residency Tower, Churchill Towers</li>
             </ol>
           </nav>
 
@@ -456,64 +458,10 @@ export function Residences() {
 
 
         {/* --- Unit Listings --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {sortedUnits.length > 0 ? (
             sortedUnits.map((unit, index) => (
-              <Card key={index} className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-background">
-                <CardContent className="p-0">
-                  <div className="relative">
-                    <Image
-                      src={unit.image}
-                      alt={unit.title}
-                      data-ai-hint={unit.aiHint}
-                      width={600}
-                      height={400}
-                      className="w-full h-auto object-cover"
-                    />
-                    <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      {unit.verified && (
-                          <div className="flex items-center gap-1.5 bg-background/80 backdrop-blur-sm text-foreground text-xs font-bold py-1 px-2 rounded-full shadow-md">
-                              <CheckCircle className="w-4 h-4 text-primary" />
-                              <span>eni Verified</span>
-                          </div>
-                      )}
-                      {unit.exclusive && (
-                          <div className="bg-primary-gradient text-primary-foreground text-xs font-bold py-1 px-2 rounded-full shadow-md">
-                              Exclusive
-                          </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold font-headline mb-2">{unit.title}</h3>
-                     <p className="text-2xl font-bold font-headline text-primary mb-4">
-                        AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
-                    </p>
-                    <div className="space-y-3 text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <Ruler className="w-5 h-5 text-primary" />
-                        <span>{unit.area.toLocaleString()} sq. ft.</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Eye className="w-5 h-5 text-primary" />
-                        <span>{unit.view}</span>
-                      </div>
-                       <div className="flex items-center gap-2">
-                        <Armchair className="w-5 h-5 text-primary" />
-                        <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-5 h-5 text-primary" />
-                        <span>{unit.status}</span>
-                      </div>
-                    </div>
-                    <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                      <Button className="flex-1 bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">3D Virtual Tour</Button>
-                      <Button variant="outline" className="flex-1 rounded-lg">View Floor Plan</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <UnitCard key={index} unit={unit} />
             ))
           ) : (
             <div className="col-span-full text-center py-12">
@@ -527,15 +475,132 @@ export function Residences() {
   );
 }
 
+const UnitCard = ({ unit }) => {
+    return (
+        <Card className="w-full overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row">
+            {/* Left side: Image */}
+            <div className="relative md:w-1/3 lg:w-2/5 flex-shrink-0">
+                <Image
+                    src={unit.image}
+                    alt={unit.title}
+                    data-ai-hint={unit.aiHint}
+                    width={400}
+                    height={300}
+                    className="w-full h-full object-cover aspect-[4/3] md:aspect-auto"
+                />
+                {unit.exclusive && (
+                    <div className="absolute top-2 left-2 bg-indigo-700 text-white text-xs font-bold py-1 px-3 rounded-md flex items-center gap-1">
+                        <Star className="w-3 h-3 fill-current" />
+                        <span>SUPERAGENT</span>
+                    </div>
+                )}
+                <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5">
+                    <Camera className="w-4 h-4" />
+                    <span>12</span>
+                </div>
+                <div className="absolute bottom-2 right-2">
+                     <Button size="icon" variant="secondary" className="rounded-full h-9 w-9 bg-white/90 hover:bg-white text-gray-700 shadow">
+                        <MapPin className="w-5 h-5" />
+                    </Button>
+                </div>
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    <span className="h-1.5 w-4 rounded-full bg-white"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/70"></span>
+                </div>
+            </div>
+
+            {/* Right side: Details + Footer */}
+            <div className="flex-1 flex flex-col justify-between">
+                <div className="p-4">
+                    <div className="flex justify-between items-start">
+                        <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
+                        <div className="text-right">
+                           {unit.exclusive && <span className="text-xs font-bold text-amber-600">PREMIUM</span>}
+                           <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
+                        </div>
+                    </div>
+
+                    <p className="text-2xl font-bold text-foreground my-1">
+                        AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
+                    </p>
+                    
+                    <p className="text-foreground font-medium truncate">
+                        {unit.furnished ? 'Furnished' : 'Spacious unFurnished'} | {unit.beds} bedroom | {unit.view}
+                    </p>
+
+                    <div className="my-3 border-b border-border -mx-4"></div>
+
+                    <div className="text-sm text-muted-foreground space-y-3">
+                        <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-gray-500" />
+                            <span>Churchill Residency Tower, Churchill Towers, Business Bay</span>
+                        </div>
+                        <div className="flex items-center gap-x-4 gap-y-1 flex-wrap">
+                            <div className="flex items-center gap-1.5">
+                                <Bed className="w-4 h-4 text-gray-500" />
+                                <span>{unit.beds}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <Bath className="w-4 h-4 text-gray-500" />
+                                <span>{unit.baths}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <Ruler className="w-4 h-4 text-gray-500" />
+                                <span>{unit.area.toLocaleString()} sqft</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="p-3 border-t border-border bg-gray-50/50">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <div className="relative">
+                                <Avatar className="h-9 w-9">
+                                    <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
+                                    <AvatarFallback>EN</AvatarFallback>
+                                </Avatar>
+                                <span className="absolute -bottom-1 -right-1 bg-indigo-700 rounded-full p-0.5 border-2 border-background">
+                                    <Star className="w-2.5 h-2.5 text-white fill-current" />
+                                </span>
+                            </div>
+                            <span className="text-xs text-muted-foreground">Listed 26 days ago</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <Button variant="outline" size="sm" className="hidden sm:flex rounded-md">
+                                <Phone className="mr-1.5 h-3.5 w-3.5" /> Call
+                            </Button>
+                             <Button variant="outline" size="sm" className="hidden sm:flex rounded-md">
+                                <Mail className="mr-1.5 h-3.5 w-3.5" /> Email
+                            </Button>
+                             <Button variant="outline" size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] hidden sm:flex rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
+                                  <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
+                                </svg> WhatsApp
+                            </Button>
+                             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border">
+                                <Heart className="w-4 h-4" />
+                            </Button>
+                             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border">
+                                <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Card>
+    );
+};
+
+
 // --- Filter Popover Components ---
 
 const FilterHeader = ({ title }) => (
     <DialogHeader className="p-4 border-b">
         <DialogTitle className="text-xl text-center font-headline">{title}</DialogTitle>
-        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-      </DialogClose>
     </DialogHeader>
 );
 
@@ -769,14 +834,3 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
-
-    
-
-    
-
-
-
-
-    
-
-    
