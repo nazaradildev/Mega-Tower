@@ -503,50 +503,50 @@ const UnitCard = ({ unit }) => {
     }
     
     return (
-        <Card className="w-full overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row">
-            {/* Left side: Image */}
-            <div className="relative w-full md:w-5/12 flex-shrink-0 group/image">
-                 <Image
-                    key={currentImageIndex} 
-                    src={images[currentImageIndex]}
-                    alt={`${unit.title} - Image ${currentImageIndex + 1}`}
-                    data-ai-hint={unit.aiHint}
-                    width={400}
-                    height={300}
-                    className="w-full h-full object-cover aspect-[4/3]"
-                />
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
-                
-                <Button onClick={prevImage} size="icon" variant="secondary" className="absolute top-1/2 -translate-y-1/2 left-3 rounded-full h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity">
-                    <ChevronLeft className="w-5 h-5" />
-                </Button>
-                <Button onClick={nextImage} size="icon" variant="secondary" className="absolute top-1/2 -translate-y-1/2 right-3 rounded-full h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity">
-                    <ChevronRight className="w-5 h-5" />
-                </Button>
+        <Card className="w-full overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
+            <div className="flex flex-col md:flex-row">
+                {/* Left side: Image */}
+                 <div className="relative w-full md:w-1/2 lg:w-5/12 flex-shrink-0 group/image">
+                    <Image
+                        key={currentImageIndex} 
+                        src={images[currentImageIndex]}
+                        alt={`${unit.title} - Image ${currentImageIndex + 1}`}
+                        data-ai-hint={unit.aiHint}
+                        width={400}
+                        height={300}
+                        className="w-full h-full object-cover aspect-[4/3]"
+                    />
+                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+                    
+                    <Button onClick={prevImage} size="icon" variant="secondary" className="absolute top-1/2 -translate-y-1/2 left-3 rounded-full h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity">
+                        <ChevronLeft className="w-5 h-5" />
+                    </Button>
+                    <Button onClick={nextImage} size="icon" variant="secondary" className="absolute top-1/2 -translate-y-1/2 right-3 rounded-full h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity">
+                        <ChevronRight className="w-5 h-5" />
+                    </Button>
 
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-2">
-                    {images.map((_, index) => (
-                        <button key={index} onClick={() => goToImage(index)} className="p-1" aria-label={`Go to image ${index + 1}`}>
-                            <div className={cn("w-2 h-2 rounded-full border-2 bg-transparent transition-all", 
-                                currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80'
-                            )}></div>
-                        </button>
-                    ))}
+                    <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-2">
+                        {images.map((_, index) => (
+                            <button key={index} onClick={() => goToImage(index)} className="p-1" aria-label={`Go to image ${index + 1}`}>
+                                <div className={cn("w-2.5 h-2.5 rounded-full border-2 bg-transparent transition-all", 
+                                    currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80 bg-black/30'
+                                )}></div>
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5">
+                        <Camera className="w-4 h-4" />
+                        <span>{images.length}</span>
+                    </div>
                 </div>
 
-                <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5">
-                    <Camera className="w-4 h-4" />
-                    <span>{images.length}</span>
-                </div>
-            </div>
-
-            {/* Right side: Details */}
-            <div className="flex-1 flex flex-col">
-                <div className="p-4 flex-grow">
+                {/* Right side: Details */}
+                <div className="flex-1 flex flex-col p-4">
                     <div className="flex justify-between items-start">
                         <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
-                       <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
+                        <Image src="https://placehold.co/100x40.png" alt="Agency Logo" data-ai-hint="real estate logo" width={70} height={28} className="mt-1"/>
                     </div>
 
                     <p className="text-2xl font-bold text-foreground my-1">
@@ -555,6 +555,8 @@ const UnitCard = ({ unit }) => {
                     
                     <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
                     
+                    <p className="text-sm text-muted-foreground my-2">{unit.status}</p>
+
                     <div className="my-4 border-b border-border -mx-4"></div>
 
                     <div className="space-y-3 text-sm">
@@ -588,37 +590,37 @@ const UnitCard = ({ unit }) => {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Footer */}
-                <div className="p-4 border-t bg-gray-50/50 mt-auto">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                            <Avatar className="h-10 w-10">
-                                <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
-                                <AvatarFallback>EN</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="font-semibold text-foreground text-sm">eni Real Estate</p>
-                                <p className="text-xs text-muted-foreground">{unit.status}</p>
-                            </div>
+            {/* Footer */}
+            <div className="p-4 border-t bg-gray-50/50">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                        <Avatar className="h-10 w-10">
+                            <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
+                            <AvatarFallback>EN</AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <p className="text-xs text-muted-foreground">Marketing by</p>
+                            <p className="font-semibold text-foreground text-sm">eni Real Estate</p>
                         </div>
-                        <div className="flex items-center flex-wrap justify-center gap-2">
-                            <Button variant="outline" size="sm" className="rounded-md"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span>Call</span> </Button>
-                            <Button variant="outline" size="sm" className="rounded-md"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span>Email</span> </Button>
-                             <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
-                                  <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
-                                </svg>
-                                <span>WhatsApp</span>
-                            </Button>
-                             <Button variant="outline" size="sm" className="rounded-md"> <Video className="mr-1.5 h-3.5 w-3.5" /> <span>Insights</span> </Button>
-                            <Button variant="outline" size="sm" className="rounded-md"> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
-                            <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden sm:block" />
-                            <div className="hidden sm:flex items-center gap-1">
-                                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Share2 className="w-5 h-5 text-muted-foreground" /> </Button>
-                                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Bookmark className="w-5 h-5 text-muted-foreground" /> </Button>
-                                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Heart className="w-5 h-5 text-muted-foreground" /> </Button>
-                            </div>
+                    </div>
+                    <div className="flex items-center flex-wrap justify-start gap-2">
+                        <Button variant="outline" size="sm" className="rounded-md"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span>Call</span> </Button>
+                        <Button variant="outline" size="sm" className="rounded-md"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span>Email</span> </Button>
+                        <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
+                              <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
+                            </svg>
+                            <span>WhatsApp</span>
+                        </Button>
+                        <Button variant="outline" size="sm" className="rounded-md"> <Video className="mr-1.5 h-3.5 w-3.5" /> <span>Virtual Tour</span> </Button>
+                        <Button variant="outline" size="sm" className="rounded-md"> <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span> </Button>
+                        <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden lg:block" />
+                        <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Share2 className="w-5 h-5 text-muted-foreground" /> </Button>
+                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Bookmark className="w-5 h-5 text-muted-foreground" /> </Button>
+                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Heart className="w-5 h-5 text-muted-foreground" /> </Button>
                         </div>
                     </div>
                 </div>
@@ -630,14 +632,12 @@ const UnitCard = ({ unit }) => {
 
 // --- Filter Popover Components ---
 
-const FilterHeader = ({ title, showCloseButton = false, onClear }) => (
+const FilterHeader = ({ title, onClear }) => (
     <DialogHeader className="p-4 border-b text-left relative flex-row justify-between items-center">
-        {showCloseButton && (
-            <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-            </DialogClose>
-        )}
+        <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+        </DialogClose>
         <DialogTitle className="text-xl font-headline text-center flex-grow">{title}</DialogTitle>
         <Button variant="link" onClick={onClear} className="text-primary p-0 h-auto">Clear</Button>
     </DialogHeader>
@@ -702,7 +702,7 @@ const RentFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, 
     }
     return (
         <>
-        {isMobile && <FilterHeader title={title} showCloseButton onClear={onClear}/>}
+        {isMobile && <FilterHeader title={title} onClear={onClear}/>}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
@@ -731,7 +731,7 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobi
     };
     return (
         <>
-        {isMobile && <FilterHeader title={title} showCloseButton onClear={onClear} />}
+        {isMobile && <FilterHeader title={title} onClear={onClear} />}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
@@ -744,7 +744,7 @@ const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobi
 const PriceFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
     return (
       <>
-        {isMobile && <FilterHeader title={title} showCloseButton onClear={onClear} />}
+        {isMobile && <FilterHeader title={title} onClear={onClear} />}
         <div className="w-full sm:w-96">
             <div className="p-4 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -771,7 +771,7 @@ const BedBathFilterPopover = ({ onValueChange, values, onApply, onClear, isMobil
     const bathOptions = ['1', '2', '3', '4', '5+'];
     return (
         <>
-            {isMobile && <FilterHeader title={title} showCloseButton onClear={onClear} />}
+            {isMobile && <FilterHeader title={title} onClear={onClear} />}
             <div className="w-full sm:w-80">
                 <div className="p-4 space-y-4">
                      <div>
