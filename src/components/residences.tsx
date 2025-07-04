@@ -180,7 +180,8 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
             {...props}
         >
             {Icon && <Icon className="h-5 w-5" />}
-            <span className="truncate">{getButtonText()}</span>
+            <span className="truncate hidden sm:inline">{getButtonText()}</span>
+            <span className="truncate sm:hidden">{filterKey}</span>
         </Button>
     );
 };
@@ -429,15 +430,17 @@ export function Residences() {
               <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower, Churchill Towers</h1>
               <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" className="rounded-lg justify-center">
-                <MapPin className="mr-2 h-4 w-4" />
-                Map view
-              </Button>
-              <Button variant="outline" className="rounded-lg justify-center">
-                <Eye className="mr-2 h-4 w-4" />
-                Insights
-              </Button>
+            <div className="flex flex-col sm:flex-row items-stretch gap-2">
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="rounded-lg justify-center flex-1">
+                  <MapPin className="mr-2 h-4 w-4" />
+                  Map view
+                </Button>
+                <Button variant="outline" className="rounded-lg justify-center flex-1">
+                  <Eye className="mr-2 h-4 w-4" />
+                  Insights
+                </Button>
+              </div>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="rounded-lg justify-center data-[state=open]:bg-accent w-full sm:w-auto">
@@ -459,7 +462,7 @@ export function Residences() {
 
 
         {/* --- Unit Listings --- */}
-        <div className="grid grid-cols-1 gap-6 px-2 sm:px-0">
+        <div className="grid grid-cols-1 gap-6">
           {sortedUnits.length > 0 ? (
             sortedUnits.map((unit, index) => (
               <UnitCard key={index} unit={unit} />
@@ -524,7 +527,7 @@ const UnitCard = ({ unit }) => {
                     data-ai-hint={unit.aiHint}
                     width={800}
                     height={450}
-                    className="w-full h-full object-cover aspect-video"
+                    className="w-full h-full object-cover aspect-[4/3] sm:aspect-video"
                 />
                 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
@@ -895,3 +898,5 @@ const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsEx
         </>
     )
 }
+
+    
