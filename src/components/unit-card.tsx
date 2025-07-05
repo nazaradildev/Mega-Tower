@@ -16,7 +16,6 @@ import {
   View,
   X,
 } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -119,15 +118,13 @@ export function UnitCard({ unit }: UnitCardProps) {
                 <CarouselContent>
                   {unit.images.map((imgSrc, index) => (
                     <CarouselItem key={index}>
-                      <div className="relative aspect-[4/3] w-full">
-                        <Image
+                      <div className="aspect-[4/3] w-full">
+                        <img
                           src={imgSrc}
                           alt={`${unit.title} - Image ${index + 1}`}
                           data-ai-hint={unit.aiHint}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          priority={index === 0}
+                          className="w-full h-full object-cover"
+                          loading={index === 0 ? 'eager' : 'lazy'}
                         />
                       </div>
                     </CarouselItem>
@@ -312,7 +309,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                       </div>
                       <div className="bg-muted/50 max-h-[80vh] overflow-auto">
                         <div className="flex justify-center items-center p-4">
-                          <Image
+                          <img
                             src={
                               planView === '2D'
                                 ? unit.floorPlanImage
@@ -320,8 +317,6 @@ export function UnitCard({ unit }: UnitCardProps) {
                             }
                             alt={`Floor plan for ${unit.title} (${planView})`}
                             data-ai-hint="apartment floor plan"
-                            width={1000}
-                            height={1400}
                             className="w-auto h-auto max-w-none"
                           />
                         </div>
