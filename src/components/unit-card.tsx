@@ -115,9 +115,9 @@ export function UnitCard({ unit }: UnitCardProps) {
               data-interactive
             >
               <Carousel setApi={setApi} className="w-full">
-                <CarouselContent>
+                <CarouselContent className="m-0">
                   {unit.images.map((imgSrc, index) => (
-                    <CarouselItem key={index}>
+                    <CarouselItem key={index} className="p-0">
                       <div className="aspect-[4/3] w-full">
                         <img
                           src={imgSrc}

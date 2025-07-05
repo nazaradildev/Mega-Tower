@@ -154,9 +154,9 @@ export default function PropertyDetailsPage({
                   className="w-full"
                   opts={{ loop: true }}
                 >
-                  <CarouselContent>
+                  <CarouselContent className='m-0'>
                     {unit.images.map((img, index) => (
-                      <CarouselItem key={index}>
+                      <CarouselItem key={index} className='p-0'>
                         <div className="aspect-video">
                           <img
                             src={img}
