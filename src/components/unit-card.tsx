@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -109,19 +110,23 @@ export function UnitCard({ unit }: UnitCardProps) {
           }}
         >
           <div className="md:grid md:grid-cols-2">
-            <div className="relative w-full group/image" onClick={handleInteraction} data-interactive>
+            <div
+              className="relative w-full group/image"
+              onClick={handleInteraction}
+              data-interactive
+            >
               <Carousel setApi={setApi} className="w-full">
                 <CarouselContent>
                   {unit.images.map((imgSrc, index) => (
                     <CarouselItem key={index}>
-                      <div className="aspect-[4/3] w-full overflow-hidden">
+                      <div className="relative aspect-[4/3] w-full">
                         <Image
                           src={imgSrc}
                           alt={`${unit.title} - Image ${index + 1}`}
                           data-ai-hint={unit.aiHint}
-                          width={800}
-                          height={600}
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
                           priority={index === 0}
                         />
                       </div>
@@ -215,7 +220,11 @@ export function UnitCard({ unit }: UnitCardProps) {
                 </div>
               </div>
 
-              <div className="mt-auto pt-4 flex items-center flex-wrap justify-start gap-2" onClick={handleInteraction} data-interactive>
+              <div
+                className="mt-auto pt-4 flex items-center flex-wrap justify-start gap-2"
+                onClick={handleInteraction}
+                data-interactive
+              >
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button
@@ -325,7 +334,11 @@ export function UnitCard({ unit }: UnitCardProps) {
           </div>
         </a>
       </Link>
-      <div className="p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" onClick={handleInteraction} data-interactive>
+      <div
+        className="p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        onClick={handleInteraction}
+        data-interactive
+      >
         <div className="flex items-center gap-3 flex-shrink-0">
           <Avatar className="h-10 w-10">
             <AvatarImage
@@ -344,12 +357,20 @@ export function UnitCard({ unit }: UnitCardProps) {
         </div>
         <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2 w-full sm:w-auto">
           <div className="grid grid-cols-3 gap-2">
-            <Button variant="outline" size="sm" className="rounded-md justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-md justify-center"
+            >
               {' '}
               <Phone className="mr-1.5 h-3.5 w-3.5" />{' '}
               <span className="hidden sm:inline">Call</span>{' '}
             </Button>
-            <Button variant="outline" size="sm" className="rounded-md justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-md justify-center"
+            >
               {' '}
               <Mail className="mr-1.5 h-3.5 w-3.5" />{' '}
               <span className="hidden sm:inline">Email</span>{' '}
@@ -376,15 +397,27 @@ export function UnitCard({ unit }: UnitCardProps) {
               orientation="vertical"
               className="h-6 mx-1 bg-border hidden sm:block"
             />
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full"
+            >
               {' '}
               <Share2 className="w-5 h-5 text-muted-foreground" />{' '}
             </Button>
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full"
+            >
               {' '}
               <Bookmark className="w-5 h-5 text-muted-foreground" />{' '}
             </Button>
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full"
+            >
               {' '}
               <Heart className="w-5 h-5 text-muted-foreground" />{' '}
             </Button>
