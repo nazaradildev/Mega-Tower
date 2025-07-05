@@ -18,14 +18,11 @@ import {
   Bath,
   BedDouble,
   Building,
-  Calendar,
   CheckCircle,
-  ChevronDown,
   ChevronRight,
   Heart,
   Home,
   Mail,
-  Map,
   MapPin,
   Phone,
   Ruler,
@@ -148,15 +145,15 @@ export default function PropertyDetailsPage({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left/Main Column */}
             <div className="col-span-1 lg:col-span-2">
-              <Card className="overflow-hidden">
+              <Card className="overflow-hidden aspect-video">
                 <Carousel
                   setApi={setApi}
-                  className="w-full"
+                  className="w-full h-full"
                   opts={{ loop: true }}
                 >
-                  <CarouselContent className='m-0'>
+                  <CarouselContent className='m-0 h-full'>
                     {unit.images.map((img, index) => (
-                      <CarouselItem key={index} className='p-0 aspect-video'>
+                      <CarouselItem key={index} className='p-0'>
                         <img
                           src={img}
                           alt={`Property image ${index + 1}`}

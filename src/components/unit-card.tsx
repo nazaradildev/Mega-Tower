@@ -1,4 +1,4 @@
-import type { Unit } from '@/data/units';
+
 import {
   Bath,
   Bed,
@@ -42,6 +42,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import type { Unit } from '@/data/units';
 
 function Icon360(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -89,251 +90,217 @@ export function UnitCard({ unit }: UnitCardProps) {
     };
   }, [api]);
 
-  const handleInteraction = (e: React.MouseEvent) => {
-    // This stops the click from propagating to the parent Link component
-    e.stopPropagation();
-  };
-
   return (
     <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col sm:max-w-4xl">
-      <Link href={`/property/${unit.id}`} legacyBehavior>
-        <a
-          onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-            // Prevent navigation if clicking on an interactive element
-            const target = e.target as HTMLElement;
-            if (
-              target.closest('button') ||
-              target.closest('[data-interactive]')
-            ) {
-              e.preventDefault();
-            }
-          }}
-        >
-          <div className="md:grid md:grid-cols-2">
-            <div
-              className="relative w-full group/image"
-              onClick={handleInteraction}
-              data-interactive
-            >
-              <Carousel setApi={setApi} className="w-full">
-                <CarouselContent className="m-0">
-                  {unit.images.map((imgSrc, index) => (
-                    <CarouselItem key={index} className="p-0 aspect-[4/3]">
-                      <img
-                        src={imgSrc}
-                        alt={`${unit.title} - Image ${index + 1}`}
-                        data-ai-hint={unit.aiHint}
-                        className="w-full h-full object-cover"
-                        loading={index === 0 ? 'eager' : 'lazy'}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
-                <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
+      <div className="md:grid md:grid-cols-2">
+        <div className="relative w-full group/image aspect-[4/3]">
+            <Carousel setApi={setApi} className="w-full h-full">
+              <CarouselContent className="m-0 h-full">
+                {unit.images.map((imgSrc, index) => (
+                  <CarouselItem key={index} className="p-0">
+                    <img
+                      src={imgSrc}
+                      alt={`${unit.title} - Image ${index + 1}`}
+                      data-ai-hint={unit.aiHint}
+                      className="w-full h-full object-cover"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
+              <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
 
-                <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10 pointer-events-none">
+              <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10">
                   {unit.images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                        e.stopPropagation();
-                        api?.scrollTo(index);
-                      }}
-                      className="p-1 pointer-events-auto"
-                      aria-label={`Go to image ${index + 1}`}
-                    >
-                      <div
-                        className={cn(
-                          'w-2 h-2 rounded-full border-2 transition-all',
-                          currentImageIndex === index
-                            ? 'bg-primary border-primary'
-                            : 'border-white/80 bg-black/30'
-                        )}
-                      ></div>
-                    </button>
+                      <button key={index} onClick={(e) => { e.preventDefault(); e.stopPropagation(); api?.scrollTo(index); }} className="p-1" aria-label={`Go to image ${index + 1}`}>
+                          <div className={cn("w-2 h-2 rounded-full border-2 transition-all", 
+                              currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80 bg-black/30'
+                          )}></div>
+                      </button>
                   ))}
-                </div>
+              </div>
 
-                <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
-                  <Camera className="w-4 h-4" />
-                  <span>{unit.images.length}</span>
-                </div>
-              </Carousel>
+              <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
+                <Camera className="w-4 h-4" />
+                <span>{unit.images.length}</span>
+              </div>
+          </Carousel>
+        </div>
+
+        <div className="p-4 flex flex-col">
+            <Link href={`/property/${unit.id}`}>
+                <span className="text-sm text-muted-foreground hover:text-primary transition-colors">{unit.propertyType}</span>
+            </Link>
+
+          <Link href={`/property/${unit.id}`}>
+            <p className="text-2xl font-bold text-foreground my-1 hover:text-primary transition-colors">
+              AED {unit.rent.toLocaleString()}{' '}
+              <span className="text-base font-normal text-muted-foreground">
+                / year
+              </span>
+            </p>
+          </Link>
+
+          <Link href={`/property/${unit.id}`}>
+            <span className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">
+              {unit.title}
+            </span>
+          </Link>
+
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
+            <Calendar className="h-4 w-4" />
+            <span>{unit.status}</span>
+          </div>
+
+          <div className="space-y-3 text-sm mt-4">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <span>
+                Churchill Residency Tower, Churchill Towers, Business Bay
+              </span>
             </div>
-
-            <div className="p-4 flex flex-col">
-              <span className="text-sm text-muted-foreground">
-                {unit.propertyType}
-              </span>
-
-              <p className="text-2xl font-bold text-foreground my-1">
-                AED {unit.rent.toLocaleString()}{' '}
-                <span className="text-base font-normal text-muted-foreground">
-                  / year
-                </span>
-              </p>
-
-              <span className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">
-                {unit.title}
-              </span>
-
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
-                <Calendar className="h-4 w-4" />
-                <span>{unit.status}</span>
+            <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Bed className="w-4 h-4" />
+                <span>{unit.beds} Beds</span>
               </div>
-
-              <div className="space-y-3 text-sm mt-4">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="w-4 h-4 flex-shrink-0" />
-                  <span>
-                    Churchill Residency Tower, Churchill Towers, Business Bay
-                  </span>
-                </div>
-                <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <Bed className="w-4 h-4" />
-                    <span>{unit.beds} Beds</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Bath className="w-4 h-4" />
-                    <span>{unit.baths} Baths</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Ruler className="w-4 h-4" />
-                    <span>{unit.area.toLocaleString()} sqft</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <Armchair className="w-4 h-4" />
-                    <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <View className="w-4 h-4" />
-                    <span>{unit.view}</span>
-                  </div>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <Bath className="w-4 h-4" />
+                <span>{unit.baths} Baths</span>
               </div>
-
-              <div
-                className="mt-auto pt-4 flex items-center flex-wrap justify-start gap-2"
-                onClick={handleInteraction}
-                data-interactive
-              >
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-md flex-1 sm:flex-none"
-                      disabled={!unit.virtualTourUrl}
-                    >
-                      <Icon360 className="mr-1.5 h-4 w-4" />{' '}
-                      <span>Virtual Tour</span>
-                    </Button>
-                  </DialogTrigger>
-                  {unit.virtualTourUrl && (
-                    <DialogContent className="p-0 w-[95vw] h-[90vh] max-w-7xl border-0">
-                      <DialogHeader className="absolute top-2 right-2 z-10 p-0 m-0">
-                        <DialogClose asChild>
-                          <Button
-                            variant="default"
-                            size="icon"
-                            className="bg-black/50 hover:bg-black/70 text-white rounded-full h-10 w-10"
-                          >
-                            <X className="h-5 w-5" />
-                            <span className="sr-only">Close</span>
-                          </Button>
-                        </DialogClose>
-                      </DialogHeader>
-                      <iframe
-                        src={unit.virtualTourUrl}
-                        width="100%"
-                        height="100%"
-                        allow="fullscreen"
-                        className="rounded-lg"
-                      />
-                    </DialogContent>
-                  )}
-                </Dialog>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-md flex-1 sm:flex-none"
-                      disabled={!unit.floorPlanImage}
-                    >
-                      <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" />{' '}
-                      <span>Floor Plan</span>
-                    </Button>
-                  </DialogTrigger>
-                  {unit.floorPlanImage && (
-                    <DialogContent className="p-0 max-w-4xl w-[95vw] md:w-full">
-                      <div className="flex items-center justify-between p-4 border-b">
-                        <DialogTitle className="text-lg font-semibold truncate pr-4">
-                          Floor Plan: {unit.title}
-                        </DialogTitle>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <div className="p-1 bg-muted rounded-lg flex gap-1">
-                            <Button
-                              size="sm"
-                              variant={planView === '2D' ? 'default' : 'ghost'}
-                              onClick={() => setPlanView('2D')}
-                              className="h-8 rounded-md"
-                            >
-                              2D
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant={planView === '3D' ? 'default' : 'ghost'}
-                              onClick={() => setPlanView('3D')}
-                              className="h-8 rounded-md"
-                              disabled={!unit.floorPlanImage3d}
-                            >
-                              3D
-                            </Button>
-                          </div>
-                          <DialogClose asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="rounded-full -mr-2"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </DialogClose>
-                        </div>
-                      </div>
-                      <div className="bg-muted/50 max-h-[80vh] overflow-auto">
-                        <div className="flex justify-center items-center p-4">
-                          <Image
-                            src={
-                              planView === '2D'
-                                ? unit.floorPlanImage
-                                : unit.floorPlanImage3d || ''
-                            }
-                            alt={`Floor plan for ${unit.title} (${planView})`}
-                            data-ai-hint="apartment floor plan"
-                            width={1000}
-                            height={1400}
-                            className="w-auto h-auto max-w-none"
-                          />
-                        </div>
-                      </div>
-                    </DialogContent>
-                  )}
-                </Dialog>
+              <div className="flex items-center gap-1.5">
+                <Ruler className="w-4 h-4" />
+                <span>{unit.area.toLocaleString()} sqft</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Armchair className="w-4 h-4" />
+                <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <View className="w-4 h-4" />
+                <span>{unit.view}</span>
               </div>
             </div>
           </div>
-        </a>
-      </Link>
+
+          <div
+            className="mt-auto pt-4 flex items-center flex-wrap justify-start gap-2"
+          >
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-md flex-1 sm:flex-none"
+                  disabled={!unit.virtualTourUrl}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                >
+                  <Icon360 className="mr-1.5 h-4 w-4" />{' '}
+                  <span>Virtual Tour</span>
+                </Button>
+              </DialogTrigger>
+              {unit.virtualTourUrl && (
+                <DialogContent className="p-0 w-[95vw] h-[90vh] max-w-7xl border-0">
+                  <DialogHeader className="absolute top-2 right-2 z-10 p-0 m-0">
+                    <DialogClose asChild>
+                      <Button
+                        variant="default"
+                        size="icon"
+                        className="bg-black/50 hover:bg-black/70 text-white rounded-full h-10 w-10"
+                      >
+                        <X className="h-5 w-5" />
+                        <span className="sr-only">Close</span>
+                      </Button>
+                    </DialogClose>
+                  </DialogHeader>
+                  <iframe
+                    src={unit.virtualTourUrl}
+                    width="100%"
+                    height="100%"
+                    allow="fullscreen"
+                    className="rounded-lg"
+                  />
+                </DialogContent>
+              )}
+            </Dialog>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-md flex-1 sm:flex-none"
+                  disabled={!unit.floorPlanImage}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                >
+                  <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" />{' '}
+                  <span>Floor Plan</span>
+                </Button>
+              </DialogTrigger>
+              {unit.floorPlanImage && (
+                <DialogContent className="p-0 max-w-4xl w-[95vw] md:w-full">
+                  <div className="flex items-center justify-between p-4 border-b">
+                    <DialogTitle className="text-lg font-semibold truncate pr-4">
+                      Floor Plan: {unit.title}
+                    </DialogTitle>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <div className="p-1 bg-muted rounded-lg flex gap-1">
+                        <Button
+                          size="sm"
+                          variant={planView === '2D' ? 'default' : 'ghost'}
+                          onClick={() => setPlanView('2D')}
+                          className="h-8 rounded-md"
+                        >
+                          2D
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={planView === '3D' ? 'default' : 'ghost'}
+                          onClick={() => setPlanView('3D')}
+                          className="h-8 rounded-md"
+                          disabled={!unit.floorPlanImage3d}
+                        >
+                          3D
+                        </Button>
+                      </div>
+                      <DialogClose asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-full -mr-2"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </DialogClose>
+                    </div>
+                  </div>
+                  <div className="bg-muted/50 max-h-[80vh] overflow-auto">
+                    <div className="flex justify-center items-center p-4">
+                      <Image
+                        src={
+                          planView === '2D'
+                            ? unit.floorPlanImage
+                            : unit.floorPlanImage3d || ''
+                        }
+                        alt={`Floor plan for ${unit.title} (${planView})`}
+                        data-ai-hint="apartment floor plan"
+                        width={1000}
+                        height={1400}
+                        className="w-auto h-auto max-w-none"
+                      />
+                    </div>
+                  </div>
+                </DialogContent>
+              )}
+            </Dialog>
+          </div>
+        </div>
+      </div>
+
       <div
         className="p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-        onClick={handleInteraction}
-        data-interactive
       >
         <div className="flex items-center gap-3 flex-shrink-0">
           <Avatar className="h-10 w-10">

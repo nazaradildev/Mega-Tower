@@ -1,163 +1,32 @@
 
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, Landmark, KeyRound, Home, ChevronRight, MapPin, Video, Camera, Bed, Bath, Heart, Phone, Mail, ChevronLeft, LayoutDashboard, Armchair, View, Share2, Bookmark, Eye, Calendar } from 'lucide-react';
+import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, KeyRound, Home, ChevronRight, MapPin, Eye, LayoutDashboard, Armchair, View } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
-
-
-const units = [
-  {
-    type: '1 Bedroom',
-    propertyType: 'Apartment',
-    beds: 1,
-    baths: 2,
-    title: 'One-Bedroom with Burj & Canal View',
-    images: [
-        'https://www.propertyfinder.ae/property/1841ae8e8c256855ce7d0e30ef6ef82f/1312/894/MODE/ad484c/14446875-0682co.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/cf729a31177dd42be68fe373c5cdb16b/1312/894/MODE/dcd8c0/14446875-646c3o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/3febfbc30013bad43391f176d80332fd/1312/894/MODE/8c6c29/14446875-f72c5o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/9deb7fe0efa08a4ea926b38d35a24092/1312/894/MODE/17f7bd/14446875-cce66o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/965bba2759e1ad0eaa75be43a18352d3/1312/894/MODE/54e2e7/14446875-ed417o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/8162edffa729667a0f10b6d3bb34e6e6/1312/894/MODE/342c4e/14446875-3ad89o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/ae59bc5c9f3ebe26155b7a8bd9db9741/1312/894/MODE/cf6f80/14446875-ce281o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/31a94f8fa3dd1793e320d8e1deae3196/1312/894/MODE/19e637/14446875-f7ca1o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/dcd1783f07629cbce735f5793012bb53/1312/894/MODE/1595d8/14446875-4751ao.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/e493249482f5b48555b6425c37170bd1/1312/894/MODE/4e1059/14446875-92927o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/012571b5c67710829530f313ee90c40e/1312/894/MODE/679eb1/14446875-dd0e7o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/2d8384c5a9b78a4404f7f1758f82f3df/1312/894/MODE/8833d6/14446875-c093ao.jpg?ctr=ae'
-    ],
-    floorPlanImage: '/1-bed-type-1.png',
-    floorPlanImage3d: 'https://placehold.co/800x1100.png',
-    virtualTourUrl: 'https://my.matterport.com/show/?m=69UUKm16w39',
-    aiHint: 'luxury living room',
-    area: 781,
-    view: 'Burj Khalifa & Canal View',
-    status: 'Available Now',
-    rent: 88000,
-    furnished: true,
-    exclusive: true,
-    verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark']
-  },
-  {
-    type: '1 Bedroom',
-    propertyType: 'Apartment',
-    beds: 1,
-    baths: 2,
-    title: 'One-Bedroom Apartment - Type A',
-    images: ['https://placehold.co/600x400.png'],
-    floorPlanImage: 'https://placehold.co/800x1100.png',
-    floorPlanImage3d: null,
-    virtualTourUrl: null,
-    aiHint: 'modern apartment interior',
-    area: 950,
-    view: 'Canal View',
-    status: 'Available Now',
-    rent: 150000,
-    furnished: false,
-    exclusive: false,
-    verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water']
-  },
-  {
-    type: '3 Bedroom',
-    propertyType: 'Apartment',
-    beds: 3,
-    baths: 4,
-    title: 'Three-Bedroom Sky Villa',
-    images: ['https://placehold.co/600x400.png'],
-    floorPlanImage: 'https://placehold.co/800x1100.png',
-    floorPlanImage3d: null,
-    virtualTourUrl: null,
-    aiHint: 'spacious apartment kitchen',
-    area: 2200,
-    view: 'Full Canal View',
-    status: 'Available Now',
-    rent: 350000,
-    furnished: true,
-    exclusive: true,
-    verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Walk-in Closet']
-  },
-  {
-    type: '4 Bedroom',
-    propertyType: 'Penthouse',
-    beds: 4,
-    baths: 5,
-    title: 'Four-Bedroom Penthouse',
-    images: ['https://placehold.co/600x400.png'],
-    floorPlanImage: 'https://placehold.co/800x1100.png',
-    floorPlanImage3d: null,
-    virtualTourUrl: null,
-    aiHint: 'penthouse apartment view',
-    area: 3800,
-    view: '360° Panoramic View',
-    status: 'Limited Availability',
-    rent: 550000,
-    furnished: true,
-    exclusive: true,
-    verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Private Jacuzzi', 'Study']
-  },
-  {
-    type: '1 Bedroom',
-    propertyType: 'Apartment',
-    beds: 1,
-    baths: 1,
-    title: 'One-Bedroom Apartment - Type B',
-    images: ['https://placehold.co/600x400.png'],
-    floorPlanImage: 'https://placehold.co/800x1100.png',
-    floorPlanImage3d: null,
-    virtualTourUrl: null,
-    aiHint: 'cozy bedroom apartment',
-    area: 1050,
-    view: 'Business Bay View',
-    status: 'Available Now',
-    rent: 165000,
-    furnished: true,
-    exclusive: false,
-    verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking']
-  },
-  {
-    type: '2 Bedroom',
-    propertyType: 'Apartment',
-    beds: 2,
-    baths: 2,
-    title: 'Two-Bedroom Apartment - Type D',
-    images: ['https://placehold.co/600x400.png'],
-    floorPlanImage: 'https://placehold.co/800x1100.png',
-    floorPlanImage3d: null,
-    virtualTourUrl: null,
-    aiHint: 'minimalist apartment design',
-    area: 1600,
-    view: 'Downtown View',
-    status: 'Available Now',
-    rent: 245000,
-    furnished: false,
-    exclusive: false,
-    verified: true,
-    amenities: ['Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark']
-  },
-];
-
+import { units } from '@/data/units';
+import { UnitCard } from './unit-card';
 
 const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
 
-const FilterButton = ({ filterKey, filters, ...props }) => {
+type FilterKey = 'Rent' | 'Apartment' | 'Beds & Baths' | 'Price' | 'More Filters';
+type FilterValues = {
+    [key: string]: any;
+};
+
+type FilterButtonProps = React.ComponentProps<typeof Button> & {
+  filterKey: FilterKey;
+  filters: FilterValues;
+};
+
+function FilterButton({ filterKey, filters, ...props }: FilterButtonProps) {
     
     const getButtonText = () => {
         const data = filters[filterKey];
@@ -192,7 +61,7 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
 
     const isActive = filters[filterKey] && Object.values(filters[filterKey]).some(v => v && (Array.isArray(v) ? v.length > 0 : true));
     
-    const iconMap = {
+    const iconMap: Record<FilterKey, React.ElementType> = {
       'Rent': KeyRound,
       'Apartment': Building2,
       'Beds & Baths': BedDouble,
@@ -218,20 +87,298 @@ const FilterButton = ({ filterKey, filters, ...props }) => {
     );
 };
 
+type FilterPopoverProps = {
+    onValueChange: (value: any) => void;
+    values: any;
+    onApply: () => void;
+    onClear: () => void;
+    isMobile: boolean;
+    title: string;
+};
+
+function FilterHeader({ title, onClear, isMobile }: { title: string; onClear: () => void; isMobile: boolean }) {
+    return (
+        <DialogHeader className="p-4 border-b text-left relative flex-row justify-between items-center">
+            {isMobile && 
+              <DialogClose asChild>
+                  <Button variant="ghost" size="icon" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                      <X className="h-4 w-4" />
+                      <span className="sr-only">Close</span>
+                  </Button>
+              </DialogClose>
+            }
+            <DialogTitle className="text-xl font-headline text-center flex-grow">{title}</DialogTitle>
+            <Button variant="link" onClick={onClear} className="text-primary p-0 h-auto">Clear</Button>
+        </DialogHeader>
+    );
+}
+
+function FilterPopoverFooter({ onApply, onClear, isMobile }: { onApply: () => void; onClear: () => void; isMobile: boolean }) {
+    const clearButton = <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>;
+    const applyButton = <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>;
+
+    if (isMobile) {
+        return (
+             <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+                <DialogClose asChild>
+                    {clearButton}
+                </DialogClose>
+                <DialogClose asChild>
+                    {applyButton}
+                </DialogClose>
+            </div>
+        )
+    }
+
+    return (
+        <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+            {clearButton}
+            {applyButton}
+        </div>
+    );
+};
+
+
+type ControlButtonProps = React.ComponentProps<typeof Button> & {
+    value: string;
+    selectedValue: string;
+    onSelect: (value: string) => void;
+};
+
+function ControlButton({ value, selectedValue, onSelect, children, className }: ControlButtonProps) {
+    return (
+        <Button
+            variant="outline"
+            className={cn(
+              "h-10 transition-colors duration-200 ease-in-out border-border", 
+              selectedValue === value && "bg-primary-gradient border-transparent text-primary-foreground shadow-sm",
+              className
+            )}
+            onClick={() => onSelect(value)}
+        >
+            {children || value}
+        </Button>
+    );
+}
+
+function RentFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+    const types = ['Rent', 'Buy'];
+    const buttonContent = (type: string) => {
+        const isSelected = values.type === type;
+        const button = (
+            <button
+              onClick={() => { onValueChange({ type }); onApply(); }} 
+              className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+              <span>{type}</span> 
+              {isSelected && <Check className="h-4 w-4" />}
+            </button>
+        );
+        if (isMobile) {
+            return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
+        }
+        return <li key={type}>{button}</li>;
+    }
+    return (
+        <>
+        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile}/>}
+        <div className="p-2 w-64">
+             <ul className="max-h-60 overflow-y-auto">
+                {types.map(buttonContent)}
+            </ul>
+        </div>
+      </>
+    )
+};
+
+function UnitTypeFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+    const types = ['Apartment', 'Penthouse', 'Villa', 'Townhouse'];
+    const buttonContent = (type: string) => {
+        const isSelected = values.type === type;
+        const button = (
+            <button
+              onClick={() => { onValueChange({ type }); onApply(); }} 
+              className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
+              <span>{type}</span> 
+              {isSelected && <Check className="h-4 w-4" />}
+            </button>
+        );
+         if (isMobile) {
+            return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
+        }
+        return <li key={type}>{button}</li>;
+    };
+    return (
+        <>
+        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
+        <div className="p-2 w-64">
+             <ul className="max-h-60 overflow-y-auto">
+                {types.map(buttonContent)}
+            </ul>
+        </div>
+      </>
+    )
+};
+
+function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+    return (
+      <>
+        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
+        <div className="w-full sm:w-96">
+            <div className="p-4 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <Input type="number" name="min_price" placeholder="Min. Price (AED)" value={values.min_price || ''} onChange={(e) => onValueChange({ min_price: e.target.value })} className="rounded-lg h-12"/>
+                     <Input type="number" name="max_price" placeholder="Max. Price (AED)" value={values.max_price || ''} onChange={(e) => onValueChange({ max_price: e.target.value })} className="rounded-lg h-12"/>
+                </div>
+                 <div>
+                    <h4 className="text-sm font-semibold text-foreground mb-2 block">Rental Period</h4>
+                    <div className="flex flex-wrap gap-2">
+                        {['Yearly', 'Monthly'].map(period => (
+                            <ControlButton key={period} value={period} selectedValue={values.period} onSelect={(val) => onValueChange({ period: val })} className="rounded-lg flex-1">{period}</ControlButton>
+                        ))}
+                    </div>
+                 </div>
+            </div>
+            <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
+        </div>
+      </>
+    )
+}
+
+function BedBathFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+    const bedOptions = ['1', '2', '3', '4+'];
+    const bathOptions = ['1', '2', '3', '4', '5+'];
+    return (
+        <>
+            {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
+            <div className="w-full sm:w-80">
+                <div className="p-4 space-y-4">
+                     <div>
+                        <h4 className="text-sm font-semibold text-foreground mb-2 block">Bedrooms</h4>
+                        <div className="space-y-2">
+                            <ControlButton value={'Studio'} selectedValue={values.beds} onSelect={(val) => onValueChange({ beds: val })} className="w-full rounded-lg">Studio</ControlButton>
+                            <div className="flex flex-wrap gap-2">
+                                {bedOptions.map(o => <ControlButton key={o} value={o} selectedValue={values.beds} onSelect={(val) => onValueChange({ beds: val })} className="w-12 h-12 rounded-lg">{o}</ControlButton>)}
+                            </div>
+                        </div>
+                     </div>
+                     <div>
+                        <h4 className="text-sm font-semibold text-foreground mb-2 block">Bathrooms</h4>
+                        <div className="flex flex-wrap gap-2">
+                            {bathOptions.map(o => <ControlButton key={o} value={o} selectedValue={values.baths} onSelect={(val) => onValueChange({ baths: val })} className="w-12 h-12 rounded-lg">{o}</ControlButton>)}
+                        </div>
+                     </div>
+                </div>
+                <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
+            </div>
+        </>
+    )
+}
+
+
+type MoreFiltersModalProps = {
+    onApply: (values: any) => void;
+    onClear: () => void;
+    initialValues?: any;
+    isExpanded: boolean;
+    setIsExpanded: (isExpanded: boolean) => void;
+};
+
+function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsExpanded }: MoreFiltersModalProps) {
+    const [localFilters, setLocalFilters] = useState(initialValues || {});
+
+    const handleValueChange = (key: string, value: any) => {
+        setLocalFilters((prev: any) => ({...prev, [key]: value}));
+    }
+    
+    const handleAmenityChange = (amenity: string, checked: boolean) => {
+        const currentAmenities = localFilters.amenities || [];
+        const newAmenities = checked
+            ? [...currentAmenities, amenity]
+            : currentAmenities.filter((a: string) => a !== amenity);
+        handleValueChange('amenities', newAmenities);
+    }
+    
+    const amenitiesToShow = isExpanded ? allAmenities : allAmenities.slice(0, 9);
+    
+    const clearAndClose = () => {
+      setLocalFilters({});
+      onClear();
+    }
+
+    return (
+         <>
+            <DialogHeader className="p-6 border-b text-center relative">
+              <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
+            </DialogHeader>
+
+            <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
+                 <div>
+                    <h4 className="font-semibold text-foreground mb-3">Furnishing</h4>
+                    <div className="flex flex-wrap gap-2">
+                         {['Any', 'Furnished', 'Unfurnished'].map(o => <ControlButton key={o} value={o} selectedValue={localFilters.furnishing || 'Any'} onSelect={(val) => handleValueChange('furnishing', val)} className="rounded-full px-4">{o}</ControlButton>)}
+                    </div>
+                </div>
+
+                <div>
+                    <h4 className="font-semibold text-foreground mb-3">Property Size (sq. ft.)</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                       <Input type="number" name="min_area" placeholder="Min. Area" value={localFilters.min_area || ''} onChange={e => handleValueChange('min_area', e.target.value)} className="rounded-lg h-12"/>
+                       <Input type="number" name="max_area" placeholder="Max. Area" value={localFilters.max_area || ''} onChange={e => handleValueChange('max_area', e.target.value)} className="rounded-lg h-12"/>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 className="font-semibold text-foreground mb-3">Amenities</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                         {amenitiesToShow.map(o => (
+                             <label key={o} className="flex items-center gap-3 p-1 rounded-md hover:bg-accent cursor-pointer">
+                                 <Checkbox 
+                                     id={`amenity-${o}`}
+                                     checked={localFilters.amenities?.includes(o) || false}
+                                     onCheckedChange={(checked) => handleAmenityChange(o, !!checked)}
+                                 />
+                                 <span className="text-sm">{o}</span>
+                             </label>
+                         ))}
+                    </div>
+                    {allAmenities.length > 9 && (
+                        <Button variant="link" className="text-primary p-0 h-auto mt-4" onClick={() => setIsExpanded(!isExpanded)}>
+                            {isExpanded ? 'Show less' : 'Show more'}
+                        </Button>
+                    )}
+                </div>
+            </div>
+            
+            <div className="p-4 bg-secondary/50 border-t flex justify-between items-center">
+                 <Button variant="ghost" onClick={clearAndClose}>Clear All</Button>
+                 <DialogClose asChild>
+                    <Button size="lg" className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={() => onApply(localFilters)}>Show Results</Button>
+                 </DialogClose>
+            </div>
+        </>
+    )
+}
+
 export function Residences() {
     const [filters, setFilters] = useState({});
     const [sortOption, setSortOption] = useState('Newest');
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
-    const [openPopovers, setOpenPopovers] = useState({});
+    const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
     const isMobile = useIsMobile();
     const [searchTags, setSearchTags] = useState(['Churchill Towers', 'Business Bay']);
     const [inputValue, setInputValue] = useState('');
 
-    const handlePopoverOpenChange = (filterKey, isOpen) => {
+    const handlePopoverOpenChange = (filterKey: FilterKey, isOpen: boolean) => {
         setOpenPopovers(prev => ({ ...prev, [filterKey]: isOpen }));
     };
 
-    const handleFilterChange = (filterKey, newValues) => {
+    const handleFilterChange = (filterKey: FilterKey, newValues: any) => {
         setFilters(prev => {
             const updated = { ...prev };
             if (newValues && Object.keys(newValues).length > 0) {
@@ -243,11 +390,11 @@ export function Residences() {
         });
     };
     
-    const handleSingleValueChange = (filterKey, value) => {
-        setFilters(prev => ({ ...prev, [filterKey]: { ...prev[filterKey], ...value } }));
+    const handleSingleValueChange = (filterKey: FilterKey, value: any) => {
+        setFilters((prev: FilterValues) => ({ ...prev, [filterKey]: { ...prev[filterKey], ...value } }));
     };
 
-    const clearFilter = (filterKey) => {
+    const clearFilter = (filterKey: FilterKey) => {
         setFilters(prev => {
             const updated = { ...prev };
             delete updated[filterKey];
@@ -255,11 +402,11 @@ export function Residences() {
         });
     };
     
-    const removeSearchTag = (tagToRemove) => {
+    const removeSearchTag = (tagToRemove: string) => {
         setSearchTags(prev => prev.filter(tag => tag !== tagToRemove));
     };
     
-    const addSearchTag = (e) => {
+    const addSearchTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && inputValue.trim() !== '') {
             setSearchTags(prev => [...prev, inputValue.trim()]);
             setInputValue('');
@@ -268,7 +415,7 @@ export function Residences() {
     };
 
     const filteredUnits = useMemo(() => units.filter(unit => {
-        const { 'Rent': rentFilter, 'Apartment': apartmentFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters } = filters;
+        const { 'Rent': rentFilter, 'Apartment': apartmentFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters }: FilterValues = filters;
 
         if (rentFilter?.type && rentFilter.type !== 'Rent') return false;
         
@@ -292,7 +439,7 @@ export function Residences() {
             if (moreFilters.min_area && unit.area < parseInt(moreFilters.min_area, 10)) return false;
             if (moreFilters.max_area && unit.area > parseInt(moreFilters.max_area, 10)) return false;
             if (moreFilters.amenities && moreFilters.amenities.length > 0) {
-                if (!moreFilters.amenities.every(amenity => unit.amenities.includes(amenity))) return false;
+                if (!moreFilters.amenities.every((amenity: string) => unit.amenities.includes(amenity))) return false;
             }
         }
         
@@ -322,12 +469,12 @@ export function Residences() {
         return unitsToSort;
     }, [filteredUnits, sortOption]);
     
-    const renderFilterPopoverContent = (filterKey) => {
+    const renderFilterPopoverContent = (filterKey: FilterKey) => {
         const closePopover = () => handlePopoverOpenChange(filterKey, false);
         const currentValues = filters[filterKey] || {};
 
         const contentProps = {
-            onValueChange: (value) => handleSingleValueChange(filterKey, value),
+            onValueChange: (value: any) => handleSingleValueChange(filterKey, value),
             onApply: closePopover,
             onClear: () => {
                 clearFilter(filterKey);
@@ -352,7 +499,7 @@ export function Residences() {
         }
     };
 
-    const filterButtons = ['Rent', 'Apartment', 'Beds & Baths', 'Price'];
+    const filterButtons: FilterKey[] = ['Rent', 'Apartment', 'Beds & Baths', 'Price'];
     
     return (
     <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
@@ -496,8 +643,8 @@ export function Residences() {
         {/* --- Unit Listings --- */}
         <div className="grid grid-cols-1 gap-6">
           {sortedUnits.length > 0 ? (
-            sortedUnits.map((unit, index) => (
-              <UnitCard key={index} unit={unit} />
+            sortedUnits.map((unit) => (
+              <UnitCard key={unit.id} unit={unit} />
             ))
           ) : (
             <div className="col-span-full text-center py-12">
@@ -509,481 +656,4 @@ export function Residences() {
       </div>
     </section>
   );
-}
-
-const Icon360 = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16" height="16" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M21 12a9 9 0 1 1-6.2-8.7"/>
-    <path d="M17.4 8.6l-3.2 2.3 2.3 3.3"/>
-    <path d="m21.5 10.5-2-2.5-3 1.5"/>
-  </svg>
-);
-
-const UnitCard = ({ unit }) => {
-    const [api, setApi] = useState<CarouselApi>()
-    const [currentImageIndex, setCurrentImageIndex] = useState(0)
-    const [planView, setPlanView] = useState('2D');
-
-    useEffect(() => {
-        if (!api) {
-          return
-        }
-    
-        setCurrentImageIndex(api.selectedScrollSnap())
-        const onSelect = () => {
-          setCurrentImageIndex(api.selectedScrollSnap())
-        }
-        api.on("select", onSelect)
-    
-        return () => {
-          api.off("select", onSelect)
-        }
-    }, [api])
-
-    return (
-        <Card className="w-full max-w-4xl mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
-            <div className="md:grid md:grid-cols-2">
-                <div className="relative w-full group/image">
-                    <Carousel setApi={setApi} className="w-full">
-                        <CarouselContent>
-                            {unit.images.map((imgSrc, index) => (
-                                <CarouselItem key={index}>
-                                    <div className="aspect-[4/3] w-full">
-                                        <Image
-                                            src={imgSrc}
-                                            alt={`${unit.title} - Image ${index + 1}`}
-                                            data-ai-hint={unit.aiHint}
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 100vw, 50vw"
-                                        />
-                                    </div>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
-                        <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
-                        
-                        <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10 pointer-events-none">
-                            {unit.images.map((_, index) => (
-                                <button key={index} onClick={() => api?.scrollTo(index)} className="p-1 pointer-events-auto" aria-label={`Go to image ${index + 1}`}>
-                                    <div className={cn("w-2 h-2 rounded-full border-2 transition-all", 
-                                        currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80 bg-black/30'
-                                    )}></div>
-                                </button>
-                            ))}
-                        </div>
-
-                        <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
-                            <Camera className="w-4 h-4" />
-                            <span>{unit.images.length}</span>
-                        </div>
-                    </Carousel>
-                </div>
-
-                <div className="p-4 flex flex-col">
-                    <div className="flex justify-between items-start">
-                        <span className="text-sm text-muted-foreground">{unit.propertyType}</span>
-                        
-                    </div>
-
-                    <p className="text-2xl font-bold text-foreground my-1">
-                        AED {unit.rent.toLocaleString()} <span className="text-base font-normal text-muted-foreground">/ year</span>
-                    </p>
-                    
-                    <a href="#" className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">{unit.title}</a>
-                    
-                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
-                        <Calendar className="h-4 w-4" />
-                        <span>{unit.status}</span>
-                    </div>
-
-                    <div className="space-y-3 text-sm mt-4">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                            <MapPin className="w-4 h-4 flex-shrink-0" />
-                            <span>Churchill Residency Tower, Churchill Towers, Business Bay</span>
-                        </div>
-                        <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                                <Bed className="w-4 h-4" />
-                                <span>{unit.beds} Beds</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <Bath className="w-4 h-4" />
-                                <span>{unit.baths} Baths</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <Ruler className="w-4 h-4" />
-                                <span>{unit.area.toLocaleString()} sqft</span>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                                <Armchair className="w-4 h-4" />
-                                <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <View className="w-4 h-4" />
-                                <span>{unit.view}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center flex-wrap justify-start gap-2">
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none" disabled={!unit.virtualTourUrl}>
-                                    <Icon360 className="mr-1.5 h-4 w-4" /> <span>Virtual Tour</span>
-                                </Button>
-                            </DialogTrigger>
-                             {unit.virtualTourUrl && (
-                                <DialogContent className="p-0 w-[95vw] h-[90vh] max-w-7xl border-0">
-                                     <DialogHeader className="absolute top-2 right-2 z-10 p-0 m-0">
-                                         <DialogClose asChild>
-                                            <Button variant="default" size="icon" className="bg-black/50 hover:bg-black/70 text-white rounded-full h-10 w-10">
-                                                <X className="h-5 w-5" />
-                                                <span className="sr-only">Close</span>
-                                            </Button>
-                                        </DialogClose>
-                                    </DialogHeader>
-                                    <iframe
-                                        src={unit.virtualTourUrl}
-                                        width="100%"
-                                        height="100%"
-                                        allow="fullscreen"
-                                        className="rounded-lg"
-                                    />
-                                </DialogContent>
-                            )}
-                        </Dialog>
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" className="rounded-md flex-1 sm:flex-none" disabled={!unit.floorPlanImage}>
-                                    <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" /> <span>Floor Plan</span>
-                                </Button>
-                            </DialogTrigger>
-                            {unit.floorPlanImage && (
-                                <DialogContent className="p-0 max-w-4xl">
-                                    <div className="flex items-center justify-between p-4 border-b">
-                                        <DialogTitle className="text-lg font-semibold truncate pr-4">Floor Plan: {unit.title}</DialogTitle>
-                                        <div className="flex items-center gap-2 flex-shrink-0">
-                                            <div className="p-1 bg-muted rounded-lg flex gap-1">
-                                                <Button size="sm" variant={planView === '2D' ? 'default' : 'ghost'} onClick={() => setPlanView('2D')} className="h-8 rounded-md">2D</Button>
-                                                <Button size="sm" variant={planView === '3D' ? 'default' : 'ghost'} onClick={() => setPlanView('3D')} className="h-8 rounded-md" disabled={!unit.floorPlanImage3d}>3D</Button>
-                                            </div>
-                                            <DialogClose asChild>
-                                                <Button variant="ghost" size="icon" className="rounded-full -mr-2">
-                                                    <X className="h-4 w-4" />
-                                                </Button>
-                                            </DialogClose>
-                                        </div>
-                                    </div>
-                                    <div className="bg-muted/50 max-h-[80vh] overflow-auto">
-                                        <div className="flex justify-center items-center p-4">
-                                            <Image
-                                                src={planView === '2D' ? unit.floorPlanImage : (unit.floorPlanImage3d || '')}
-                                                alt={`Floor plan for ${unit.title} (${planView})`}
-                                                data-ai-hint="apartment floor plan"
-                                                width={1000}
-                                                height={1400}
-                                                className="w-auto h-auto max-w-none"
-                                            />
-                                        </div>
-                                    </div>
-                                </DialogContent>
-                            )}
-                        </Dialog>
-                    </div>
-                </div>
-            </div>
-
-            <div className="p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-3 flex-shrink-0">
-                    <Avatar className="h-10 w-10">
-                        <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="agent portrait" alt="Agent" />
-                        <AvatarFallback>EN</AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <p className="text-xs text-muted-foreground">Marketing by</p>
-                        <p className="font-semibold text-foreground text-sm">Prime Properties</p>
-                    </div>
-                </div>
-                <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2 w-full sm:w-auto">
-                    <div className="grid grid-cols-3 gap-2">
-                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Phone className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden sm:inline">Call</span> </Button>
-                        <Button variant="outline" size="sm" className="rounded-md justify-center"> <Mail className="mr-1.5 h-3.5 w-3.5" /> <span className="hidden sm:inline">Email</span> </Button>
-                        <Button size="sm" className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="mr-1.5 h-4 w-4">
-                              <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z"/>
-                            </svg>
-                            <span className="hidden sm:inline">WhatsApp</span>
-                        </Button>
-                    </div>
-                    <div className="flex items-center justify-center gap-0">
-                         <Separator orientation="vertical" className="h-6 mx-1 bg-border hidden sm:block" />
-                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Share2 className="w-5 h-5 text-muted-foreground" /> </Button>
-                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Bookmark className="w-5 h-5 text-muted-foreground" /> </Button>
-                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full"> <Heart className="w-5 h-5 text-muted-foreground" /> </Button>
-                    </div>
-                </div>
-            </div>
-        </Card>
-    );
-};
-
-
-// --- Filter Popover Components ---
-
-const FilterHeader = ({ title, onClear, isMobile }) => (
-    <DialogHeader className="p-4 border-b text-left relative flex-row justify-between items-center">
-        {isMobile && 
-          <DialogClose asChild>
-              <Button variant="ghost" size="icon" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
-              </Button>
-          </DialogClose>
-        }
-        <DialogTitle className="text-xl font-headline text-center flex-grow">{title}</DialogTitle>
-        <Button variant="link" onClick={onClear} className="text-primary p-0 h-auto">Clear</Button>
-    </DialogHeader>
-);
-
-const FilterPopoverFooter = ({ onApply, onClear, isMobile }) => {
-    const clearButton = <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>;
-    const applyButton = <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>;
-
-    if (isMobile) {
-        return (
-             <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-                <DialogClose asChild>
-                    {clearButton}
-                </DialogClose>
-                <DialogClose asChild>
-                    {applyButton}
-                </DialogClose>
-            </div>
-        )
-    }
-
-    return (
-        <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-            {clearButton}
-            {applyButton}
-        </div>
-    );
-};
-
-
-const ControlButton = ({ value, selectedValue, onSelect, children, className }) => (
-    <Button
-        variant="outline"
-        className={cn(
-          "h-10 transition-colors duration-200 ease-in-out border-border", 
-          selectedValue === value && "bg-primary-gradient border-transparent text-primary-foreground shadow-sm",
-          className
-        )}
-        onClick={() => onSelect(value)}
-    >
-        {children || value}
-    </Button>
-);
-
-const RentFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
-    const types = ['Rent', 'Buy'];
-    const buttonContent = (type) => {
-        const isSelected = values.type === type;
-        const button = (
-            <button
-              onClick={() => { onValueChange({ type }); onApply(); }} 
-              className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
-              <span>{type}</span> 
-              {isSelected && <Check className="h-4 w-4" />}
-            </button>
-        );
-        if (isMobile) {
-            return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
-        }
-        return <li key={type}>{button}</li>;
-    }
-    return (
-        <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile}/>}
-        <div className="p-2 w-64">
-             <ul className="max-h-60 overflow-y-auto">
-                {types.map(buttonContent)}
-            </ul>
-        </div>
-      </>
-    )
-};
-
-const UnitTypeFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
-    const types = ['Apartment', 'Penthouse', 'Villa', 'Townhouse'];
-    const buttonContent = (type) => {
-        const isSelected = values.type === type;
-        const button = (
-            <button
-              onClick={() => { onValueChange({ type }); onApply(); }} 
-              className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
-              <span>{type}</span> 
-              {isSelected && <Check className="h-4 w-4" />}
-            </button>
-        );
-         if (isMobile) {
-            return <li key={type}><DialogClose asChild>{button}</DialogClose></li>
-        }
-        return <li key={type}>{button}</li>;
-    };
-    return (
-        <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
-        <div className="p-2 w-64">
-             <ul className="max-h-60 overflow-y-auto">
-                {types.map(buttonContent)}
-            </ul>
-        </div>
-      </>
-    )
-};
-
-const PriceFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
-    return (
-      <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
-        <div className="w-full sm:w-96">
-            <div className="p-4 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <Input type="number" name="min_price" placeholder="Min. Price (AED)" value={values.min_price || ''} onChange={(e) => onValueChange({ min_price: e.target.value })} className="rounded-lg h-12"/>
-                     <Input type="number" name="max_price" placeholder="Max. Price (AED)" value={values.max_price || ''} onChange={(e) => onValueChange({ max_price: e.target.value })} className="rounded-lg h-12"/>
-                </div>
-                 <div>
-                    <h4 className="text-sm font-semibold text-foreground mb-2 block">Rental Period</h4>
-                    <div className="flex flex-wrap gap-2">
-                        {['Yearly', 'Monthly'].map(period => (
-                            <ControlButton key={period} value={period} selectedValue={values.period} onSelect={(val) => onValueChange({ period: val })} className="rounded-lg flex-1">{period}</ControlButton>
-                        ))}
-                    </div>
-                 </div>
-            </div>
-            <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
-        </div>
-      </>
-    )
-}
-
-const BedBathFilterPopover = ({ onValueChange, values, onApply, onClear, isMobile, title }) => {
-    const bedOptions = ['1', '2', '3', '4+'];
-    const bathOptions = ['1', '2', '3', '4', '5+'];
-    return (
-        <>
-            {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
-            <div className="w-full sm:w-80">
-                <div className="p-4 space-y-4">
-                     <div>
-                        <h4 className="text-sm font-semibold text-foreground mb-2 block">Bedrooms</h4>
-                        <div className="space-y-2">
-                            <ControlButton value={'Studio'} selectedValue={values.beds} onSelect={(val) => onValueChange({ beds: val })} className="w-full rounded-lg">Studio</ControlButton>
-                            <div className="flex flex-wrap gap-2">
-                                {bedOptions.map(o => <ControlButton key={o} value={o} selectedValue={values.beds} onSelect={(val) => onValueChange({ beds: val })} className="w-12 h-12 rounded-lg">{o}</ControlButton>)}
-                            </div>
-                        </div>
-                     </div>
-                     <div>
-                        <h4 className="text-sm font-semibold text-foreground mb-2 block">Bathrooms</h4>
-                        <div className="flex flex-wrap gap-2">
-                            {bathOptions.map(o => <ControlButton key={o} value={o} selectedValue={values.baths} onSelect={(val) => onValueChange({ baths: val })} className="w-12 h-12 rounded-lg">{o}</ControlButton>)}
-                        </div>
-                     </div>
-                </div>
-                <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
-            </div>
-        </>
-    )
-}
-
-
-const MoreFiltersModal = ({ onApply, onClear, initialValues, isExpanded, setIsExpanded }) => {
-    const [localFilters, setLocalFilters] = useState(initialValues || {});
-
-    const handleValueChange = (key, value) => {
-        setLocalFilters(prev => ({...prev, [key]: value}));
-    }
-    
-    const handleAmenityChange = (amenity, checked) => {
-        const currentAmenities = localFilters.amenities || [];
-        const newAmenities = checked
-            ? [...currentAmenities, amenity]
-            : currentAmenities.filter(a => a !== amenity);
-        handleValueChange('amenities', newAmenities);
-    }
-    
-    const amenitiesToShow = isExpanded ? allAmenities : allAmenities.slice(0, 9);
-    
-    const clearAndClose = () => {
-      setLocalFilters({});
-      onClear();
-    }
-
-    return (
-         <>
-            <DialogHeader className="p-6 border-b text-center relative">
-              <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
-                <DialogClose asChild>
-                    <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">Close</span>
-                    </Button>
-                </DialogClose>
-            </DialogHeader>
-
-            <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
-                 <div>
-                    <h4 className="font-semibold text-foreground mb-3">Furnishing</h4>
-                    <div className="flex flex-wrap gap-2">
-                         {['Any', 'Furnished', 'Unfurnished'].map(o => <ControlButton key={o} value={o} selectedValue={localFilters.furnishing || 'Any'} onSelect={(val) => handleValueChange('furnishing', val)} className="rounded-full px-4">{o}</ControlButton>)}
-                    </div>
-                </div>
-
-                <div>
-                    <h4 className="font-semibold text-foreground mb-3">Property Size (sq. ft.)</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                       <Input type="number" name="min_area" placeholder="Min. Area" value={localFilters.min_area || ''} onChange={e => handleValueChange('min_area', e.target.value)} className="rounded-lg h-12"/>
-                       <Input type="number" name="max_area" placeholder="Max. Area" value={localFilters.max_area || ''} onChange={e => handleValueChange('max_area', e.target.value)} className="rounded-lg h-12"/>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 className="font-semibold text-foreground mb-3">Amenities</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                         {amenitiesToShow.map(o => (
-                             <label key={o} className="flex items-center gap-3 p-1 rounded-md hover:bg-accent cursor-pointer">
-                                 <Checkbox 
-                                     id={`amenity-${o}`}
-                                     checked={localFilters.amenities?.includes(o) || false}
-                                     onCheckedChange={(checked) => handleAmenityChange(o, !!checked)}
-                                 />
-                                 <span className="text-sm">{o}</span>
-                             </label>
-                         ))}
-                    </div>
-                    {allAmenities.length > 9 && (
-                        <Button variant="link" className="text-primary p-0 h-auto mt-4" onClick={() => setIsExpanded(!isExpanded)}>
-                            {isExpanded ? 'Show less' : 'Show more'}
-                        </Button>
-                    )}
-                </div>
-            </div>
-            
-            <div className="p-4 bg-secondary/50 border-t flex justify-between items-center">
-                 <Button variant="ghost" onClick={clearAndClose}>Clear All</Button>
-                 <DialogClose asChild>
-                    <Button size="lg" className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={() => onApply(localFilters)}>Show Results</Button>
-                 </DialogClose>
-            </div>
-        </>
-    )
 }
