@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 function Icon360(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -117,16 +118,14 @@ export function UnitCard({ unit }: UnitCardProps) {
               <Carousel setApi={setApi} className="w-full">
                 <CarouselContent className="m-0">
                   {unit.images.map((imgSrc, index) => (
-                    <CarouselItem key={index} className="p-0">
-                      <div className="aspect-[4/3] w-full">
-                        <img
-                          src={imgSrc}
-                          alt={`${unit.title} - Image ${index + 1}`}
-                          data-ai-hint={unit.aiHint}
-                          className="w-full h-full object-cover"
-                          loading={index === 0 ? 'eager' : 'lazy'}
-                        />
-                      </div>
+                    <CarouselItem key={index} className="p-0 aspect-[4/3]">
+                      <img
+                        src={imgSrc}
+                        alt={`${unit.title} - Image ${index + 1}`}
+                        data-ai-hint={unit.aiHint}
+                        className="w-full h-full object-cover"
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                      />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -309,7 +308,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                       </div>
                       <div className="bg-muted/50 max-h-[80vh] overflow-auto">
                         <div className="flex justify-center items-center p-4">
-                          <img
+                          <Image
                             src={
                               planView === '2D'
                                 ? unit.floorPlanImage
@@ -317,6 +316,8 @@ export function UnitCard({ unit }: UnitCardProps) {
                             }
                             alt={`Floor plan for ${unit.title} (${planView})`}
                             data-ai-hint="apartment floor plan"
+                            width={1000}
+                            height={1400}
                             className="w-auto h-auto max-w-none"
                           />
                         </div>

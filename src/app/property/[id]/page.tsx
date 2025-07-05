@@ -156,15 +156,13 @@ export default function PropertyDetailsPage({
                 >
                   <CarouselContent className='m-0'>
                     {unit.images.map((img, index) => (
-                      <CarouselItem key={index} className='p-0'>
-                        <div className="aspect-video">
-                          <img
-                            src={img}
-                            alt={`Property image ${index + 1}`}
-                            className="w-full h-full object-cover"
-                            loading={index < 2 ? 'eager' : 'lazy'}
-                          />
-                        </div>
+                      <CarouselItem key={index} className='p-0 aspect-video'>
+                        <img
+                          src={img}
+                          alt={`Property image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                          loading={index < 2 ? 'eager' : 'lazy'}
+                        />
                       </CarouselItem>
                     ))}
                   </CarouselContent>
