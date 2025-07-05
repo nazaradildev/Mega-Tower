@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Bath,
   Bed,
@@ -91,63 +93,68 @@ export function UnitCard({ unit }: UnitCardProps) {
   }, [api]);
 
   return (
-    <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col sm:max-w-4xl">
+    <Card className="relative w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col sm:max-w-4xl">
       <div className="md:grid md:grid-cols-2">
         <div className="relative w-full group/image aspect-[4/3]">
-            <Carousel setApi={setApi} className="w-full h-full">
-              <CarouselContent className="m-0 h-full">
-                {unit.images.map((imgSrc, index) => (
-                  <CarouselItem key={index} className="p-0">
-                    <img
-                      src={imgSrc}
-                      alt={`${unit.title} - Image ${index + 1}`}
-                      data-ai-hint={unit.aiHint}
-                      className="w-full h-full object-cover"
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
-              <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity" />
+          <Carousel setApi={setApi} className="w-full h-full">
+            <CarouselContent className="m-0 h-full">
+              {unit.images.map((imgSrc, index) => (
+                <CarouselItem key={index} className="p-0">
+                  <img
+                    src={imgSrc}
+                    alt={`${unit.title} - Image ${index + 1}`}
+                    data-ai-hint={unit.aiHint}
+                    className="w-full h-full object-cover"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
+            <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
 
-              <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10">
-                  {unit.images.map((_, index) => (
-                      <button key={index} onClick={(e) => { e.preventDefault(); e.stopPropagation(); api?.scrollTo(index); }} className="p-1" aria-label={`Go to image ${index + 1}`}>
-                          <div className={cn("w-2 h-2 rounded-full border-2 transition-all", 
-                              currentImageIndex === index ? 'bg-primary border-primary' : 'border-white/80 bg-black/30'
-                          )}></div>
-                      </button>
-                  ))}
-              </div>
+            <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10">
+              {unit.images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={(e) => {
+                    api?.scrollTo(index);
+                  }}
+                  className="p-1"
+                  aria-label={`Go to image ${index + 1}`}
+                >
+                  <div
+                    className={cn(
+                      'w-2 h-2 rounded-full border-2 transition-all',
+                      currentImageIndex === index
+                        ? 'bg-primary border-primary'
+                        : 'border-white/80 bg-black/30'
+                    )}
+                  ></div>
+                </button>
+              ))}
+            </div>
 
-              <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
-                <Camera className="w-4 h-4" />
-                <span>{unit.images.length}</span>
-              </div>
+            <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
+              <Camera className="w-4 h-4" />
+              <span>{unit.images.length}</span>
+            </div>
           </Carousel>
         </div>
 
         <div className="p-4 flex flex-col">
-            <Link href={`/property/${unit.id}`}>
-                <span className="text-sm text-muted-foreground hover:text-primary transition-colors">{unit.propertyType}</span>
-            </Link>
-
-          <Link href={`/property/${unit.id}`}>
-            <p className="text-2xl font-bold text-foreground my-1 hover:text-primary transition-colors">
-              AED {unit.rent.toLocaleString()}{' '}
-              <span className="text-base font-normal text-muted-foreground">
-                / year
-              </span>
-            </p>
-          </Link>
-
-          <Link href={`/property/${unit.id}`}>
-            <span className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer block truncate">
-              {unit.title}
+          <span className="text-sm text-muted-foreground">
+            {unit.propertyType}
+          </span>
+          <p className="text-2xl font-bold text-foreground my-1">
+            AED {unit.rent.toLocaleString()}{' '}
+            <span className="text-base font-normal text-muted-foreground">
+              / year
             </span>
-          </Link>
-
+          </p>
+          <span className="text-lg font-semibold text-foreground block truncate">
+            {unit.title}
+          </span>
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
             <Calendar className="h-4 w-4" />
             <span>{unit.status}</span>
@@ -186,9 +193,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             </div>
           </div>
 
-          <div
-            className="mt-auto pt-4 flex items-center flex-wrap justify-start gap-2"
-          >
+          <div className="relative z-10 mt-auto pt-4 flex items-center flex-wrap justify-start gap-2">
             <Dialog>
               <DialogTrigger asChild>
                 <Button
@@ -196,7 +201,6 @@ export function UnitCard({ unit }: UnitCardProps) {
                   size="sm"
                   className="rounded-md flex-1 sm:flex-none"
                   disabled={!unit.virtualTourUrl}
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                 >
                   <Icon360 className="mr-1.5 h-4 w-4" />{' '}
                   <span>Virtual Tour</span>
@@ -233,7 +237,6 @@ export function UnitCard({ unit }: UnitCardProps) {
                   size="sm"
                   className="rounded-md flex-1 sm:flex-none"
                   disabled={!unit.floorPlanImage}
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                 >
                   <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" />{' '}
                   <span>Floor Plan</span>
@@ -299,9 +302,7 @@ export function UnitCard({ unit }: UnitCardProps) {
         </div>
       </div>
 
-      <div
-        className="p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
+      <div className="relative z-10 p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3 flex-shrink-0">
           <Avatar className="h-10 w-10">
             <AvatarImage
@@ -365,28 +366,30 @@ export function UnitCard({ unit }: UnitCardProps) {
               size="icon"
               className="h-9 w-9 rounded-full"
             >
-              {' '}
-              <Share2 className="w-5 h-5 text-muted-foreground" />{' '}
+              <Share2 className="w-5 h-5 text-muted-foreground" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               className="h-9 w-9 rounded-full"
             >
-              {' '}
-              <Bookmark className="w-5 h-5 text-muted-foreground" />{' '}
+              <Bookmark className="w-5 h-5 text-muted-foreground" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               className="h-9 w-9 rounded-full"
             >
-              {' '}
-              <Heart className="w-5 h-5 text-muted-foreground" />{' '}
+              <Heart className="w-5 h-5 text-muted-foreground" />
             </Button>
           </div>
         </div>
       </div>
+      <Link
+        href={`/property/${unit.id}`}
+        className="absolute inset-0"
+        aria-label={`View details for ${unit.title}`}
+      />
     </Card>
   );
 }
