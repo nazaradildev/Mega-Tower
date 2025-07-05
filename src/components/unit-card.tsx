@@ -114,14 +114,14 @@ export function UnitCard({ unit }: UnitCardProps) {
                 <CarouselContent>
                   {unit.images.map((imgSrc, index) => (
                     <CarouselItem key={index}>
-                      <div className="aspect-[4/3] w-full relative">
+                      <div className="aspect-[4/3] w-full overflow-hidden">
                         <Image
                           src={imgSrc}
                           alt={`${unit.title} - Image ${index + 1}`}
                           data-ai-hint={unit.aiHint}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 50vw"
+                          width={800}
+                          height={600}
+                          className="w-full h-full object-cover"
                           priority={index === 0}
                         />
                       </div>
