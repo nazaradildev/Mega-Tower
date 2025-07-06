@@ -32,6 +32,7 @@ import {
   Heart,
   Home,
   Landmark,
+  LayoutDashboard,
   Mail,
   MapPin,
   ParkingSquare,
@@ -41,6 +42,8 @@ import {
   Shirt,
   ToyBrick,
   Users,
+  Video,
+  View,
   Waves,
   X,
 } from 'lucide-react';
@@ -60,8 +63,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -89,6 +90,7 @@ export default function PropertyDetailsPage({
   const [api, setApi] = React.useState<CarouselApi>();
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [viewMode, setViewMode] = React.useState<'gallery' | 'video' | 'virtualTour' | 'floorPlan'>('gallery');
 
   const amenityIcons: Record<string, React.ElementType> = {
     Balcony: GalleryVerticalEnd,
@@ -130,6 +132,7 @@ export default function PropertyDetailsPage({
   }, [api, thumbApi]);
 
   const onThumbClick = (index: number) => {
+    setViewMode('gallery');
     api?.scrollTo(index);
   };
 
@@ -192,23 +195,89 @@ export default function PropertyDetailsPage({
             <div className="col-span-1 lg:col-span-2">
               <Card className="overflow-hidden">
                 <div className="aspect-[4/3]">
-                  <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
-                    <CarouselContent className="m-0 h-full">
-                      {unit.images.map((img, index) => (
-                        <CarouselItem key={index} className="p-0">
+                  {viewMode === 'gallery' && (
+                    <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
+                      <CarouselContent className="m-0 h-full">
+                        {unit.images.map((img, index) => (
+                          <CarouselItem key={index} className="p-0">
+                            <img
+                              src={img}
+                              alt={`Property image ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+                      <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
+                    </Carousel>
+                  )}
+                  {viewMode === 'virtualTour' && (
+                    unit.virtualTourUrl ? (
+                    <iframe
+                        src={unit.virtualTourUrl}
+                        width="100%"
+                        height="100%"
+                        allow="fullscreen"
+                        className="border-0 w-full h-full"
+                    />
+                    ) : (
+                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <p className="text-muted-foreground">Virtual tour not available.</p>
+                    </div>
+                    )
+                  )}
+                  {viewMode === 'floorPlan' && (
+                      unit.floorPlanImage ? (
+                      <div className="w-full h-full bg-muted flex items-center justify-center p-4">
                           <img
-                            src={img}
-                            alt={`Property image ${index + 1}`}
-                            className="w-full h-full object-cover"
+                          src={unit.floorPlanImage}
+                          alt={`Floor plan for ${unit.title}`}
+                          className="w-auto h-full object-contain max-w-full max-h-full"
                           />
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
-                    <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
-                  </Carousel>
+                      </div>
+                      ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <p className="text-muted-foreground">Floor plan not available.</p>
+                      </div>
+                      )
+                  )}
+                  {viewMode === 'video' && (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <p className="text-muted-foreground">Video not available.</p>
+                      </div>
+                  )}
                 </div>
               </Card>
+
+              <div className="my-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <Button
+                  variant={viewMode === 'video' ? 'default' : 'outline'}
+                  onClick={() => setViewMode('video')}
+                  className="rounded-lg"
+                >
+                  <Video className="mr-2 h-4 w-4" />
+                  Video
+                </Button>
+                <Button
+                  variant={viewMode === 'virtualTour' ? 'default' : 'outline'}
+                  onClick={() => setViewMode('virtualTour')}
+                  disabled={!unit.virtualTourUrl}
+                  className="rounded-lg"
+                >
+                  <View className="mr-2 h-4 w-4" />
+                  Virtual Tour
+                </Button>
+                <Button
+                  variant={viewMode === 'floorPlan' ? 'default' : 'outline'}
+                  onClick={() => setViewMode('floorPlan')}
+                  disabled={!unit.floorPlanImage}
+                  className="rounded-lg"
+                >
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  Floor Plan
+                </Button>
+              </div>
 
               <div className="mt-4">
                 <Carousel
@@ -229,7 +298,7 @@ export default function PropertyDetailsPage({
                         <div
                           className={cn(
                             'aspect-video p-1 rounded-md',
-                            index === selectedIndex
+                            index === selectedIndex && viewMode === 'gallery'
                               ? 'bg-primary'
                               : 'bg-transparent'
                           )}
