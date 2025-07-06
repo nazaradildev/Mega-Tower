@@ -93,9 +93,9 @@ export function UnitCard({ unit }: UnitCardProps) {
   }, [api]);
 
   return (
-    <Card className="relative w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row md:max-w-4xl">
+    <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row">
       {/* Image Part */}
-      <div className="w-full md:w-1/2 relative group/image aspect-[4/3] md:aspect-auto flex-shrink-0">
+      <div className="w-full md:w-1/2 relative group/image aspect-[4/3] flex-shrink-0">
         <Carousel setApi={setApi} className="w-full h-full">
           <CarouselContent className="m-0 h-full">
             {unit.images.map((imgSrc, index) => (
@@ -143,7 +143,12 @@ export function UnitCard({ unit }: UnitCardProps) {
       </div>
 
       {/* Content Part */}
-      <div className="w-full md:w-1/2 flex flex-col">
+      <div className="w-full md:w-1/2 flex flex-col relative">
+        <Link
+          href={`/property/${unit.id}`}
+          className="absolute inset-0 z-0"
+          aria-label={`View details for ${unit.title}`}
+        />
         {/* Main Content */}
         <div className="p-4 flex flex-col flex-grow">
           <span className="text-sm text-muted-foreground">
@@ -322,25 +327,23 @@ export function UnitCard({ unit }: UnitCardProps) {
               </p>
             </div>
           </div>
-          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2 w-full sm:w-auto">
-            <div className="grid grid-cols-3 gap-2">
+          <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto justify-end gap-2">
+            <div className="w-full sm:w-auto grid grid-cols-3 gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 className="rounded-md justify-center"
               >
-                {' '}
-                <Phone className="mr-1.5 h-3.5 w-3.5" />{' '}
-                <span className="hidden sm:inline">Call</span>{' '}
+                <Phone className="mr-1.5 h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Call</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 className="rounded-md justify-center"
               >
-                {' '}
-                <Mail className="mr-1.5 h-3.5 w-3.5" />{' '}
-                <span className="hidden sm:inline">Email</span>{' '}
+                <Mail className="mr-1.5 h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Email</span>
               </Button>
               <Button
                 size="sm"
@@ -389,12 +392,6 @@ export function UnitCard({ unit }: UnitCardProps) {
           </div>
         </div>
       </div>
-
-      <Link
-        href={`/property/${unit.id}`}
-        className="absolute inset-0 z-0"
-        aria-label={`View details for ${unit.title}`}
-      />
     </Card>
   );
 }
