@@ -27,6 +27,7 @@ import {
   Phone,
   Ruler,
   Share2,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -39,6 +40,13 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Footer } from '@/components/footer';
@@ -145,27 +153,24 @@ export default function PropertyDetailsPage({
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left/Main Column */}
             <div className="col-span-1 lg:col-span-2">
-              <Card className="overflow-hidden aspect-video">
-                <Carousel
-                  setApi={setApi}
-                  className="w-full h-full"
-                  opts={{ loop: true }}
-                >
-                  <CarouselContent className='m-0 h-full'>
-                    {unit.images.map((img, index) => (
-                      <CarouselItem key={index} className='p-0'>
-                        <img
-                          src={img}
-                          alt={`Property image ${index + 1}`}
-                          className="w-full h-full object-cover"
-                          loading={index < 2 ? 'eager' : 'lazy'}
-                        />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
-                  <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
-                </Carousel>
+              <Card className="overflow-hidden">
+                <div className="aspect-[4/3]">
+                  <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
+                    <CarouselContent className="m-0 h-full">
+                      {unit.images.map((img, index) => (
+                        <CarouselItem key={index} className="p-0">
+                          <img
+                            src={img}
+                            alt={`Property image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+                    <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
+                  </Carousel>
+                </div>
               </Card>
 
               <div className="mt-4">
@@ -261,16 +266,71 @@ export default function PropertyDetailsPage({
                     <h3 className="text-xl font-bold font-headline mb-4">
                       Description
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Discover the pinnacle of urban living in this stunning{' '}
-                      {unit.beds}-bedroom apartment located in the prestigious
-                      Churchill Towers, Business Bay. Offering breathtaking
-                      views of the {unit.view}, this residence combines luxury,
-                      comfort, and convenience. The spacious layout is perfect
-                      for both relaxation and entertaining, featuring high-end
-                      finishes and floor-to-ceiling windows that flood the space
-                      with natural light.
-                    </p>
+                    <div className="text-muted-foreground leading-relaxed space-y-2">
+                      <p className="line-clamp-4">
+                        Discover the pinnacle of urban living in this stunning{' '}
+                        {unit.beds}-bedroom apartment located in the prestigious
+                        Churchill Towers, Business Bay. Offering breathtaking
+                        views of the {unit.view}, this residence combines
+                        luxury, comfort, and convenience. The spacious layout
+                        is perfect for both relaxation and entertaining,
+                        featuring high-end finishes and floor-to-ceiling
+                        windows that flood the space with natural light.
+                      </p>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="link"
+                            className="p-0 h-auto text-primary font-semibold"
+                          >
+                            Read More...
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl">
+                          <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">
+                              Description
+                            </DialogTitle>
+                          </DialogHeader>
+                          <div className="py-4 space-y-4 max-h-[70vh] overflow-y-auto pr-6 text-muted-foreground leading-relaxed">
+                            <p>
+                              Discover the pinnacle of urban living in this
+                              stunning {unit.beds}-bedroom apartment located in
+                              the prestigious Churchill Towers, Business Bay.
+                              Offering breathtaking views of the {unit.view},
+                              this residence combines luxury, comfort, and
+                              convenience. The spacious layout is perfect for
+                              both relaxation and entertaining, featuring
+                              high-end finishes and floor-to-ceiling windows
+                              that flood the space with natural light.
+                            </p>
+                            <p>
+                              The apartment boasts a modern kitchen with
+                              top-of-the-line appliances, elegant bathrooms,
+                              and ample storage space. Residents of Churchill
+                              Towers enjoy access to exclusive amenities,
+                              creating a lifestyle of unparalleled comfort and
+                              sophistication.
+                            </p>
+
+                            <h4 className="font-bold text-foreground pt-4">
+                              Property Features:
+                            </h4>
+                            <ul className="list-disc list-inside space-y-1">
+                              <li>{unit.beds} Bedroom</li>
+                              <li>{unit.baths} Baths</li>
+                              <li>{unit.area.toLocaleString()} sq. ft.</li>
+                              <li>
+                                {unit.furnished
+                                  ? 'Furnished'
+                                  : 'Unfurnished'}
+                              </li>
+                              <li>View: {unit.view}</li>
+                            </ul>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
 
                   <Separator className="my-6" />
