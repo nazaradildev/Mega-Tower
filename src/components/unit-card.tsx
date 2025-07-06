@@ -93,56 +93,59 @@ export function UnitCard({ unit }: UnitCardProps) {
   }, [api]);
 
   return (
-    <Card className="relative w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col sm:max-w-4xl">
-      <div className="md:grid md:grid-cols-2">
-        <div className="relative w-full group/image aspect-[4/3]">
-          <Carousel setApi={setApi} className="w-full h-full">
-            <CarouselContent className="m-0 h-full">
-              {unit.images.map((imgSrc, index) => (
-                <CarouselItem key={index} className="p-0">
-                  <img
-                    src={imgSrc}
-                    alt={`${unit.title} - Image ${index + 1}`}
-                    data-ai-hint={unit.aiHint}
-                    className="w-full h-full object-cover"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
-            <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
+    <Card className="relative w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row md:max-w-4xl">
+      {/* Image Part */}
+      <div className="w-full md:w-1/2 relative group/image aspect-[4/3] md:aspect-auto flex-shrink-0">
+        <Carousel setApi={setApi} className="w-full h-full">
+          <CarouselContent className="m-0 h-full">
+            {unit.images.map((imgSrc, index) => (
+              <CarouselItem key={index} className="p-0">
+                <img
+                  src={imgSrc}
+                  alt={`${unit.title} - Image ${index + 1}`}
+                  data-ai-hint={unit.aiHint}
+                  className="w-full h-full object-cover"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
+          <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
 
-            <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10">
-              {unit.images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={(e) => {
-                    api?.scrollTo(index);
-                  }}
-                  className="p-1"
-                  aria-label={`Go to image ${index + 1}`}
-                >
-                  <div
-                    className={cn(
-                      'w-2 h-2 rounded-full border-2 transition-all',
-                      currentImageIndex === index
-                        ? 'bg-primary border-primary'
-                        : 'border-white/80 bg-black/30'
-                    )}
-                  ></div>
-                </button>
-              ))}
-            </div>
+          <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10">
+            {unit.images.map((_, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  api?.scrollTo(index);
+                }}
+                className="p-1"
+                aria-label={`Go to image ${index + 1}`}
+              >
+                <div
+                  className={cn(
+                    'w-2 h-2 rounded-full border-2 transition-all',
+                    currentImageIndex === index
+                      ? 'bg-primary border-primary'
+                      : 'border-white/80 bg-black/30'
+                  )}
+                ></div>
+              </button>
+            ))}
+          </div>
 
-            <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
-              <Camera className="w-4 h-4" />
-              <span>{unit.images.length}</span>
-            </div>
-          </Carousel>
-        </div>
+          <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
+            <Camera className="w-4 h-4" />
+            <span>{unit.images.length}</span>
+          </div>
+        </Carousel>
+      </div>
 
-        <div className="p-4 flex flex-col">
+      {/* Content Part */}
+      <div className="w-full md:w-1/2 flex flex-col">
+        {/* Main Content */}
+        <div className="p-4 flex flex-col flex-grow">
           <span className="text-sm text-muted-foreground">
             {unit.propertyType}
           </span>
@@ -300,94 +303,96 @@ export function UnitCard({ unit }: UnitCardProps) {
             </Dialog>
           </div>
         </div>
+
+        {/* Footer */}
+        <div className="relative z-10 p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src="https://placehold.co/40x40.png"
+                data-ai-hint="agent portrait"
+                alt="Agent"
+              />
+              <AvatarFallback>EN</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-xs text-muted-foreground">Marketing by</p>
+              <p className="font-semibold text-foreground text-sm">
+                Prime Properties
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2 w-full sm:w-auto">
+            <div className="grid grid-cols-3 gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md justify-center"
+              >
+                {' '}
+                <Phone className="mr-1.5 h-3.5 w-3.5" />{' '}
+                <span className="hidden sm:inline">Call</span>{' '}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md justify-center"
+              >
+                {' '}
+                <Mail className="mr-1.5 h-3.5 w-3.5" />{' '}
+                <span className="hidden sm:inline">Email</span>{' '}
+              </Button>
+              <Button
+                size="sm"
+                className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  className="mr-1.5 h-4 w-4"
+                >
+                  <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z" />
+                </svg>
+                <span className="hidden sm:inline">WhatsApp</span>
+              </Button>
+            </div>
+            <div className="flex items-center justify-center gap-0">
+              <Separator
+                orientation="vertical"
+                className="h-6 mx-1 bg-border hidden sm:block"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full"
+              >
+                <Share2 className="w-5 h-5 text-muted-foreground" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full"
+              >
+                <Bookmark className="w-5 h-5 text-muted-foreground" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full"
+              >
+                <Heart className="w-5 h-5 text-muted-foreground" />
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="relative z-10 p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <Avatar className="h-10 w-10">
-            <AvatarImage
-              src="https://placehold.co/40x40.png"
-              data-ai-hint="agent portrait"
-              alt="Agent"
-            />
-            <AvatarFallback>EN</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-xs text-muted-foreground">Marketing by</p>
-            <p className="font-semibold text-foreground text-sm">
-              Prime Properties
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2 w-full sm:w-auto">
-          <div className="grid grid-cols-3 gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-md justify-center"
-            >
-              {' '}
-              <Phone className="mr-1.5 h-3.5 w-3.5" />{' '}
-              <span className="hidden sm:inline">Call</span>{' '}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-md justify-center"
-            >
-              {' '}
-              <Mail className="mr-1.5 h-3.5 w-3.5" />{' '}
-              <span className="hidden sm:inline">Email</span>{' '}
-            </Button>
-            <Button
-              size="sm"
-              className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-                className="mr-1.5 h-4 w-4"
-              >
-                <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z" />
-              </svg>
-              <span className="hidden sm:inline">WhatsApp</span>
-            </Button>
-          </div>
-          <div className="flex items-center justify-center gap-0">
-            <Separator
-              orientation="vertical"
-              className="h-6 mx-1 bg-border hidden sm:block"
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 rounded-full"
-            >
-              <Share2 className="w-5 h-5 text-muted-foreground" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 rounded-full"
-            >
-              <Bookmark className="w-5 h-5 text-muted-foreground" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 rounded-full"
-            >
-              <Heart className="w-5 h-5 text-muted-foreground" />
-            </Button>
-          </div>
-        </div>
-      </div>
       <Link
         href={`/property/${unit.id}`}
-        className="absolute inset-0"
+        className="absolute inset-0 z-0"
         aria-label={`View details for ${unit.title}`}
       />
     </Card>
