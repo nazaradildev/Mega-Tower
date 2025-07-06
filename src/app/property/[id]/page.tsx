@@ -60,6 +60,7 @@ import {
 } from '@/components/ui/carousel';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -91,6 +92,7 @@ export default function PropertyDetailsPage() {
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [viewMode, setViewMode] = React.useState<'gallery' | 'video' | 'virtualTour' | 'floorPlan'>('gallery');
+  const [zoomedImageUrl, setZoomedImageUrl] = React.useState<string | null>(null);
 
   const amenityIcons: Record<string, React.ElementType> = {
     Balcony: GalleryVerticalEnd,
@@ -199,11 +201,15 @@ export default function PropertyDetailsPage() {
                     <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
                       <CarouselContent className="m-0 h-full">
                         {unit.images.map((img, index) => (
-                          <CarouselItem key={index} className="p-0">
+                          <CarouselItem
+                            key={index}
+                            className="p-0"
+                            onDoubleClick={() => setZoomedImageUrl(img)}
+                          >
                             <img
                               src={img}
                               alt={`Property image ${index + 1}`}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover cursor-zoom-in"
                             />
                           </CarouselItem>
                         ))}
@@ -229,7 +235,10 @@ export default function PropertyDetailsPage() {
                   )}
                   {viewMode === 'floorPlan' && (
                       unit.floorPlanImage ? (
-                      <div className="w-full h-full bg-muted flex items-center justify-center p-4">
+                      <div 
+                        className="w-full h-full bg-muted flex items-center justify-center p-4 cursor-zoom-in"
+                        onDoubleClick={() => unit.floorPlanImage && setZoomedImageUrl(unit.floorPlanImage)}
+                      >
                           <img
                           src={unit.floorPlanImage}
                           alt={`Floor plan for ${unit.title}`}
@@ -610,6 +619,18 @@ export default function PropertyDetailsPage() {
           </div>
         </div>
       </main>
+      <Dialog open={!!zoomedImageUrl} onOpenChange={(open) => !open && setZoomedImageUrl(null)}>
+        <DialogContent className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center outline-none ring-0">
+            <DialogClose asChild>
+                <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full">
+                    <X className="h-6 w-6" />
+                </Button>
+            </DialogClose>
+            {zoomedImageUrl && (
+                <img src={zoomedImageUrl} alt="Zoomed view" className="max-w-[95vw] max-h-[95vh] object-contain" />
+            )}
+        </DialogContent>
+      </Dialog>
       <Footer />
     </div>
   );
