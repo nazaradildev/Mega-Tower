@@ -1,5 +1,6 @@
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 
 export function Footer() {
@@ -8,8 +9,8 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-8">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
           <div className="text-center sm:text-left">
-            <Link href="/" className="font-bold text-2xl font-headline">
-              eni
+            <Link href="/">
+              <Image src="/ENI.png" alt="ENI Logo" width={100} height={34} />
             </Link>
             <p className="text-sm text-muted-foreground mt-2">
               © {new Date().getFullYear()} Churchill Living. All rights reserved.
