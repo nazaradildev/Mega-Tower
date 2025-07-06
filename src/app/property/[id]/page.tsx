@@ -14,19 +14,34 @@ import {
 import { units } from '@/data/units';
 import { notFound } from 'next/navigation';
 import {
+  AirVent,
   ArrowLeft,
   Bath,
   BedDouble,
+  BellRing,
+  BookOpen,
   Building,
   CheckCircle,
   ChevronRight,
+  Cloudy,
+  Dog,
+  DoorOpen,
+  Dumbbell,
+  Flame,
+  GalleryVerticalEnd,
   Heart,
   Home,
+  Landmark,
   Mail,
   MapPin,
+  ParkingSquare,
   Phone,
   Ruler,
   Share2,
+  Shirt,
+  ToyBrick,
+  Users,
+  Waves,
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -46,6 +61,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -73,6 +89,27 @@ export default function PropertyDetailsPage({
   const [api, setApi] = React.useState<CarouselApi>();
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  const amenityIcons: Record<string, React.ElementType> = {
+    Balcony: GalleryVerticalEnd,
+    'Shared Pool': Waves,
+    'Shared Gym': Dumbbell,
+    'Covered Parking': ParkingSquare,
+    'View of Landmark': Landmark,
+    'View of Water': Waves,
+    'Walk-in Closet': DoorOpen,
+    'Private Jacuzzi': Bath,
+    Study: BookOpen,
+    'Maids Room': Users,
+    'Pets Allowed': Dog,
+    "Children's Play Area": ToyBrick,
+    "Children's Pool": Waves,
+    'Barbecue Area': Flame,
+    'Built in Wardrobes': Shirt,
+    'Central A/C': AirVent,
+    'Concierge Service': BellRing,
+    'Shared Spa': Cloudy,
+  };
 
   React.useEffect(() => {
     if (!api) {
@@ -340,17 +377,20 @@ export default function PropertyDetailsPage({
                       Amenities
                     </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {unit.amenities.map((amenity) => (
-                        <div
-                          key={amenity}
-                          className="flex items-center gap-2"
-                        >
-                          <CheckCircle className="h-5 w-5 text-primary" />
-                          <span className="text-muted-foreground">
-                            {amenity}
-                          </span>
-                        </div>
-                      ))}
+                      {unit.amenities.map((amenity) => {
+                        const Icon = amenityIcons[amenity] || CheckCircle;
+                        return (
+                          <div
+                            key={amenity}
+                            className="flex items-center gap-2"
+                          >
+                            <Icon className="h-5 w-5 text-primary" />
+                            <span className="text-muted-foreground">
+                              {amenity}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </CardContent>
