@@ -12,7 +12,7 @@ import {
 } from 'recharts';
 
 import { units } from '@/data/units';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import {
   AirVent,
   ArrowLeft,
@@ -81,12 +81,11 @@ const priceData = [
   { month: 'Jun', price: 148000 },
 ];
 
-export default function PropertyDetailsPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const unit = units.find((u) => u.id === parseInt(params.id));
+export default function PropertyDetailsPage() {
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const unit = units.find((u) => u.id === parseInt(id, 10));
+
   const [api, setApi] = React.useState<CarouselApi>();
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
