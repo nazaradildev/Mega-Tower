@@ -37,6 +37,7 @@ import {
   MapPin,
   ParkingSquare,
   Phone,
+  RefreshCw,
   Ruler,
   Share2,
   Shirt,
@@ -46,6 +47,8 @@ import {
   View,
   Waves,
   X,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -92,7 +95,12 @@ export default function PropertyDetailsPage() {
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [viewMode, setViewMode] = React.useState<'gallery' | 'video' | 'virtualTour' | 'floorPlan'>('gallery');
+  
   const [zoomedImageUrl, setZoomedImageUrl] = React.useState<string | null>(null);
+  const [zoomTransform, setZoomTransform] = React.useState({ scale: 1, x: 0, y: 0 });
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragStart, setDragStart] = React.useState({ x: 0, y: 0 });
+
 
   const amenityIcons: Record<string, React.ElementType> = {
     Balcony: GalleryVerticalEnd,
@@ -132,11 +140,55 @@ export default function PropertyDetailsPage() {
       api.off('select', onSelect);
     };
   }, [api, thumbApi]);
+  
+  React.useEffect(() => {
+    if (zoomedImageUrl) {
+      setZoomTransform({ scale: 1, x: 0, y: 0 });
+    }
+  }, [zoomedImageUrl]);
 
   const onThumbClick = (index: number) => {
     setViewMode('gallery');
     api?.scrollTo(index);
   };
+  
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+    setDragStart({ 
+        x: e.clientX - zoomTransform.x, 
+        y: e.clientY - zoomTransform.y 
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    setZoomTransform(prev => ({
+        ...prev,
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+    }));
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+  
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const scaleAmount = 0.1;
+    const newScale = e.deltaY > 0 ? zoomTransform.scale - scaleAmount : zoomTransform.scale + scaleAmount;
+    setZoomTransform(prev => ({
+        ...prev,
+        scale: Math.max(0.5, Math.min(newScale, 5)) // Clamp scale
+    }));
+  }
+  
+  const handleZoomIn = () => setZoomTransform(prev => ({ ...prev, scale: Math.min(prev.scale + 0.2, 5) }));
+  const handleZoomOut = () => setZoomTransform(prev => ({ ...prev, scale: Math.max(0.5, prev.scale - 0.2) }));
+  const handleResetZoom = () => setZoomTransform({ scale: 1, x: 0, y: 0 });
+
 
   if (!unit) {
     notFound();
@@ -619,15 +671,47 @@ export default function PropertyDetailsPage() {
           </div>
         </div>
       </main>
-      <Dialog open={!!zoomedImageUrl} onOpenChange={(open) => !open && setZoomedImageUrl(null)}>
-        <DialogContent className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center outline-none ring-0">
+      <Dialog open={!!zoomedImageUrl} onOpenChange={(open) => { if (!open) { setZoomedImageUrl(null); } }}>
+        <DialogContent 
+            className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center outline-none ring-0"
+            onWheel={handleWheel}
+        >
             <DialogClose asChild>
                 <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full">
                     <X className="h-6 w-6" />
                 </Button>
             </DialogClose>
+             <div className="absolute top-4 left-4 z-50 flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={handleZoomIn} className="text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full">
+                    <ZoomIn className="h-6 w-6" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={handleZoomOut} className="text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full">
+                    <ZoomOut className="h-6 w-6" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={handleResetZoom} className="text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full">
+                    <RefreshCw className="h-5 w-5" />
+                </Button>
+            </div>
             {zoomedImageUrl && (
-                <img src={zoomedImageUrl} alt="Zoomed view" className="max-w-[95vw] max-h-[95vh] object-contain" />
+                <div 
+                    className="w-full h-full overflow-hidden" 
+                    style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseUp}
+                >
+                    <img 
+                        src={zoomedImageUrl} 
+                        alt="Zoomed view" 
+                        className="max-w-none max-h-none transition-transform duration-100 ease-linear"
+                        style={{ 
+                            transform: `scale(${zoomTransform.scale}) translate(${zoomTransform.x}px, ${zoomTransform.y}px)`,
+                            width: 'auto',
+                            height: 'auto',
+                        }}
+                    />
+                </div>
             )}
         </DialogContent>
       </Dialog>
