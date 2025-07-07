@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { units, type Unit } from "@/data/units";
+import { Card, CardContent } from "@/components/ui/card";
 
 const featuredAmenities = [
   {
@@ -29,6 +31,19 @@ const featuredAmenities = [
     aiHint: "modern building garden",
   },
 ];
+
+// Get unique floor plans from units data
+const floorPlans = units
+  .filter(unit => unit.floorPlanImage)
+  .reduce((acc, current) => {
+    // Add unit only if a plan for that bed count doesn't exist yet
+    if (!acc.some(item => item.beds === current.beds)) {
+      acc.push(current);
+    }
+    return acc;
+  }, [] as Unit[])
+  .sort((a,b) => a.beds - b.beds);
+
 
 export function Amenities() {
   return (
@@ -60,6 +75,36 @@ export function Amenities() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 md:mt-24">
+            <div className="text-center mb-12 md:mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold font-headline">Explore Our Floor Plans</h2>
+                <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
+                    Find the perfect layout that suits your lifestyle.
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {floorPlans.map((plan, index) => (
+                    <Card key={index} className="overflow-hidden">
+                        <CardContent className="p-4">
+                            <h3 className="font-bold text-lg mb-4 text-center">{plan.title}</h3>
+                            <div className="aspect-[4/3] bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                                {plan.floorPlanImage && (
+                                    <Image
+                                        src={plan.floorPlanImage}
+                                        alt={`Floor plan for ${plan.title}`}
+                                        data-ai-hint="apartment floor plan"
+                                        width={800}
+                                        height={600}
+                                        className="w-auto h-full object-contain"
+                                    />
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
         </div>
 
       </div>

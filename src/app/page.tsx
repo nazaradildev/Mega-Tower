@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/header';
 import { Residences } from '@/components/residences';
-import { ImmersiveExperience } from '@/components/immersive-experience';
 import { Amenities } from '@/components/amenities';
 import { Location } from '@/components/location';
 import { Contact } from '@/components/contact';
@@ -75,7 +74,6 @@ export default function Home() {
         </section>
 
         <Residences />
-        <ImmersiveExperience />
         <Amenities />
         <Location />
         <Contact />
