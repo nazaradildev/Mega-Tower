@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { units, type Unit } from '@/data/units';
 
 const galleryImages = [
     { category: 'Interiors', src: 'https://placehold.co/600x400.png', alt: 'Modern living room', aiHint: 'modern living room' },
@@ -19,12 +20,18 @@ const galleryImages = [
 
 const galleryFilters = ['All', 'Interiors', 'Exteriors', 'Amenities', 'Views'];
 
-const floorPlans = [
-    { name: '1 Bedroom - Type A', src: 'https://placehold.co/800x600.png', aiHint: 'apartment floor plan' },
-    { name: '2 Bedroom - Type C', src: 'https://placehold.co/800x600.png', aiHint: 'apartment floor plan' },
-    { name: '3 Bedroom - Sky Villa', src: 'https://placehold.co/800x600.png', aiHint: 'apartment floor plan' },
-    { name: '4 Bedroom - Penthouse', src: 'https://placehold.co/800x600.png', aiHint: 'apartment floor plan' },
-];
+// Get unique floor plans from units data
+const floorPlans = units
+  .filter(unit => unit.floorPlanImage)
+  .reduce((acc, current) => {
+    // Add unit only if a plan for that bed count doesn't exist yet
+    if (!acc.some(item => item.beds === current.beds)) {
+      acc.push(current);
+    }
+    return acc;
+  }, [] as Unit[])
+  .sort((a,b) => a.beds - b.beds);
+
 
 export function ImmersiveExperience() {
   const [galleryFilter, setGalleryFilter] = useState('All');
@@ -65,16 +72,18 @@ export function ImmersiveExperience() {
                 {floorPlans.map((plan, index) => (
                     <Card key={index} className="overflow-hidden">
                         <CardContent className="p-4">
-                            <h3 className="font-bold text-lg mb-4 text-center">{plan.name}</h3>
-                            <div className="aspect-[4/3] bg-muted rounded-lg overflow-hidden">
-                                <Image
-                                    src={plan.src}
-                                    alt={`Floor plan for ${plan.name}`}
-                                    data-ai-hint={plan.aiHint}
-                                    width={800}
-                                    height={600}
-                                    className="w-full h-full object-contain"
-                                />
+                            <h3 className="font-bold text-lg mb-4 text-center">{plan.title}</h3>
+                            <div className="aspect-[4/3] bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                                {plan.floorPlanImage && (
+                                    <Image
+                                        src={plan.floorPlanImage}
+                                        alt={`Floor plan for ${plan.title}`}
+                                        data-ai-hint="apartment floor plan"
+                                        width={800}
+                                        height={600}
+                                        className="w-auto h-full object-contain"
+                                    />
+                                )}
                             </div>
                         </CardContent>
                     </Card>
