@@ -8,6 +8,7 @@ import { Residences } from '@/components/residences';
 import { Amenities } from '@/components/amenities';
 import { Location } from '@/components/location';
 import { Contact } from '@/components/contact';
+import { ImmersiveExperience } from '@/components/immersive-experience';
 
 const heroImages = [
   { src: '/image1.jpg', alt: 'Hero image of Churchill Towers in Business Bay, Dubai', hint: 'dubai cityscape' },
@@ -74,6 +75,7 @@ export default function Home() {
         </section>
 
         <Residences />
+        <ImmersiveExperience />
         <Amenities />
         <Location />
         <Contact />
