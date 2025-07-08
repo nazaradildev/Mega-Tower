@@ -19,6 +19,7 @@ export type Unit = {
   exclusive: boolean;
   verified: boolean;
   amenities: string[];
+  serviceCharges: number;
 };
 
 export const units: Unit[] = [
@@ -54,7 +55,8 @@ export const units: Unit[] = [
     furnished: true,
     exclusive: true,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark']
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark', 'Security', 'Concierge', 'Built in Wardrobes'],
+    serviceCharges: 14.19
   },
   {
     id: 2,
@@ -75,7 +77,8 @@ export const units: Unit[] = [
     furnished: false,
     exclusive: false,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water']
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'Security', 'Concierge', 'Built in Wardrobes'],
+    serviceCharges: 15.50
   },
   {
     id: 3,
@@ -96,7 +99,8 @@ export const units: Unit[] = [
     furnished: true,
     exclusive: true,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Walk-in Closet']
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Walk-in Closet', 'Pets Allowed', 'Security', 'Concierge'],
+    serviceCharges: 18.25
   },
   {
     id: 4,
@@ -117,7 +121,8 @@ export const units: Unit[] = [
     furnished: true,
     exclusive: true,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Private Jacuzzi', 'Study']
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Private Jacuzzi', 'Study', 'Security', 'Concierge'],
+    serviceCharges: 22.00
   },
   {
     id: 5,
@@ -138,7 +143,8 @@ export const units: Unit[] = [
     furnished: true,
     exclusive: false,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking']
+    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'Security', 'Concierge', 'Pets Allowed'],
+    serviceCharges: 16.00
   },
   {
     id: 6,
@@ -159,6 +165,7 @@ export const units: Unit[] = [
     furnished: false,
     exclusive: false,
     verified: true,
-    amenities: ['Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark']
+    amenities: ['Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark', 'Security', 'Concierge', 'Built in Wardrobes'],
+    serviceCharges: 17.50
   },
 ];

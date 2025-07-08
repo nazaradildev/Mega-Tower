@@ -41,10 +41,12 @@ import {
   Ruler,
   Share2,
   Shirt,
+  Star,
   ToyBrick,
   Users,
   Video,
   View,
+  Wallet,
   Waves,
   X,
   ZoomIn,
@@ -121,6 +123,7 @@ export default function PropertyDetailsPage() {
     'Central A/C': AirVent,
     'Concierge Service': BellRing,
     'Shared Spa': Cloudy,
+    Security: Users,
   };
 
   React.useEffect(() => {
@@ -246,72 +249,98 @@ export default function PropertyDetailsPage() {
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left/Main Column */}
-            <div className="col-span-1 lg:col-span-2">
+            <div className="col-span-1 lg:col-span-2 space-y-8">
               <Card className="overflow-hidden">
-                <div className="aspect-[4/3]">
-                  {viewMode === 'gallery' && (
-                    <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
-                      <CarouselContent className="m-0 h-full">
-                        {unit.images.map((img, index) => (
-                          <CarouselItem
-                            key={index}
-                            className="p-0"
-                            onDoubleClick={() => setZoomedImageUrl(img)}
-                          >
-                            <img
-                              src={img}
-                              alt={`Property image ${index + 1}`}
-                              className="w-full h-full object-cover cursor-zoom-in"
-                            />
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
-                      <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
-                    </Carousel>
-                  )}
-                  {viewMode === 'virtualTour' && (
-                    unit.virtualTourUrl ? (
-                    <iframe
-                        src={unit.virtualTourUrl}
-                        width="100%"
-                        height="100%"
-                        allow="fullscreen"
-                        className="border-0 w-full h-full"
-                    />
-                    ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center">
-                        <p className="text-muted-foreground">Virtual tour not available.</p>
-                    </div>
-                    )
-                  )}
-                  {viewMode === 'floorPlan' && (
-                      unit.floorPlanImage ? (
-                      <div 
-                        className="w-full h-full bg-muted flex items-center justify-center p-4 cursor-zoom-in"
-                        onDoubleClick={() => unit.floorPlanImage && setZoomedImageUrl(unit.floorPlanImage)}
-                      >
-                          <img
-                          src={unit.floorPlanImage}
-                          alt={`Floor plan for ${unit.title}`}
-                          className="w-auto h-full object-contain max-w-full max-h-full"
-                          />
+                <CardHeader>
+                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                      <div>
+                        <CardTitle className="font-headline text-3xl mb-1">
+                          {unit.title}
+                        </CardTitle>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <MapPin className="h-4 w-4" />
+                          <span>
+                            Churchill Residency Tower, Churchill Towers, Business
+                            Bay
+                          </span>
+                        </div>
                       </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Button variant="outline" size="icon">
+                          <Share2 className="h-5 w-5" />
+                        </Button>
+                        <Button variant="outline" size="icon">
+                          <Heart className="h-5 w-5" />
+                        </Button>
+                      </div>
+                    </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="aspect-[4/3]">
+                    {viewMode === 'gallery' && (
+                      <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
+                        <CarouselContent className="m-0 h-full">
+                          {unit.images.map((img, index) => (
+                            <CarouselItem
+                              key={index}
+                              className="p-0"
+                              onDoubleClick={() => setZoomedImageUrl(img)}
+                            >
+                              <img
+                                src={img}
+                                alt={`Property image ${index + 1}`}
+                                className="w-full h-full object-cover cursor-zoom-in"
+                              />
+                            </CarouselItem>
+                          ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+                        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
+                      </Carousel>
+                    )}
+                    {viewMode === 'virtualTour' && (
+                      unit.virtualTourUrl ? (
+                      <iframe
+                          src={unit.virtualTourUrl}
+                          width="100%"
+                          height="100%"
+                          allow="fullscreen"
+                          className="border-0 w-full h-full"
+                      />
                       ) : (
                       <div className="w-full h-full bg-muted flex items-center justify-center">
-                          <p className="text-muted-foreground">Floor plan not available.</p>
+                          <p className="text-muted-foreground">Virtual tour not available.</p>
                       </div>
                       )
-                  )}
-                  {viewMode === 'video' && (
-                      <div className="w-full h-full bg-muted flex items-center justify-center">
-                      <p className="text-muted-foreground">Video not available.</p>
-                      </div>
-                  )}
-                </div>
+                    )}
+                    {viewMode === 'floorPlan' && (
+                        unit.floorPlanImage ? (
+                        <div 
+                          className="w-full h-full bg-muted flex items-center justify-center p-4 cursor-zoom-in"
+                          onDoubleClick={() => unit.floorPlanImage && setZoomedImageUrl(unit.floorPlanImage)}
+                        >
+                            <img
+                            src={unit.floorPlanImage}
+                            alt={`Floor plan for ${unit.title}`}
+                            className="w-auto h-full object-contain max-w-full max-h-full"
+                            />
+                        </div>
+                        ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                            <p className="text-muted-foreground">Floor plan not available.</p>
+                        </div>
+                        )
+                    )}
+                    {viewMode === 'video' && (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <p className="text-muted-foreground">Video not available.</p>
+                        </div>
+                    )}
+                  </div>
+                </CardContent>
               </Card>
 
-              <div className="my-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <Button
                   variant={viewMode === 'video' ? 'default' : 'outline'}
                   onClick={() => setViewMode('video')}
@@ -340,7 +369,7 @@ export default function PropertyDetailsPage() {
                 </Button>
               </div>
 
-              <div className="mt-4">
+              <div>
                 <Carousel
                   setApi={setThumbApi}
                   opts={{
@@ -379,62 +408,62 @@ export default function PropertyDetailsPage() {
                 </Carousel>
               </div>
 
-              {/* Details Section */}
-              <Card className="mt-8">
+              <Card>
                 <CardHeader>
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                    <div>
-                      <CardTitle className="font-headline text-3xl mb-1">
-                        {unit.title}
-                      </CardTitle>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <MapPin className="h-4 w-4" />
-                        <span>
-                          Churchill Residency Tower, Churchill Towers, Business
-                          Bay
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <Button variant="outline" size="icon">
-                        <Share2 className="h-5 w-5" />
-                      </Button>
-                      <Button variant="outline" size="icon">
-                        <Heart className="h-5 w-5" />
-                      </Button>
-                    </div>
-                  </div>
+                  <CardTitle className="font-headline text-xl">
+                    Property Details
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Separator className="my-4" />
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-                    <div className="flex flex-col items-center gap-1">
-                      <BedDouble className="h-8 w-8 text-primary" />
-                      <span className="font-semibold">{unit.beds} Bedroom</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                     <div className="flex items-start gap-3">
+                        <Building className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                            <p className="text-sm text-muted-foreground">Property Type</p>
+                            <p className="font-semibold">{unit.propertyType}</p>
+                        </div>
                     </div>
-                    <div className="flex flex-col items-center gap-1">
-                      <Bath className="h-8 w-8 text-primary" />
-                      <span className="font-semibold">{unit.baths} Baths</span>
+                     <div className="flex items-start gap-3">
+                        <Ruler className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                            <p className="text-sm text-muted-foreground">Property Size</p>
+                            <p className="font-semibold">{unit.area.toLocaleString()} sqft / {Math.round(unit.area * 0.092903)} sqm</p>
+                        </div>
                     </div>
-                    <div className="flex flex-col items-center gap-1">
-                      <Ruler className="h-8 w-8 text-primary" />
-                      <span className="font-semibold">
-                        {unit.area.toLocaleString()} sqft
-                      </span>
+                    <div className="flex items-start gap-3">
+                        <BedDouble className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                            <p className="text-sm text-muted-foreground">Bedrooms</p>
+                            <p className="font-semibold">{unit.beds}</p>
+                        </div>
                     </div>
-                    <div className="flex flex-col items-center gap-1">
-                      <Building className="h-8 w-8 text-primary" />
-                      <span className="font-semibold">{unit.propertyType}</span>
+                    <div className="flex items-start gap-3">
+                        <Bath className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                            <p className="text-sm text-muted-foreground">Bathrooms</p>
+                            <p className="font-semibold">{unit.baths}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                        <Wallet className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                            <p className="text-sm text-muted-foreground">Service Charges</p>
+                            <p className="font-semibold">{unit.serviceCharges} AED per sqft</p>
+                        </div>
                     </div>
                   </div>
-                  <Separator className="my-6" />
+                </CardContent>
+              </Card>
 
-                  <div>
-                    <h3 className="text-xl font-bold font-headline mb-4">
-                      Description
-                    </h3>
-                    <div className="text-muted-foreground leading-relaxed space-y-2">
-                      <p className="line-clamp-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">
+                    Description
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                      <p>
                         Discover the pinnacle of urban living in this stunning{' '}
                         {unit.beds}-bedroom apartment located in the prestigious
                         Churchill Towers, Business Bay. Offering breathtaking
@@ -444,70 +473,19 @@ export default function PropertyDetailsPage() {
                         featuring high-end finishes and floor-to-ceiling
                         windows that flood the space with natural light.
                       </p>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="link"
-                            className="p-0 h-auto text-primary font-semibold"
-                          >
-                            Read More...
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl">
-                          <DialogHeader>
-                            <DialogTitle className="font-headline text-2xl">
-                              Description
-                            </DialogTitle>
-                          </DialogHeader>
-                          <div className="py-4 space-y-4 max-h-[70vh] overflow-y-auto pr-6 text-muted-foreground leading-relaxed">
-                            <p>
-                              Discover the pinnacle of urban living in this
-                              stunning {unit.beds}-bedroom apartment located in
-                              the prestigious Churchill Towers, Business Bay.
-                              Offering breathtaking views of the {unit.view},
-                              this residence combines luxury, comfort, and
-                              convenience. The spacious layout is perfect for
-                              both relaxation and entertaining, featuring
-                              high-end finishes and floor-to-ceiling windows
-                              that flood the space with natural light.
-                            </p>
-                            <p>
-                              The apartment boasts a modern kitchen with
-                              top-of-the-line appliances, elegant bathrooms,
-                              and ample storage space. Residents of Churchill
-                              Towers enjoy access to exclusive amenities,
-                              creating a lifestyle of unparalleled comfort and
-                              sophistication.
-                            </p>
-
-                            <h4 className="font-bold text-foreground pt-4">
-                              Property Features:
-                            </h4>
-                            <ul className="list-disc list-inside space-y-1">
-                              <li>{unit.beds} Bedroom</li>
-                              <li>{unit.baths} Baths</li>
-                              <li>{unit.area.toLocaleString()} sq. ft.</li>
-                              <li>
-                                {unit.furnished
-                                  ? 'Furnished'
-                                  : 'Unfurnished'}
-                              </li>
-                              <li>View: {unit.view}</li>
-                            </ul>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
                   </div>
+                </CardContent>
+              </Card>
 
-                  <Separator className="my-6" />
-
-                  <div>
-                    <h3 className="text-xl font-bold font-headline mb-4">
-                      Amenities
-                    </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {unit.amenities.map((amenity) => {
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">
+                    Amenities
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                      {unit.amenities.slice(0,8).map((amenity) => {
                         const Icon = amenityIcons[amenity] || CheckCircle;
                         return (
                           <div
@@ -522,12 +500,100 @@ export default function PropertyDetailsPage() {
                         );
                       })}
                     </div>
-                  </div>
+                     <Dialog>
+                        <DialogTrigger asChild>
+                           <Button variant="outline">See all amenities ({unit.amenities.length})</Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                           <DialogHeader>
+                              <DialogTitle className="font-headline text-2xl">All Amenities</DialogTitle>
+                           </DialogHeader>
+                           <div className="py-4 grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
+                              {unit.amenities.map((amenity) => {
+                                const Icon = amenityIcons[amenity] || CheckCircle;
+                                return (
+                                  <div key={amenity} className="flex items-center gap-3">
+                                      <Icon className="h-5 w-5 text-primary flex-shrink-0" />
+                                      <span className="text-muted-foreground">{amenity}</span>
+                                  </div>
+                                );
+                              })}
+                           </div>
+                        </DialogContent>
+                      </Dialog>
                 </CardContent>
               </Card>
+              
+               <Card>
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">
+                    Location
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="h-64 w-full bg-muted rounded-lg flex items-center justify-center">
+                    <p className="text-muted-foreground">Map will be here</p>
+                  </div>
+                   <p className="font-semibold">Churchill Residency Tower, Churchill Towers, Business Bay, Dubai</p>
+                   <Button variant="outline" className="w-full sm:w-auto">View on map</Button>
+                </CardContent>
+              </Card>
+              
+              <div>
+                <h2 className="text-2xl font-bold font-headline mb-4">Insights</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                   <Card>
+                      <CardHeader>
+                          <CardTitle className="text-lg">Residential Insights</CardTitle>
+                          <p className="text-sm text-muted-foreground">Churchill Residency Tower</p>
+                      </CardHeader>
+                      <CardContent>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex text-yellow-500">
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star className="h-5 w-5" />
+                            </div>
+                            <span className="font-semibold">4.5/5</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-4">32 Reviews</p>
+                          <p className="text-sm text-muted-foreground">Price Range:</p>
+                          <p className="font-semibold">1.2M - 2.8M AED</p>
+                      </CardContent>
+                   </Card>
+                   <Card>
+                      <CardHeader>
+                          <CardTitle className="text-lg">Community Insights</CardTitle>
+                          <p className="text-sm text-muted-foreground">Business Bay</p>
+                      </CardHeader>
+                      <CardContent>
+                          <div className="flex items-center gap-2 mb-2">
+                             <div className="flex text-yellow-500">
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star fill="currentColor" className="h-5 w-5" />
+                                <Star className="h-5 w-5" />
+                            </div>
+                            <span className="font-semibold">4/5</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-4">476 building reviews</p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <Badge variant="secondary">Mostly apartments</Badge>
+                            <Badge variant="secondary">Luxury</Badge>
+                            <Badge variant="secondary">Well connected</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">Price Range:</p>
+                          <p className="font-semibold">370K - 750M AED</p>
+                      </CardContent>
+                   </Card>
+                </div>
+              </div>
 
-              {/* Price Insights */}
-              <Card className="mt-8">
+
+              <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">
                     Price Insights
@@ -655,18 +721,6 @@ export default function PropertyDetailsPage() {
                 </CardContent>
               </Card>
 
-              <Card className="mt-8">
-                <CardHeader>
-                  <CardTitle className="font-headline text-xl">
-                    Location
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 w-full bg-muted rounded-lg flex items-center justify-center">
-                    <p className="text-muted-foreground">Map will be here</p>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
