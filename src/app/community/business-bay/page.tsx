@@ -165,25 +165,12 @@ export default function BusinessBayPage() {
                   <Badge variant="secondary">Centrally Located</Badge>
                   <Badge variant="secondary">Metro Station</Badge>
                 </div>
-                <div className="space-y-4 text-muted-foreground prose prose-sm max-w-none">
-                  <p>
-                    One of Dubai’s most iconic neighbourhoods, Business Bay is
-                    where work and play cross paths. It’s a commercial,
-                    residential, and business community consisting mainly of
-                    skyscrapers.
-                  </p>
-                  <p>
-                    Located next to Downtown Dubai, Sheikh Zayed Road, and DIFC,
-                    It’s a stone’s throw away from the city’s most happening
-                    areas.
-                  </p>
-                  <p>
-                    Business Bay is home to jaw-dropping architecture, the
-                    stunning Dubai Canal, and endless entertainment and nightlife
-                    options like rooftop restaurants, lounges, and upscale
-                    hotels. It also houses plenty of businesses and commercial
-                    buildings, hence its name.
-                  </p>
+                <div className="space-y-4 text-muted-foreground prose prose-lg max-w-none">
+                    <p>One of Dubai’s most iconic neighbourhoods, Business Bay is where work and play cross paths. It’s a commercial, residential, and business community consisting mainly of skyscrapers.</p>
+                    <p>Located next to Downtown Dubai, Sheikh Zayed Road, and DIFC, It’s a stone’s throw away from the city’s most happening areas.</p>
+                    <p>Business Bay is home to jaw-dropping architecture, the stunning Dubai Canal, and endless entertainment and nightlife options like rooftop restaurants, lounges, and upscale hotels. It also houses plenty of businesses and commercial buildings, hence its name.</p>
+                    <p>The area boasts over 240 buildings and is one of the most popular communities in Dubai. It covers 46,900,000 sq. ft. with 18.5% of the area dedicated to commercial developments, 59.4% to mixed-use developments, and 22.1% to residential developments.</p>
+                    <p>If you want to live close to Downtown Dubai at a more manageable housing price, Business Bay is a great option. This glitzy community is a key part of Dubai’s skyline and is one of the best places for renting and buying luxury apartments in Dubai.</p>
                 </div>
               </section>
 
@@ -209,6 +196,19 @@ export default function BusinessBayPage() {
                     </li>
                   ))}
                 </ul>
+              </section>
+
+              <section id="lifestyle">
+                <h2 className="text-2xl font-bold font-headline mb-4">Lifestyle & Things to Do in Business Bay</h2>
+                <div className="space-y-4 text-muted-foreground prose prose-lg max-w-none">
+                    <p>The lifestyle in Business Bay is vibrant and buzzing with activities. From entertainment and waterfront strolls to restaurants and hotels, there’s always something to do here.</p>
+                    <h3 className="text-xl font-bold font-headline !text-foreground !mt-6 !mb-2">Iconic Attractions</h3>
+                    <p>One of the most popular attractions in Business Bay is La Perle by Dragone, Dubai’s permanent show. The mastermind behind it was Franco Dragone, the theatre director who worked with Cirque du Soleil. La Perle is located in V Hotel at Al Habtoor City. It’s inspired by Dubai’s pearl-diving history and displays impressive acrobatics, stunts, and choreography with a cast of 65 performers.</p>
+                    <p>Another iconic attraction in Business Bay is the Dubai Canal. This man-made project features a 3.2 km promenade that overlooks Dubai’s stunning skyscrapers and has restaurants, hotels, luxury homes, and walking and cycling paths.</p>
+                    <h3 className="text-xl font-bold font-headline !text-foreground !mt-6 !mb-2">Dining & Nightlife</h3>
+                    <p>For more leisure options, visitors and residents can head to Bay Square. It is a mixed-use complex with waterfront promenades, shops, and restaurants where residents and visitors can shop, dine, and stroll to their heart’s contentment.</p>
+                    <p>On top of that, Business Bay boasts a vibrant nightlife, with a large variety of clubs, lounges and pubs, such as BLU Dubai and 1OAK, while JW Marriott Marquis Hotel includes a variety of nightlife options.</p>
+                </div>
               </section>
 
               <section id="price-insights">
