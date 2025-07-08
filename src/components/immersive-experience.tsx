@@ -11,7 +11,7 @@ const features = [
     icon: View,
     title: "3D Virtual Tours",
     description: "Walk through our apartments from the comfort of your home. Explore every room and detail with our high-fidelity virtual tours.",
-    link: "#residences",
+    link: "/amenities-tour",
     linkText: "Start Touring",
   },
 ];
