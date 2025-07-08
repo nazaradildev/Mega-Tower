@@ -407,6 +407,28 @@ export default function PropertyDetailsPage() {
                   </CarouselContent>
                 </Carousel>
               </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">
+                    Description
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                      <p>
+                        Discover the pinnacle of urban living in this stunning{' '}
+                        {unit.beds}-bedroom apartment located in the prestigious
+                        Churchill Towers, Business Bay. Offering breathtaking
+                        views of the {unit.view}, this residence combines
+                        luxury, comfort, and convenience. The spacious layout
+                        is perfect for both relaxation and entertaining,
+                        featuring high-end finishes and floor-to-ceiling
+                        windows that flood the space with natural light.
+                      </p>
+                  </div>
+                </CardContent>
+              </Card>
 
               <Card>
                 <CardHeader>
@@ -451,28 +473,6 @@ export default function PropertyDetailsPage() {
                             <p className="font-semibold">{unit.serviceCharges} AED per sqft</p>
                         </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-headline text-xl">
-                    Description
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-muted-foreground leading-relaxed space-y-2">
-                      <p>
-                        Discover the pinnacle of urban living in this stunning{' '}
-                        {unit.beds}-bedroom apartment located in the prestigious
-                        Churchill Towers, Business Bay. Offering breathtaking
-                        views of the {unit.view}, this residence combines
-                        luxury, comfort, and convenience. The spacious layout
-                        is perfect for both relaxation and entertaining,
-                        featuring high-end finishes and floor-to-ceiling
-                        windows that flood the space with natural light.
-                      </p>
                   </div>
                 </CardContent>
               </Card>
@@ -563,32 +563,34 @@ export default function PropertyDetailsPage() {
                           <p className="font-semibold">1.2M - 2.8M AED</p>
                       </CardContent>
                    </Card>
-                   <Card>
-                      <CardHeader>
-                          <CardTitle className="text-lg">Community Insights</CardTitle>
-                          <p className="text-sm text-muted-foreground">Business Bay</p>
-                      </CardHeader>
-                      <CardContent>
-                          <div className="flex items-center gap-2 mb-2">
-                             <div className="flex text-yellow-500">
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star className="h-5 w-5" />
+                   <Link href="/community/business-bay" className="block">
+                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
+                        <CardHeader>
+                            <CardTitle className="text-lg">Community Insights</CardTitle>
+                            <p className="text-sm text-muted-foreground">Business Bay</p>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className="flex text-yellow-500">
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star className="h-5 w-5" />
+                                </div>
+                                <span className="font-semibold">4/5</span>
                             </div>
-                            <span className="font-semibold">4/5</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-4">476 building reviews</p>
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            <Badge variant="secondary">Mostly apartments</Badge>
-                            <Badge variant="secondary">Luxury</Badge>
-                            <Badge variant="secondary">Well connected</Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground">Price Range:</p>
-                          <p className="font-semibold">370K - 750M AED</p>
-                      </CardContent>
-                   </Card>
+                            <p className="text-sm text-muted-foreground mb-4">476 building reviews</p>
+                            <div className="flex flex-wrap gap-2 mb-4">
+                                <Badge variant="secondary">Mostly apartments</Badge>
+                                <Badge variant="secondary">Luxury</Badge>
+                                <Badge variant="secondary">Well connected</Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">Price Range:</p>
+                            <p className="font-semibold">370K - 750M AED</p>
+                        </CardContent>
+                    </Card>
+                   </Link>
                 </div>
               </div>
 
