@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card } from "@/components/ui/card";
@@ -10,14 +11,14 @@ const features = [
     icon: View,
     title: "3D Virtual Tours",
     description: "Walk through our apartments from the comfort of your home. Explore every room and detail with our high-fidelity virtual tours.",
-    link: "#",
+    link: "#residences",
     linkText: "Start Touring",
   },
   {
     icon: ImageIcon,
     title: "Photo Gallery",
     description: "Browse a curated collection of high-resolution images showcasing the stunning interiors, exteriors, and amenities of Churchill Towers.",
-    link: "#residences",
+    link: "#amenities",
     linkText: "View Gallery",
   },
 ];
