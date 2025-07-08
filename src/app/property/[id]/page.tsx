@@ -542,27 +542,29 @@ export default function PropertyDetailsPage() {
               <div>
                 <h2 className="text-2xl font-bold font-headline mb-4">Insights</h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                   <Card>
-                      <CardHeader>
-                          <CardTitle className="text-lg">Residential Insights</CardTitle>
-                          <p className="text-sm text-muted-foreground">Churchill Residency Tower</p>
-                      </CardHeader>
-                      <CardContent>
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="flex text-yellow-500">
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star fill="currentColor" className="h-5 w-5" />
-                                <Star className="h-5 w-5" />
+                   <Link href="/building/churchill-residency-tower" className="block">
+                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
+                        <CardHeader>
+                            <CardTitle className="text-lg">Residential Insights</CardTitle>
+                            <p className="text-sm text-muted-foreground">Churchill Residency Tower</p>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className="flex text-yellow-500">
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star fill="currentColor" className="h-5 w-5" />
+                                    <Star className="h-5 w-5" />
+                                </div>
+                                <span className="font-semibold">4.5/5</span>
                             </div>
-                            <span className="font-semibold">4.5/5</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-4">32 Reviews</p>
-                          <p className="text-sm text-muted-foreground">Price Range:</p>
-                          <p className="font-semibold">1.2M - 2.8M AED</p>
-                      </CardContent>
-                   </Card>
+                            <p className="text-sm text-muted-foreground mb-4">32 Reviews</p>
+                            <p className="text-sm text-muted-foreground">Price Range:</p>
+                            <p className="font-semibold">1.2M - 2.8M AED</p>
+                        </CardContent>
+                    </Card>
+                   </Link>
                    <Link href="/community/business-bay" className="block">
                     <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
                         <CardHeader>
