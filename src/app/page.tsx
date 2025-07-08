@@ -75,8 +75,8 @@ export default function Home() {
         </section>
 
         <Residences />
-        <ImmersiveExperience />
         <Amenities />
+        <ImmersiveExperience />
         <Location />
         <Contact />
       </main>
