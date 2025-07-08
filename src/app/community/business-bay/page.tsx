@@ -31,8 +31,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Star, CheckCircle, Camera } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from '@/components/ui/carousel';
+import { CheckCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const galleryImages = [
+  { src: "https://placehold.co/800x600.png", alt: "Business Bay Overview", hint: "dubai business bay" },
+  { src: "https://placehold.co/800x600.png", alt: "Dubai Canal", hint: "dubai canal" },
+  { src: "https://placehold.co/800x600.png", alt: "Business Bay Skyline", hint: "dubai skyline" },
+  { src: "https://placehold.co/800x600.png", alt: "Modern Architecture", hint: "dubai architecture" },
+  { src: "https://placehold.co/800x600.png", alt: "Cityscape at Night", hint: "cityscape night" },
+  { src: "https://placehold.co/800x600.png", alt: "Waterfront Promenade", hint: "waterfront promenade" },
+  { src: "https://placehold.co/800x600.png", alt: "Bay Square", hint: "bay square" },
+  { src: "https://placehold.co/800x600.png", alt: "JW Marriott Marquis", hint: "luxury hotel" },
+];
 
 const rentData = [
   { type: 'Studio', price: '79,000' },
@@ -69,6 +88,32 @@ const faqItems = [
 ];
 
 export default function BusinessBayPage() {
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  
+  React.useEffect(() => {
+      if (!api || !thumbApi) {
+          return;
+      }
+
+      const onSelect = () => {
+          setSelectedIndex(api.selectedScrollSnap());
+          thumbApi?.scrollTo(api.selectedScrollSnap());
+      };
+
+      api.on('select', onSelect);
+      onSelect();
+
+      return () => {
+          api.off('select', onSelect);
+      };
+  }, [api, thumbApi]);
+
+  const onThumbClick = (index: number) => {
+      api?.scrollTo(index);
+  };
+
   return (
     <div className="bg-background">
       <Header />
@@ -78,77 +123,69 @@ export default function BusinessBayPage() {
             <h1 className="text-4xl font-bold font-headline mb-2">
               Business Bay
             </h1>
-            <div className="flex items-center gap-2 text-sm sm:text-base">
-              <div className="flex text-yellow-500">
-                <Star fill="currentColor" className="h-5 w-5" />
-                <Star fill="currentColor" className="h-5 w-5" />
-                <Star fill="currentColor" className="h-5 w-5" />
-                <Star fill="currentColor" className="h-5 w-5" />
-                <Star className="h-5 w-5" />
-              </div>
-              <span className="font-semibold">4/5</span>
-              <span className="text-muted-foreground">
-                (Based on 476 building reviews)
-              </span>
-            </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 mb-8 h-64 md:h-96">
-            <div className="col-span-2 row-span-2 relative rounded-lg overflow-hidden">
-              <Image
-                src="https://placehold.co/800x600.png"
-                data-ai-hint="dubai business bay"
-                alt="Business Bay Overview"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="relative rounded-lg overflow-hidden hidden md:block">
-              <Image
-                src="https://placehold.co/400x300.png"
-                data-ai-hint="dubai skyline"
-                alt="Business Bay 2"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="relative rounded-lg overflow-hidden hidden md:block">
-              <Image
-                src="https://placehold.co/400x300.png"
-                data-ai-hint="dubai canal"
-                alt="Business Bay 3"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="relative rounded-lg overflow-hidden hidden md:block">
-              <Image
-                src="https://placehold.co/400x300.png"
-                data-ai-hint="dubai architecture"
-                alt="Business Bay 4"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="relative rounded-lg overflow-hidden hidden md:block">
-              <Image
-                src="https://placehold.co/400x300.png"
-                data-ai-hint="cityscape night"
-                alt="Business Bay 5"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <Button
-                  variant="outline"
-                  className="bg-transparent text-white border-white hover:bg-white hover:text-black"
-                >
-                  <Camera className="mr-2 h-4 w-4" />
-                  Show 8 photos
-                </Button>
-              </div>
-            </div>
+          <div className="space-y-2 mb-8">
+              <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
+                  <CarouselContent className="m-0">
+                      {galleryImages.map((image, index) => (
+                          <CarouselItem key={index} className="p-0">
+                              <div className="aspect-[16/9] relative rounded-lg overflow-hidden">
+                                  <Image
+                                      src={image.src}
+                                      data-ai-hint={image.hint}
+                                      alt={image.alt}
+                                      fill
+                                      className="object-cover"
+                                      priority={index === 0}
+                                  />
+                              </div>
+                          </CarouselItem>
+                      ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+                  <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
+              </Carousel>
+
+              <Carousel
+                  setApi={setThumbApi}
+                  opts={{
+                      containScroll: 'keepSnaps',
+                      dragFree: true,
+                  }}
+                  className="w-full"
+              >
+                  <CarouselContent className="m-0">
+                      {galleryImages.map((image, index) => (
+                          <CarouselItem
+                              key={index}
+                              onClick={() => onThumbClick(index)}
+                              className="pl-2 basis-1/4 md:basis-1/6 cursor-pointer"
+                          >
+                              <div
+                                  className={cn(
+                                      'aspect-video p-1 rounded-md',
+                                      index === selectedIndex
+                                          ? 'bg-primary'
+                                          : 'bg-transparent'
+                                  )}
+                              >
+                                  <div className="relative h-full w-full overflow-hidden rounded-md">
+                                      <Image
+                                          src={image.src}
+                                          alt={`Thumbnail ${image.alt}`}
+                                          fill
+                                          className="object-cover"
+                                          loading="lazy"
+                                      />
+                                  </div>
+                              </div>
+                          </CarouselItem>
+                      ))}
+                  </CarouselContent>
+              </Carousel>
           </div>
+
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-3 space-y-12">
