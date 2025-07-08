@@ -15,14 +15,12 @@ import { units } from '@/data/units';
 import { notFound, useParams } from 'next/navigation';
 import {
   AirVent,
-  ArrowLeft,
   Bath,
   BedDouble,
   BellRing,
   BookOpen,
   Building,
   CheckCircle,
-  ChevronRight,
   Cloudy,
   Dog,
   DoorOpen,
@@ -30,7 +28,6 @@ import {
   Flame,
   GalleryVerticalEnd,
   Heart,
-  Home,
   Landmark,
   LayoutDashboard,
   Mail,
@@ -78,6 +75,7 @@ import { Header } from '@/components/header';
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { Breadcrumb } from '@/components/breadcrumb';
 
 const priceData = [
   { month: 'Jan', price: 140000 },
@@ -197,54 +195,19 @@ export default function PropertyDetailsPage() {
     notFound();
   }
 
+  const breadcrumbItems = [
+    { label: 'Dubai' },
+    { label: 'Business Bay', href: '/community/business-bay' },
+    { label: 'Churchill Residency Tower', href: '/building/churchill-residency-tower' },
+    { label: unit.title }
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-secondary/30">
       <Header />
       <main className="flex-1 py-8 sm:py-12">
         <div className="container mx-auto px-4">
-          {/* Back Button and Breadcrumbs */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-            <Button variant="outline" asChild className="self-start">
-              <Link href="/">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Results
-              </Link>
-            </Button>
-            <nav aria-label="Breadcrumb">
-              <ol className="flex items-center gap-1.5 text-sm text-muted-foreground flex-wrap">
-                <li>
-                  <a
-                    href="#"
-                    className="flex items-center gap-1 hover:text-primary transition-colors"
-                  >
-                    <Home className="h-4 w-4" />
-                  </a>
-                </li>
-                <li>
-                  <ChevronRight className="h-4 w-4" />
-                </li>
-                <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    Dubai
-                  </a>
-                </li>
-                <li>
-                  <ChevronRight className="h-4 w-4" />
-                </li>
-                <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    Business Bay
-                  </a>
-                </li>
-                <li>
-                  <ChevronRight className="h-4 w-4" />
-                </li>
-                <li className="font-medium text-foreground truncate">
-                  {unit.title}
-                </li>
-              </ol>
-            </nav>
-          </div>
+          <Breadcrumb items={breadcrumbItems} className="mb-6" />
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

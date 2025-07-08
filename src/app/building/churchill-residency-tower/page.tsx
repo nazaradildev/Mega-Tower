@@ -34,6 +34,7 @@ import {
   Landmark,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Breadcrumb } from '@/components/breadcrumb';
 
 const galleryImages = [
   { src: "https://placehold.co/800x600.png", alt: "Building Exterior", hint: "building exterior" },
@@ -110,6 +111,12 @@ const pointsOfInterest = [
     },
 ];
 
+const breadcrumbItems = [
+    { label: 'Dubai' },
+    { label: 'Business Bay', href: '/community/business-bay' },
+    { label: 'Churchill Residency Tower' },
+];
+
 export default function BuildingDetailsPage() {
     const [api, setApi] = React.useState<CarouselApi>();
     const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
@@ -139,6 +146,7 @@ export default function BuildingDetailsPage() {
             <Header />
             <main className="py-8 sm:py-12">
                 <div className="container mx-auto px-4">
+                    <Breadcrumb items={breadcrumbItems} className="mb-4" />
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                         <div>
                             <h1 className="text-4xl font-bold font-headline mb-1">Churchill Residency Tower</h1>

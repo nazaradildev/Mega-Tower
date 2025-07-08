@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollAnimation } from '@/components/scroll-animation';
 import { cn } from '@/lib/utils';
 import { Play, X } from 'lucide-react';
+import { Breadcrumb } from '@/components/breadcrumb';
 
 const amenitiesWithTours = [
   {
@@ -39,6 +40,10 @@ const amenitiesWithTours = [
     aiHint: "modern building garden",
     tourUrl: "https://my.matterport.com/show/?m=69UUKm16w39", // Placeholder
   },
+];
+
+const breadcrumbItems = [
+    { label: 'Amenities Virtual Tours' }
 ];
 
 function AmenityTourCard({ amenity }: { amenity: typeof amenitiesWithTours[0] }) {
@@ -93,6 +98,7 @@ export default function AmenitiesTourPage() {
       <Header />
       <main className="w-full py-16 md:py-24 bg-secondary overflow-hidden">
         <div className="container mx-auto px-4 md:px-6">
+          <Breadcrumb items={breadcrumbItems} className="mb-8" />
           <ScrollAnimation>
             <div className="text-center mb-12 md:mb-16">
               <h1 className="text-3xl md:text-4xl font-bold font-headline">Amenities Virtual Tours</h1>

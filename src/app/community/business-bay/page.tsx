@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/carousel';
 import { CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Breadcrumb } from '@/components/breadcrumb';
 
 const galleryImages = [
   { src: "https://placehold.co/800x600.png", alt: "Business Bay Overview", hint: "dubai business bay" },
@@ -87,6 +88,11 @@ const faqItems = [
     { q: "What are the events in Business Bay?", a: "Business Bay hosts various events throughout the year, especially around the Dubai Canal and Bay Square, including food festivals, pop-up markets, and celebrations for national holidays." },
 ];
 
+const breadcrumbItems = [
+    { label: 'Dubai' },
+    { label: 'Business Bay' },
+];
+
 export default function BusinessBayPage() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
@@ -119,6 +125,7 @@ export default function BusinessBayPage() {
       <Header />
       <main className="py-8 sm:py-12">
         <div className="container mx-auto px-4">
+          <Breadcrumb items={breadcrumbItems} className="mb-4" />
           <div className="mb-8">
             <h1 className="text-4xl font-bold font-headline mb-2">
               Business Bay
