@@ -151,7 +151,7 @@ export default function BusinessBayPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-12">
+            <div className="lg:col-span-3 space-y-12">
               <section id="about">
                 <h2 className="text-2xl font-bold font-headline mb-4">
                   About Business Bay
@@ -309,40 +309,6 @@ export default function BusinessBayPage() {
                 </Accordion>
               </section>
             </div>
-
-            <aside className="lg:col-span-1 space-y-6 self-start lg:sticky lg:top-24">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Top Buildings in Business Bay</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {['Aykon City', 'Executive Towers', 'Peninsula', 'DAMAC Towers by Paramount'].map(item => (
-                        <li key={item} className="text-sm text-primary hover:underline cursor-pointer">{item}</li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-               <Card>
-                <CardHeader>
-                  <CardTitle>Popular Searches</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <h3 className="font-semibold text-sm mb-2">Amenities</h3>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {['Balcony', 'Shared Pool', 'Shared Gym', "Maid's room", 'View of water'].map(item => (
-                        <Badge variant="outline" key={item} className="cursor-pointer">{item}</Badge>
-                    ))}
-                  </div>
-                   <h3 className="font-semibold text-sm mb-2">Perks</h3>
-                   <div className="flex flex-wrap gap-2">
-                    {['Near Metro', 'Brand New', 'Chiller Free', 'Ready to move'].map(item => (
-                        <Badge variant="outline" key={item} className="cursor-pointer">{item}</Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </aside>
           </div>
         </div>
       </main>
