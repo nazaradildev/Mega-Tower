@@ -17,7 +17,7 @@ const amenitiesWithTours = [
     description: "Immerse yourself in luxury with our stunning infinity pool, offering panoramic views of the Dubai skyline. The perfect escape from the city bustle.",
     image: "https://placehold.co/600x450.png",
     aiHint: "luxury infinity pool",
-    tourUrl: "https://my.matterport.com/show/?m=69UUKm16w39", // Placeholder
+    tourUrl: "https://kuula.co/share/7k4f5?fs=0&vr=0&sd=1&thumbs=0&info=0&logo=0&maps=0&chromeless=1",
   },
   {
     name: "State-of-the-Art Gymnasium",
@@ -57,7 +57,7 @@ function AmenityTourCard({ amenity }: { amenity: typeof amenitiesWithTours[0] })
             src={amenity.tourUrl}
             width="100%"
             height="100%"
-            allow="fullscreen"
+            allow="fullscreen; xr-spatial-tracking; gyroscope; accelerometer"
             className="border-0"
           />
           <Button 
