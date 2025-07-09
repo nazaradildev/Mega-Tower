@@ -196,6 +196,9 @@ export default function PropertyDetailsPage() {
   }
 
   const breadcrumbItems = [
+    { label: 'Apartments for rent in Dubai', href: '/#residences' },
+    { label: 'Business Bay', href: '/community/business-bay' },
+    { label: 'Churchill Residency Tower', href: '/building/churchill-residency-tower' },
     { label: unit.title }
   ];
 
