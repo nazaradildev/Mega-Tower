@@ -22,7 +22,7 @@ export default function Home() {
               alt="Hero image of Churchill Towers in Business Bay, Dubai"
               data-ai-hint="dubai cityscape"
               fill
-              className="object-cover animate-zoom-in-ken-burns"
+              className="object-contain"
               priority
             />
             <div className="absolute inset-0 bg-black/50" />
