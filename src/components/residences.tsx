@@ -368,6 +368,8 @@ function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsEx
     )
 }
 
+const arabicRegex = /[\u0600-\u06FF]/;
+
 export function Residences() {
     const [filters, setFilters] = useState<FilterValues>({});
     const [sortOption, setSortOption] = useState('Newest');
@@ -426,7 +428,7 @@ export function Residences() {
             newFilters['More Filters'] = { ...newFilters['More Filters'], furnishing: furnishing.charAt(0).toUpperCase() + furnishing.slice(1) };
         }
 
-        const foundAmenities = allAmenities.filter(amenity => doc.has(amenity.toLowerCase()));
+        const foundAmenities = allAmenities.filter(amenity => doc.has(amenity.toLowerCase().replace(/s$/, '')));
         if (foundAmenities.length > 0) {
             newFilters['More Filters'] = { ...newFilters['More Filters'], amenities: foundAmenities };
         }
@@ -434,16 +436,80 @@ export function Residences() {
         return newFilters;
     }
 
+    const parseArabicSearchQuery = (query: string): FilterValues => {
+        const newFilters: FilterValues = {};
+        const lowerQuery = query.toLowerCase();
+
+        if (lowerQuery.includes('إيجار') || lowerQuery.includes('للإيجار')) newFilters['Rent'] = { type: 'Rent' };
+        if (lowerQuery.includes('شراء') || lowerQuery.includes('للبيع')) newFilters['Rent'] = { type: 'Buy' };
+        
+        if (lowerQuery.includes('شقة')) newFilters['Apartment'] = { type: 'Apartment' };
+        if (lowerQuery.includes('بنتهاوس')) newFilters['Apartment'] = { type: 'Penthouse' };
+        if (lowerQuery.includes('فيلا')) newFilters['Apartment'] = { type: 'Villa' };
+        if (lowerQuery.includes('تاون هاوس')) newFilters['Apartment'] = { type: 'Townhouse' };
+
+        if (lowerQuery.includes('استوديو')) {
+            newFilters['Beds & Baths'] = { ...newFilters['Beds & Baths'], beds: 'Studio' };
+        } else {
+            const bedsMatch = lowerQuery.match(/(\d+)\s*(غرفة|غرف|غرفة نوم|غرف نوم)/);
+            if (bedsMatch && bedsMatch[1]) {
+                newFilters['Beds & Baths'] = { ...newFilters['Beds & Baths'], beds: bedsMatch[1] };
+            }
+        }
+
+        const bathsMatch = lowerQuery.match(/(\d+)\s*(حمام|حمامات)/);
+        if (bathsMatch && bathsMatch[1]) {
+            newFilters['Beds & Baths'] = { ...newFilters['Beds & Baths'], baths: bathsMatch[1] };
+        }
+
+        const priceMatch = lowerQuery.match(/(\d{3,})/g);
+        if (priceMatch) {
+            const amount = parseInt(priceMatch[0].replace(/,/g, ''), 10);
+            if (lowerQuery.includes('تحت') || lowerQuery.includes('أقل من')) {
+                newFilters['Price'] = { ...newFilters['Price'], max_price: amount };
+            } else if (lowerQuery.includes('فوق') || lowerQuery.includes('أكثر من')) {
+                newFilters['Price'] = { ...newFilters['Price'], min_price: amount };
+            } else {
+                newFilters['Price'] = { ...newFilters['Price'], max_price: amount };
+            }
+        }
+        if (lowerQuery.includes('سنوي')) newFilters['Price'] = { ...newFilters['Price'], period: 'Yearly' };
+        if (lowerQuery.includes('شهري')) newFilters['Price'] = { ...newFilters['Price'], period: 'Monthly' };
+        
+        if (lowerQuery.includes('مفروشة')) {
+            newFilters['More Filters'] = { ...newFilters['More Filters'], furnishing: 'Furnished' };
+        } else if (lowerQuery.includes('غير مفروشة')) {
+            newFilters['More Filters'] = { ...newFilters['More Filters'], furnishing: 'Unfurnished' };
+        }
+
+        const arabicAmenities: { [key: string]: string } = {
+            'غرفة خادمة': 'Maids Room', 'بلكونة': 'Balcony', 'شرفة': 'Balcony', 'مسبح مشترك': 'Shared Pool',
+            'سبا مشترك': 'Shared Spa', 'جيم مشترك': 'Shared Gym', 'تكييف مركزي': 'Central A/C',
+            'خدمة كونسيرج': 'Concierge Service', 'موقف سيارات مغطى': 'Covered Parking', 'اطلالة على الماء': 'View of Water',
+            'اطلالة على معلم': 'View of Landmark', 'مسموح بالحيوانات الاليفة': 'Pets Allowed', 'منطقة لعب أطفال': "Children's Play Area",
+            'مسبح أطفال': "Children's Pool", 'منطقة للشواء': 'Barbecue Area', 'خزائن مدمجة': 'Built in Wardrobes',
+            'غرفة دراسة': 'Study', 'خزانة ملابس': 'Walk-in Closet', 'جاكوزي خاص': 'Private Jacuzzi'
+        };
+        const foundAmenities = Object.keys(arabicAmenities).filter(key => lowerQuery.includes(key)).map(key => arabicAmenities[key]);
+        if(foundAmenities.length > 0) {
+            const uniqueAmenities = [...new Set(foundAmenities)];
+            newFilters['More Filters'] = { ...newFilters['More Filters'], amenities: uniqueAmenities };
+        }
+
+        return newFilters;
+    };
+
     const handleSearch = () => {
         if (!searchQuery.trim()) {
             setFilters({});
             return;
         }
-        const result = parseSearchQueryWithNLP(searchQuery);
+        const isArabic = arabicRegex.test(searchQuery);
+        const result = isArabic ? parseArabicSearchQuery(searchQuery) : parseSearchQueryWithNLP(searchQuery);
         setFilters(result);
         toast({
-            title: "Search Complete",
-            description: "Filters have been updated based on your search.",
+            title: isArabic ? "اكتمل البحث" : "Search Complete",
+            description: isArabic ? "تم تحديث الفلاتر بناءً على بحثك." : "Filters have been updated based on your search.",
         });
     };
 
@@ -578,7 +644,7 @@ export function Residences() {
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
                     <Input
                         type="text"
-                        placeholder="Search with AI: e.g., 'a furnished 2 bed with canal view under 200k'"
+                        placeholder="e.g., 'furnished 2 bed' or 'شقة مفروشة غرفتين'"
                         className="h-12 pl-11 w-full rounded-lg"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
