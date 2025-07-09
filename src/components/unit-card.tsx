@@ -21,6 +21,7 @@ import {
 import Link from 'next/link';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import Autoplay from 'embla-carousel-autoplay';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -75,6 +76,9 @@ export function UnitCard({ unit }: UnitCardProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [planView, setPlanView] = useState('2D');
+  const autoplay = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })
+  );
 
   useEffect(() => {
     if (!api) {
@@ -96,7 +100,12 @@ export function UnitCard({ unit }: UnitCardProps) {
     <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row">
       {/* Image Part */}
       <div className="w-full md:w-1/2 relative group/image aspect-[4/3] flex-shrink-0">
-        <Carousel setApi={setApi} className="w-full h-full">
+        <Carousel
+          setApi={setApi}
+          className="w-full h-full"
+          plugins={[autoplay.current]}
+          opts={{ loop: true }}
+        >
           <CarouselContent className="m-0 h-full">
             {unit.images.map((imgSrc, index) => (
               <CarouselItem key={index} className="p-0">
