@@ -43,7 +43,8 @@ function FilterButton({ filterKey, filters, ...props }: FilterButtonProps) {
 
         switch (filterKey) {
             case 'Apartment':
-                return data.type || 'Property Type';
+                if (!data.type || data.type === 'Any') return 'Property Type';
+                return data.type;
             case 'Rent':
                 return data.type || filterKey;
             case 'Price':
@@ -194,12 +195,15 @@ function RentFilterPopover({ onValueChange, values, onApply, onClear, isMobile, 
 };
 
 function UnitTypeFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
-    const types = ['Apartment', 'Penthouse', 'Villa', 'Townhouse'];
+    const types = ['Any', 'Apartment', 'Penthouse', 'Villa', 'Townhouse'];
     const buttonContent = (type: string) => {
-        const isSelected = values.type === type;
+        const isSelected = type === 'Any' ? !values.type : values.type === type;
         const button = (
             <button
-              onClick={() => { onValueChange({ type }); onApply(); }} 
+              onClick={() => { 
+                  onValueChange({ type: type === 'Any' ? undefined : type });
+                  onApply();
+              }} 
               className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
               <span>{type}</span> 
               {isSelected && <Check className="h-4 w-4" />}
@@ -427,6 +431,18 @@ export function Residences() {
         if (furnishing) {
             newFilters['More Filters'] = { ...newFilters['More Filters'], furnishing: furnishing.charAt(0).toUpperCase() + furnishing.slice(1) };
         }
+        
+        const areaMatch = doc.match('(#Value) (sqft|sqm|square_feet|square_meters)').values(0);
+        if (areaMatch.found) {
+            const area = nlp(areaMatch.text()).values().toNumber().out();
+            if(area) {
+                if (doc.has('(over|more|above)')) {
+                    newFilters['More Filters'] = { ...newFilters['More Filters'], min_area: area };
+                } else if (doc.has('(under|less|below)')) {
+                    newFilters['More Filters'] = { ...newFilters['More Filters'], max_area: area };
+                }
+            }
+        }
 
         const foundAmenities = allAmenities.filter(amenity => doc.has(amenity.toLowerCase().replace(/s$/, '')));
         if (foundAmenities.length > 0) {
@@ -480,6 +496,16 @@ export function Residences() {
             newFilters['More Filters'] = { ...newFilters['More Filters'], furnishing: 'Furnished' };
         } else if (lowerQuery.includes('غير مفروشة')) {
             newFilters['More Filters'] = { ...newFilters['More Filters'], furnishing: 'Unfurnished' };
+        }
+
+        const areaMatch = lowerQuery.match(/(\d+)\s*(متر|قدم)/);
+        if (areaMatch && areaMatch[1]) {
+            const area = parseInt(areaMatch[1], 10);
+            if (lowerQuery.includes('فوق') || lowerQuery.includes('أكثر من')) {
+                newFilters['More Filters'] = { ...newFilters['More Filters'], min_area: area };
+            } else if (lowerQuery.includes('تحت') || lowerQuery.includes('أقل من')) {
+                newFilters['More Filters'] = { ...newFilters['More Filters'], max_area: area };
+            }
         }
 
         const arabicAmenities: { [key: string]: string } = {
@@ -557,7 +583,7 @@ export function Residences() {
             if (bedBathFilter.beds && bedBathFilter.beds !== 'Any') {
                 if (bedBathFilter.beds === 'Studio') {
                     if (unit.type !== 'Studio') return false;
-                } else if (bedBathFilter.beds.endsWith('+')) {
+                } else if (String(bedBathFilter.beds).endsWith('+')) {
                     const minBeds = parseInt(bedBathFilter.beds, 10);
                     if (unit.beds < minBeds) return false;
                 } else {
@@ -565,7 +591,7 @@ export function Residences() {
                 }
             }
             if (bedBathFilter.baths && bedBathFilter.baths !== 'Any') {
-                if (bedBathFilter.baths.endsWith('+')) {
+                if (String(bedBathFilter.baths).endsWith('+')) {
                     const minBaths = parseInt(bedBathFilter.baths, 10);
                     if (unit.baths < minBaths) return false;
                 } else {
