@@ -555,10 +555,23 @@ export function Residences() {
 
         if (bedBathFilter) {
             if (bedBathFilter.beds && bedBathFilter.beds !== 'Any') {
-                 if (bedBathFilter.beds === 'Studio' && unit.type !== 'Studio') return false;
-                 if (bedBathFilter.beds !== 'Studio' && !isNaN(parseInt(bedBathFilter.beds, 10)) && unit.beds < parseInt(bedBathFilter.beds, 10)) return false;
+                if (bedBathFilter.beds === 'Studio') {
+                    if (unit.type !== 'Studio') return false;
+                } else if (bedBathFilter.beds.endsWith('+')) {
+                    const minBeds = parseInt(bedBathFilter.beds, 10);
+                    if (unit.beds < minBeds) return false;
+                } else {
+                    if (unit.beds !== parseInt(bedBathFilter.beds, 10)) return false;
+                }
             }
-            if (bedBathFilter.baths && bedBathFilter.baths !== 'Any' && !isNaN(parseInt(bedBathFilter.baths, 10)) && unit.baths < parseInt(bedBathFilter.baths, 10)) return false;
+            if (bedBathFilter.baths && bedBathFilter.baths !== 'Any') {
+                if (bedBathFilter.baths.endsWith('+')) {
+                    const minBaths = parseInt(bedBathFilter.baths, 10);
+                    if (unit.baths < minBaths) return false;
+                } else {
+                    if (unit.baths !== parseInt(bedBathFilter.baths, 10)) return false;
+                }
+            }
         }
         
         if (moreFilters) {
@@ -644,7 +657,7 @@ export function Residences() {
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
                     <Input
                         type="text"
-                        placeholder="e.g., 'furnished 2 bed' or 'شقة مفروشة غرفتين'"
+                        placeholder="e.g., 'furnished 2 bed'"
                         className="h-12 pl-11 w-full rounded-lg"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
