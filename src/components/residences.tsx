@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { units } from '@/data/units';
 import { UnitCard } from './unit-card';
+import { Breadcrumb } from './breadcrumb';
 
 const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
 
@@ -501,6 +502,13 @@ export function Residences() {
 
     const filterButtons: FilterKey[] = ['Rent', 'Apartment', 'Beds & Baths', 'Price'];
     
+    const breadcrumbItems = [
+      { label: 'Apartments for rent in Dubai', href: '/#residences' },
+      { label: 'Business Bay', href: '/community/business-bay' },
+      { label: 'Churchill Towers', href: '/building/churchill-residency-tower' },
+      { label: 'Apartments for rent in Churchill Residency Tower' }
+    ];
+
     return (
     <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
       <div className="container mx-auto px-1 sm:px-2 md:px-6">
@@ -586,27 +594,11 @@ export function Residences() {
 
         {/* --- Results Header --- */}
         <div className="mb-8">
-          <nav aria-label="Breadcrumb" className="mb-4">
-            <ol className="flex items-center gap-1.5 text-sm text-muted-foreground flex-wrap">
-              <li>
-                <a href="#" className="flex items-center gap-1 hover:text-primary transition-colors">
-                  <Home className="h-4 w-4" />
-                </a>
-              </li>
-              <li><ChevronRight className="h-4 w-4" /></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Apartments for rent in Dubai</a></li>
-              <li><ChevronRight className="h-4 w-4" /></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Business Bay</a></li>
-              <li><ChevronRight className="h-4 w-4" /></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Churchill Towers</a></li>
-              <li><ChevronRight className="h-4 w-4" /></li>
-              <li className="font-medium text-foreground truncate">Apartments for rent in Churchill Residency Tower, Churchill Towers</li>
-            </ol>
-          </nav>
+          <Breadcrumb items={breadcrumbItems} className="mb-4" />
 
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower, Churchill Towers</h1>
+              <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower</h1>
               <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch gap-2">
@@ -657,3 +649,5 @@ export function Residences() {
     </section>
   );
 }
+
+    

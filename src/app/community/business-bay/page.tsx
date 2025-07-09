@@ -89,7 +89,7 @@ const faqItems = [
 ];
 
 const breadcrumbItems = [
-    { label: 'Dubai' },
+    { label: 'Apartments for rent in Dubai', href: '/#residences' },
     { label: 'Business Bay' },
 ];
 
@@ -360,3 +360,5 @@ export default function BusinessBayPage() {
     </div>
   );
 }
+
+    

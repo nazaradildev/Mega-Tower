@@ -112,7 +112,7 @@ const pointsOfInterest = [
 ];
 
 const breadcrumbItems = [
-    { label: 'Dubai' },
+    { label: 'Apartments for rent in Dubai', href: '/#residences' },
     { label: 'Business Bay', href: '/community/business-bay' },
     { label: 'Churchill Residency Tower' },
 ];
@@ -318,3 +318,5 @@ export default function BuildingDetailsPage() {
         </div>
     );
 }
+
+    
