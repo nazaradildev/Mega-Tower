@@ -38,12 +38,10 @@ export function Header() {
   const [language, setLanguage] = useState("english");
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="container flex h-16 max-w-7xl items-center justify-between">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <div className="bg-white p-1 rounded-md flex items-center justify-center">
-            <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
-          </div>
+          <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
         </Link>
         
         <div className="flex items-center">
@@ -114,9 +112,7 @@ export function Header() {
               <SheetContent side="right" className="w-[300px] p-0 flex flex-col">
                   <div className="p-6 border-b">
                       <Link href="/" onClick={() => setIsOpen(false)}>
-                          <div className="bg-white p-1 rounded-md flex items-center justify-center w-fit">
-                            <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
-                          </div>
+                          <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
                       </Link>
                   </div>
                   <nav className="flex-1 flex flex-col gap-4 p-6">
