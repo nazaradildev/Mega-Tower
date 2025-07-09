@@ -4,7 +4,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, TowerControl, Train, Plane, MapPin } from 'lucide-react';
 import { ScrollAnimation } from "./scroll-animation";
-import { Map } from './map'; // Import the new Map component
+import dynamic from 'next/dynamic';
+import { useMemo } from 'react';
 
 const destinations = [
     { icon: ShoppingCart, name: "Dubai Mall", time: "5 mins" },
@@ -14,6 +15,11 @@ const destinations = [
 ]
 
 export function Location() {
+    const Map = useMemo(() => dynamic(() => import('@/components/map').then(mod => mod.Map), {
+        loading: () => <p className="text-center p-4">Loading map...</p>,
+        ssr: false
+    }), []);
+
     return (
         <section id="location" className="w-full py-16 md:py-24 bg-background overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">

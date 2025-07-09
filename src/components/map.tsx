@@ -4,22 +4,11 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { TowerControl } from 'lucide-react';
-import ReactDOMServer from 'react-dom/server';
 
 // --- Leaflet Icon Fix ---
-// This is a common workaround for a bug in Leaflet where default icons don't load correctly with bundlers like Webpack.
-// We are creating a custom icon that points to the correct image paths.
-const customIconHTML = ReactDOMServer.renderToString(
-  <div className="bg-primary-gradient p-2 rounded-full shadow-lg">
-    <TowerControl className="h-6 w-6 text-primary-foreground" />
-  </div>
-);
-
-const customMarkerIcon = new L.DivIcon({
-  html: customIconHTML,
-  className: 'dummy-class-to-avoid-default-leaflet-styling', // This class is not styled, it's just to prevent Leaflet from applying its own styles.
-  iconSize: [40, 40],
+const customMarkerIcon = new L.Icon({
+  iconUrl: '/khalifatower.png',
+  iconSize: [40, 40], // Adjust size as needed
   iconAnchor: [20, 40], // Point of the icon which will correspond to marker's location
   popupAnchor: [0, -40] // Point from which the popup should open relative to the iconAnchor
 });
