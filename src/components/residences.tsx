@@ -46,7 +46,8 @@ function FilterButton({ filterKey, filters, ...props }: FilterButtonProps) {
                 if (!data.type || data.type === 'Any') return 'Property Type';
                 return data.type;
             case 'Rent':
-                return data.type || filterKey;
+                 if (!data.type || data.type === 'Any') return 'Rent';
+                return data.type;
             case 'Price':
                 const parts = [];
                 if (data.min_price || data.max_price) parts.push(`AED ${data.min_price || 'Any'} - ${data.max_price || 'Any'}`);
@@ -100,49 +101,6 @@ type FilterPopoverProps = {
     title: string;
 };
 
-function FilterHeader({ title, onClear, isMobile }: { title: string; onClear: () => void; isMobile: boolean }) {
-    return (
-        <DialogHeader className="p-4 border-b text-left relative flex-row justify-between items-center">
-            {isMobile && 
-              <DialogClose asChild>
-                  <Button variant="ghost" size="icon" className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                      <X className="h-4 w-4" />
-                      <span className="sr-only">Close</span>
-                  </Button>
-              </DialogClose>
-            }
-            <DialogTitle className="text-xl font-headline text-center flex-grow">{title}</DialogTitle>
-            <Button variant="link" onClick={onClear} className="text-primary p-0 h-auto">Clear</Button>
-        </DialogHeader>
-    );
-}
-
-function FilterPopoverFooter({ onApply, onClear, isMobile }: { onApply: () => void; onClear: () => void; isMobile: boolean }) {
-    const clearButton = <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>;
-    const applyButton = <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>;
-
-    if (isMobile) {
-        return (
-             <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-                <DialogClose asChild>
-                    {clearButton}
-                </DialogClose>
-                <DialogClose asChild>
-                    {applyButton}
-                </DialogClose>
-            </div>
-        )
-    }
-
-    return (
-        <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-            {clearButton}
-            {applyButton}
-        </div>
-    );
-};
-
-
 type ControlButtonProps = React.ComponentProps<typeof Button> & {
     value: string;
     selectedValue: string;
@@ -165,13 +123,16 @@ function ControlButton({ value, selectedValue, onSelect, children, className }: 
     );
 }
 
-function RentFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
-    const types = ['Rent', 'Buy'];
+function RentFilterPopover({ onValueChange, values, onApply, isMobile, title }: FilterPopoverProps) {
+    const types = ['Any', 'Rent', 'Buy'];
     const buttonContent = (type: string) => {
-        const isSelected = values.type === type;
+        const isSelected = type === 'Any' ? !values.type : values.type === type;
         const button = (
             <button
-              onClick={() => { onValueChange({ type }); onApply(); }} 
+              onClick={() => { 
+                  onValueChange({ type: type === 'Any' ? undefined : type }); 
+                  onApply(); 
+              }} 
               className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
               <span>{type}</span> 
               {isSelected && <Check className="h-4 w-4" />}
@@ -184,7 +145,17 @@ function RentFilterPopover({ onValueChange, values, onApply, onClear, isMobile, 
     }
     return (
         <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile}/>}
+        {isMobile && (
+            <DialogHeader className="p-4 border-b text-center relative">
+                <DialogTitle className="text-xl font-headline">{title}</DialogTitle>
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full h-8 w-8 text-primary hover:text-primary hover:bg-primary/10">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
+            </DialogHeader>
+        )}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
@@ -194,7 +165,7 @@ function RentFilterPopover({ onValueChange, values, onApply, onClear, isMobile, 
     )
 };
 
-function UnitTypeFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+function UnitTypeFilterPopover({ onValueChange, values, onApply, isMobile, title }: FilterPopoverProps) {
     const types = ['Any', 'Apartment', 'Penthouse', 'Villa', 'Townhouse'];
     const buttonContent = (type: string) => {
         const isSelected = type === 'Any' ? !values.type : values.type === type;
@@ -216,7 +187,17 @@ function UnitTypeFilterPopover({ onValueChange, values, onApply, onClear, isMobi
     };
     return (
         <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
+        {isMobile && (
+            <DialogHeader className="p-4 border-b text-center relative">
+                <DialogTitle className="text-xl font-headline">{title}</DialogTitle>
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full h-8 w-8 text-primary hover:text-primary hover:bg-primary/10">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
+            </DialogHeader>
+        )}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
                 {types.map(buttonContent)}
@@ -227,9 +208,25 @@ function UnitTypeFilterPopover({ onValueChange, values, onApply, onClear, isMobi
 };
 
 function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+    const footer = (
+         <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+            <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
+            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+        </div>
+    );
     return (
       <>
-        {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
+        {isMobile && (
+            <DialogHeader className="p-4 border-b text-center relative">
+                <DialogTitle className="text-xl font-headline">{title}</DialogTitle>
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full h-8 w-8 text-primary hover:text-primary hover:bg-primary/10">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
+            </DialogHeader>
+        )}
         <div className="w-full sm:w-96">
             <div className="p-4 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -245,7 +242,16 @@ function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile,
                     </div>
                  </div>
             </div>
-            <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
+            {isMobile ? (
+                 <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+                    <DialogClose asChild>
+                        <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                        <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+                    </DialogClose>
+                </div>
+            ) : footer}
         </div>
       </>
     )
@@ -254,9 +260,26 @@ function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile,
 function BedBathFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
     const bedOptions = ['1', '2', '3', '4+'];
     const bathOptions = ['1', '2', '3', '4', '5+'];
+
+     const footer = (
+         <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+            <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
+            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+        </div>
+    );
     return (
         <>
-            {isMobile && <FilterHeader title={title} onClear={onClear} isMobile={isMobile} />}
+            {isMobile && (
+                <DialogHeader className="p-4 border-b text-center relative">
+                    <DialogTitle className="text-xl font-headline">{title}</DialogTitle>
+                    <DialogClose asChild>
+                        <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full h-8 w-8 text-primary hover:text-primary hover:bg-primary/10">
+                            <X className="h-4 w-4" />
+                            <span className="sr-only">Close</span>
+                        </Button>
+                    </DialogClose>
+                </DialogHeader>
+            )}
             <div className="w-full sm:w-80">
                 <div className="p-4 space-y-4">
                      <div>
@@ -275,7 +298,16 @@ function BedBathFilterPopover({ onValueChange, values, onApply, onClear, isMobil
                         </div>
                      </div>
                 </div>
-                <FilterPopoverFooter onApply={onApply} onClear={onClear} isMobile={isMobile} />
+                {isMobile ? (
+                     <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
+                        <DialogClose asChild>
+                            <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+                        </DialogClose>
+                    </div>
+                ) : footer}
             </div>
         </>
     )
@@ -317,7 +349,7 @@ function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsEx
             <DialogHeader className="p-6 border-b text-center relative">
               <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
                 <DialogClose asChild>
-                    <Button variant="ghost" size="icon" className="absolute right-6 top-1/2 -translate-y-1/2 rounded-full h-8 w-8">
+                    <Button variant="ghost" size="icon" className="absolute right-6 top-1/2 -translate-y-1/2 rounded-full h-8 w-8 text-primary hover:text-primary hover:bg-primary/10">
                         <X className="h-4 w-4" />
                         <span className="sr-only">Close</span>
                     </Button>
@@ -586,16 +618,16 @@ export function Residences() {
                 } else if (String(bedBathFilter.beds).endsWith('+')) {
                     const minBeds = parseInt(bedBathFilter.beds, 10);
                     if (unit.beds < minBeds) return false;
-                } else {
-                    if (unit.beds !== parseInt(bedBathFilter.beds, 10)) return false;
+                } else if (unit.beds !== parseInt(bedBathFilter.beds, 10)) {
+                    return false;
                 }
             }
             if (bedBathFilter.baths && bedBathFilter.baths !== 'Any') {
                 if (String(bedBathFilter.baths).endsWith('+')) {
                     const minBaths = parseInt(bedBathFilter.baths, 10);
                     if (unit.baths < minBaths) return false;
-                } else {
-                    if (unit.baths !== parseInt(bedBathFilter.baths, 10)) return false;
+                } else if (unit.baths !== parseInt(bedBathFilter.baths, 10)) {
+                    return false;
                 }
             }
         }
@@ -683,7 +715,7 @@ export function Residences() {
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
                     <Input
                         type="text"
-                        placeholder="e.g., 'furnished 2 bed'"
+                        placeholder="e.g., furnished 2 bed apartment"
                         className="h-12 pl-11 w-full rounded-lg"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
