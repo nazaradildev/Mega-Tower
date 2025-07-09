@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Inter, Playfair_Display } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import NextTopLoader from 'nextjs-toploader';
 
 export const metadata: Metadata = {
   title: 'eni | Churchill Towers',
@@ -31,6 +32,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn("font-body antialiased", fontBody.variable, fontHeadline.variable)}>
+        <NextTopLoader
+          color="#00d082"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #00d082, 0 0 5px #00d082"
+        />
         {children}
         <Toaster />
       </body>
