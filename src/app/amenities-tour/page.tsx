@@ -31,7 +31,7 @@ const amenitiesWithTours = [
     description: "Rejuvenate your body and mind in our exclusive sauna and steam rooms. A sanctuary of tranquility designed for ultimate relaxation.",
     image: "https://placehold.co/600x450.png",
     aiHint: "luxury spa sauna",
-    tourUrl: "https://my.matterport.com/show/?m=69UUKm16w39", // Placeholder
+    tourUrl: "https://kuula.co/share/7HhCx?fs=0&vr=0&sd=1&thumbs=0&info=0&logo=0&maps=0&chromeless=1",
   },
   {
     name: "Lush Landscaped Gardens",
