@@ -502,13 +502,6 @@ export function Residences() {
 
     const filterButtons: FilterKey[] = ['Rent', 'Apartment', 'Beds & Baths', 'Price'];
     
-    const breadcrumbItems = [
-      { label: 'Apartments for rent in Dubai', href: '/#residences' },
-      { label: 'Business Bay', href: '/community/business-bay' },
-      { label: 'Churchill Towers', href: '/building/churchill-residency-tower' },
-      { label: 'Apartments for rent in Churchill Residency Tower' }
-    ];
-
     return (
     <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
       <div className="container mx-auto px-1 sm:px-2 md:px-6">
@@ -594,8 +587,7 @@ export function Residences() {
 
         {/* --- Results Header --- */}
         <div className="mb-8">
-          <Breadcrumb items={breadcrumbItems} className="mb-4" />
-
+          <Breadcrumb items={[]} className="mb-4" />
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower</h1>
@@ -649,5 +641,3 @@ export function Residences() {
     </section>
   );
 }
-
-    
