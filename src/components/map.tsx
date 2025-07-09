@@ -1,7 +1,6 @@
 
 'use client';
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useEffect, useRef } from 'react';
@@ -9,9 +8,9 @@ import React, { useEffect, useRef } from 'react';
 // --- Leaflet Icon Fix ---
 const customMarkerIcon = new L.Icon({
   iconUrl: '/khalifatower.png',
-  iconSize: [60, 60], // Adjust size as needed
-  iconAnchor: [30, 60], // Point of the icon which will correspond to marker's location
-  popupAnchor: [0, -60] // Point from which the popup should open relative to the iconAnchor
+  iconSize: [80, 80], // Adjust size as needed
+  iconAnchor: [40, 80], // Point of the icon which will correspond to marker's location
+  popupAnchor: [0, -80] // Point from which the popup should open relative to the iconAnchor
 });
 
 
@@ -26,9 +25,10 @@ export function Map() {
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
+    let map: L.Map;
     if (mapContainerRef.current && !mapRef.current) {
         // Map is not initialized yet
-        const map = L.map(mapContainerRef.current, {
+        map = L.map(mapContainerRef.current, {
             center: burjKhalifaPosition,
             zoom: 15,
             scrollWheelZoom: false,
@@ -41,7 +41,7 @@ export function Map() {
         L.marker(burjKhalifaPosition, { icon: customMarkerIcon })
             .addTo(map)
             .bindPopup(
-                '<div class="font-bold font-headline">Churchill Towers</div><p class="text-sm">Business Bay, Dubai</p>'
+                '<div class="font-bold font-headline">Burj Khalifa</div>'
             );
         
         mapRef.current = map;
@@ -60,4 +60,3 @@ export function Map() {
     <div ref={mapContainerRef} className="h-full w-full rounded-lg" />
   );
 }
-
