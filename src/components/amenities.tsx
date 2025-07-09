@@ -24,7 +24,7 @@ const featuredAmenities = [
   {
     name: "State-of-the-Art Gymnasium",
     description: "Achieve your fitness goals in our fully equipped, modern gymnasium. Featuring the latest Technogym equipment for a comprehensive workout experience.",
-    image: "https://placehold.co/600x450.png",
+    image: ["/gym2.jpg", "/gym3.jpg", "/gym4.jpg", "/gym1.jpg"],
     aiHint: "modern gym interior",
   },
   {
@@ -41,16 +41,14 @@ const featuredAmenities = [
   },
 ];
 
-
-export function Amenities() {
+function AmenityCarousel({ images, name, aiHint }: { images: string[]; name: string; aiHint: string; }) {
   const autoplay = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
   );
-  
-  const [gardenApi, setGardenApi] = React.useState<CarouselApi>();
+  const [api, setApi] = React.useState<CarouselApi>();
 
   React.useEffect(() => {
-    if (!gardenApi) return;
+    if (!api) return;
 
     const onSelect = (api: CarouselApi) => {
       api.slideNodes().forEach((node, index) => {
@@ -62,18 +60,48 @@ export function Amenities() {
       });
     };
     
-    gardenApi.on('select', onSelect);
-    gardenApi.on('reInit', onSelect);
-
-    onSelect(gardenApi);
+    api.on('select', onSelect);
+    api.on('reInit', onSelect);
+    onSelect(api);
 
     return () => {
-      gardenApi.off('select', onSelect);
-      gardenApi.off('reInit', onSelect);
+      api.off('select', onSelect);
+      api.off('reInit', onSelect);
     };
-  }, [gardenApi]);
+  }, [api]);
+
+  return (
+    <Carousel
+      setApi={setApi}
+      className="w-full h-full"
+      plugins={[autoplay.current]}
+      opts={{ loop: true, duration: 50 }}
+    >
+      <CarouselContent className="m-0 h-full grid [grid-auto-flow:row] [align-items:flex-start]">
+        {images.map((img, i) => (
+          <CarouselItem key={i} className={cn(
+            "p-0 [grid-area:1/1/2/2] opacity-0 transition-opacity duration-1000 ease-in-out",
+            '[&.is-selected]:opacity-100'
+          )}>
+            <Image
+              src={img}
+              alt={`${name} ${i + 1}`}
+              data-ai-hint={aiHint}
+              width={600}
+              height={450}
+              className="w-full h-full object-cover"
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="absolute left-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+      <CarouselNext className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+    </Carousel>
+  );
+}
 
 
+export function Amenities() {
   return (
     <section id="amenities" className="w-full py-16 md:py-24 bg-secondary overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
@@ -92,32 +120,7 @@ export function Amenities() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
                 <div className={cn("aspect-[4/3] overflow-hidden rounded-lg shadow-xl relative group", index % 2 === 0 ? 'md:order-last' : '')}>
                   {Array.isArray(amenity.image) ? (
-                    <Carousel
-                      setApi={setGardenApi}
-                      className="w-full h-full"
-                      plugins={[autoplay.current]}
-                      opts={{ loop: true, duration: 50 }}
-                    >
-                      <CarouselContent className="m-0 h-full grid [grid-auto-flow:row] [align-items:flex-start]">
-                        {(amenity.image as string[]).map((img, i) => (
-                          <CarouselItem key={i} className={cn(
-                            "p-0 [grid-area:1/1/2/2] opacity-0 transition-opacity duration-1000 ease-in-out",
-                            '[&.is-selected]:opacity-100'
-                          )}>
-                            <Image
-                              src={img}
-                              alt={`${amenity.name} ${i + 1}`}
-                              data-ai-hint={amenity.aiHint}
-                              width={600}
-                              height={450}
-                              className="w-full h-full object-cover"
-                            />
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious className="absolute left-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-                      <CarouselNext className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-                    </Carousel>
+                    <AmenityCarousel images={amenity.image} name={amenity.name} aiHint={amenity.aiHint} />
                   ) : (
                     <Image
                       src={amenity.image as string}
