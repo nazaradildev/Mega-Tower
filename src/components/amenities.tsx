@@ -3,15 +3,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ScrollAnimation } from "./scroll-animation";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
 
 const featuredAmenities = [
@@ -41,65 +32,37 @@ const featuredAmenities = [
   },
 ];
 
-function AmenityCarousel({ images, name, aiHint }: { images: string[]; name: string; aiHint: string; }) {
-  const autoplay = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
-  );
-  const [api, setApi] = React.useState<CarouselApi>();
+function FadeCarousel({ images, name, aiHint }: { images: string[]; name: string; aiHint: string; }) {
+  const [currentIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
-    if (!api) return;
+    if (images.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 4000); // Change image every 4 seconds
 
-    const onSelect = (api: CarouselApi) => {
-      api.slideNodes().forEach((node, index) => {
-        if (api.selectedScrollSnap() === index) {
-          node.classList.add('is-selected');
-        } else {
-          node.classList.remove('is-selected');
-        }
-      });
-    };
-    
-    api.on('select', onSelect);
-    api.on('reInit', onSelect);
-    onSelect(api);
-
-    return () => {
-      api.off('select', onSelect);
-      api.off('reInit', onSelect);
-    };
-  }, [api]);
+    return () => clearInterval(timer);
+  }, [images.length]);
 
   return (
-    <Carousel
-      setApi={setApi}
-      className="w-full h-full"
-      plugins={[autoplay.current]}
-      opts={{ loop: true, duration: 50 }}
-    >
-      <CarouselContent className="m-0 h-full grid [grid-auto-flow:row] [align-items:flex-start]">
-        {images.map((img, i) => (
-          <CarouselItem key={i} className={cn(
-            "p-0 [grid-area:1/1/2/2] opacity-0 transition-opacity duration-1000 ease-in-out",
-            '[&.is-selected]:opacity-100'
-          )}>
-            <Image
-              src={img}
-              alt={`${name} ${i + 1}`}
-              data-ai-hint={aiHint}
-              width={600}
-              height={450}
-              className="w-full h-full object-cover"
-            />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="absolute left-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-      <CarouselNext className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-    </Carousel>
+    <div className="w-full h-full relative">
+      {images.map((img, i) => (
+        <Image
+          key={img}
+          src={img}
+          alt={`${name} ${i + 1}`}
+          data-ai-hint={aiHint}
+          fill
+          className={cn(
+            "w-full h-full object-cover absolute inset-0 transition-opacity duration-1000 ease-in-out",
+            i === currentIndex ? "opacity-100" : "opacity-0"
+          )}
+          priority={i === 0}
+        />
+      ))}
+    </div>
   );
 }
-
 
 export function Amenities() {
   return (
@@ -120,7 +83,7 @@ export function Amenities() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
                 <div className={cn("aspect-[4/3] overflow-hidden rounded-lg shadow-xl relative group", index % 2 === 0 ? 'md:order-last' : '')}>
                   {Array.isArray(amenity.image) ? (
-                    <AmenityCarousel images={amenity.image} name={amenity.name} aiHint={amenity.aiHint} />
+                    <FadeCarousel images={amenity.image} name={amenity.name} aiHint={amenity.aiHint} />
                   ) : (
                     <Image
                       src={amenity.image as string}
