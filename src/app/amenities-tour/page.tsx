@@ -38,7 +38,7 @@ const amenitiesWithTours = [
     description: "Find your peaceful oasis within the city in our beautifully landscaped gardens. An ideal space for a quiet stroll or peaceful contemplation.",
     image: "/garden1.jpg",
     aiHint: "modern building garden",
-    tourUrl: "https://my.matterport.com/show/?m=69UUKm16w39", // Placeholder
+    tourUrl: "https://kuula.co/share/7PcHw?fs=0&vr=0&sd=1&thumbs=0&info=0&logo=0&maps=0&chromeless=1",
   },
 ];
 
