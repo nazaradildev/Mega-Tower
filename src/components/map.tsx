@@ -4,6 +4,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import React from 'react';
 
 // --- Leaflet Icon Fix ---
 const customMarkerIcon = new L.Icon({
@@ -21,12 +22,15 @@ const EsriAttribution = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, 
 const burjKhalifaPosition: L.LatLngExpression = [25.1972, 55.2744];
 
 export function Map() {
+  const [map, setMap] = React.useState<L.Map | null>(null);
+
   return (
     <MapContainer 
       center={burjKhalifaPosition} 
       zoom={15} 
       className="h-full w-full rounded-lg"
       scrollWheelZoom={false}
+      whenCreated={setMap}
       >
       <TileLayer
         url={EsriSatelliteURL}
