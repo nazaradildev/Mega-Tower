@@ -1,8 +1,10 @@
+
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, TowerControl, Train, Plane, MapPin } from 'lucide-react';
 import { ScrollAnimation } from "./scroll-animation";
+import { Map } from './map'; // Import the new Map component
 
 const destinations = [
     { icon: ShoppingCart, name: "Dubai Mall", time: "5 mins" },
@@ -47,8 +49,8 @@ export function Location() {
                         </div>
                     </div>
                     <ScrollAnimation delay={200}>
-                        <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg flex items-center justify-center">
-                           <p className="text-muted-foreground">Map feature is temporarily disabled.</p>
+                        <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg">
+                           <Map />
                         </div>
                     </ScrollAnimation>
                 </div>
