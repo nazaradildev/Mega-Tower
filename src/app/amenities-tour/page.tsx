@@ -24,7 +24,7 @@ const amenitiesWithTours = [
     description: "Achieve your fitness goals in our fully equipped, modern gymnasium. Featuring the latest Technogym equipment for a comprehensive workout experience.",
     image: "https://placehold.co/600x450.png",
     aiHint: "modern gym interior",
-    tourUrl: "https://my.matterport.com/show/?m=69UUKm16w39", // Placeholder
+    tourUrl: "https://kuula.co/share/collection/7Yd2B?fs=0&vr=0&sd=1&thumbs=0&info=0&logo=0&maps=0&chromeless=1",
   },
   {
     name: "Serene Sauna & Steam Rooms",
