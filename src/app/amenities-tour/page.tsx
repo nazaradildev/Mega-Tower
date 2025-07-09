@@ -17,7 +17,7 @@ const amenitiesWithTours = [
     description: "Immerse yourself in luxury with our stunning infinity pool, offering panoramic views of the Dubai skyline. The perfect escape from the city bustle.",
     image: "https://placehold.co/600x450.png",
     aiHint: "luxury infinity pool",
-    tourUrl: "https://kuula.co/share/7k4f5?fs=0&vr=0&sd=1&thumbs=0&info=0&logo=0&maps=0&chromeless=1",
+    tourUrl: "https://kuula.co/share/7lnCj?fs=0&vr=0&sd=1&thumbs=0&info=0&logo=0&maps=0&chromeless=1",
   },
   {
     name: "State-of-the-Art Gymnasium",
