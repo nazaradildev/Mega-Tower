@@ -289,9 +289,10 @@ export function UnitCard({ unit }: UnitCardProps) {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="rounded-full -mr-2"
+                          className="rounded-full"
                         >
                           <X className="h-4 w-4" />
+                          <span className="sr-only">Close</span>
                         </Button>
                       </DialogClose>
                     </div>
