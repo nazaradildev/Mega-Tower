@@ -14,7 +14,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { units } from '@/data/units';
 import { UnitCard } from './unit-card';
 import { Breadcrumb } from './breadcrumb';
-import { findProperties } from '@/ai/flows/find-properties-flow';
+import nlp from 'compromise';
 import { useToast } from "@/hooks/use-toast";
 
 const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
@@ -375,29 +375,76 @@ export function Residences() {
     const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
     const isMobile = useIsMobile();
     const [searchQuery, setSearchQuery] = useState('');
-    const [isSearching, setIsSearching] = useState(false);
     const { toast } = useToast();
 
-    const handleSearch = async () => {
-        if (!searchQuery.trim()) return;
-        setIsSearching(true);
-        try {
-            const result = await findProperties(searchQuery);
-            setFilters(result);
-            toast({
-                title: "Search Complete",
-                description: "Filters have been updated based on your search.",
-            });
-        } catch (error) {
-            console.error("AI search failed:", error);
-            toast({
-                variant: "destructive",
-                title: "Search Failed",
-                description: "The AI search could not be completed. Please try again.",
-            });
-        } finally {
-            setIsSearching(false);
+    const parseSearchQueryWithNLP = (query: string): FilterValues => {
+        const doc = nlp(query.toLowerCase());
+        const newFilters: FilterValues = {};
+
+        if (doc.has('rent')) newFilters['Rent'] = { type: 'Rent' };
+        if (doc.has('buy')) newFilters['Rent'] = { type: 'Buy' };
+
+        const propertyTypes = ['apartment', 'penthouse', 'villa', 'townhouse'];
+        const foundType = propertyTypes.find(type => doc.has(type));
+        if (foundType) {
+            newFilters['Apartment'] = { type: foundType.charAt(0).toUpperCase() + foundType.slice(1) };
         }
+
+        const bedsMatch = doc.match('(#Value) (bed|beds|bedroom|bedrooms)').values(0);
+        const bedsText = bedsMatch.text();
+        if (bedsText) {
+            const bedsVal = bedsText === 'studio' ? 'Studio' : nlp(bedsText).values().toNumber().out();
+            if (bedsVal) newFilters['Beds & Baths'] = { ...newFilters['Beds & Baths'], beds: String(bedsVal) };
+        }
+        if (doc.has('studio')) {
+            newFilters['Beds & Baths'] = { ...newFilters['Beds & Baths'], beds: 'Studio' };
+        }
+
+        const bathsMatch = doc.match('(#Value) (bath|baths|bathroom|bathrooms)').values(0);
+        const bathsText = bathsMatch.text();
+        if (bathsText) {
+            const bathsVal = nlp(bathsText).values().toNumber().out();
+            if(bathsVal) newFilters['Beds & Baths'] = { ...newFilters['Beds & Baths'], baths: String(bathsVal) };
+        }
+
+        const money = doc.money().get(0);
+        if (money) {
+            const amount = money.amount;
+            if (doc.match(`(under|less|below) ${money.text}`).found) {
+                newFilters['Price'] = { ...newFilters['Price'], max_price: amount };
+            } else if (doc.match(`(over|more|above) ${money.text}`).found) {
+                newFilters['Price'] = { ...newFilters['Price'], min_price: amount };
+            } else {
+                 newFilters['Price'] = { ...newFilters['Price'], max_price: amount };
+            }
+        }
+        if (doc.has('yearly')) newFilters['Price'] = { ...newFilters['Price'], period: 'Yearly' };
+        if (doc.has('monthly')) newFilters['Price'] = { ...newFilters['Price'], period: 'Monthly' };
+
+        const furnishing = doc.match('(furnished|unfurnished)').text();
+        if (furnishing) {
+            newFilters['More Filters'] = { ...newFilters['More Filters'], furnishing: furnishing.charAt(0).toUpperCase() + furnishing.slice(1) };
+        }
+
+        const foundAmenities = allAmenities.filter(amenity => doc.has(amenity.toLowerCase()));
+        if (foundAmenities.length > 0) {
+            newFilters['More Filters'] = { ...newFilters['More Filters'], amenities: foundAmenities };
+        }
+        
+        return newFilters;
+    }
+
+    const handleSearch = () => {
+        if (!searchQuery.trim()) {
+            setFilters({});
+            return;
+        }
+        const result = parseSearchQueryWithNLP(searchQuery);
+        setFilters(result);
+        toast({
+            title: "Search Complete",
+            description: "Filters have been updated based on your search.",
+        });
     };
 
     const handlePopoverOpenChange = (filterKey: FilterKey, isOpen: boolean) => {
@@ -535,11 +582,10 @@ export function Residences() {
                         className="h-12 pl-11 w-full rounded-lg"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        disabled={isSearching}
                     />
                 </div>
-                <Button type="submit" className="h-12 w-full sm:w-auto px-6 rounded-lg bg-primary-gradient text-primary-foreground font-semibold" disabled={isSearching || !searchQuery.trim()}>
-                    {isSearching ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Search'}
+                <Button type="submit" className="h-12 w-full sm:w-auto px-6 rounded-lg bg-primary-gradient text-primary-foreground font-semibold" disabled={!searchQuery.trim()}>
+                    {'Search'}
                 </Button>
             </form>
             <div className="flex items-center gap-2 flex-wrap">
