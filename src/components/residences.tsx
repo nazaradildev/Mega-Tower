@@ -7,13 +7,15 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, KeyRound, Home, ChevronRight, MapPin, Eye, LayoutDashboard, Armchair, View } from 'lucide-react';
+import { Ruler, ChevronDown, Search, BedDouble, Wallet, SlidersHorizontal, Building2, X, Check, KeyRound, Home, ChevronRight, MapPin, Eye, LayoutDashboard, Armchair, View, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { units } from '@/data/units';
 import { UnitCard } from './unit-card';
 import { Breadcrumb } from './breadcrumb';
+import { findProperties } from '@/ai/flows/find-properties-flow';
+import { useToast } from "@/hooks/use-toast";
 
 const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
 
@@ -367,13 +369,36 @@ function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsEx
 }
 
 export function Residences() {
-    const [filters, setFilters] = useState({});
+    const [filters, setFilters] = useState<FilterValues>({});
     const [sortOption, setSortOption] = useState('Newest');
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
     const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
     const isMobile = useIsMobile();
-    const [searchTags, setSearchTags] = useState(['Churchill Towers', 'Business Bay']);
-    const [inputValue, setInputValue] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
+    const { toast } = useToast();
+
+    const handleSearch = async () => {
+        if (!searchQuery.trim()) return;
+        setIsSearching(true);
+        try {
+            const result = await findProperties(searchQuery);
+            setFilters(result);
+            toast({
+                title: "Search Complete",
+                description: "Filters have been updated based on your search.",
+            });
+        } catch (error) {
+            console.error("AI search failed:", error);
+            toast({
+                variant: "destructive",
+                title: "Search Failed",
+                description: "The AI search could not be completed. Please try again.",
+            });
+        } finally {
+            setIsSearching(false);
+        }
+    };
 
     const handlePopoverOpenChange = (filterKey: FilterKey, isOpen: boolean) => {
         setOpenPopovers(prev => ({ ...prev, [filterKey]: isOpen }));
@@ -403,18 +428,6 @@ export function Residences() {
         });
     };
     
-    const removeSearchTag = (tagToRemove: string) => {
-        setSearchTags(prev => prev.filter(tag => tag !== tagToRemove));
-    };
-    
-    const addSearchTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && inputValue.trim() !== '') {
-            setSearchTags(prev => [...prev, inputValue.trim()]);
-            setInputValue('');
-            e.preventDefault();
-        }
-    };
-
     const filteredUnits = useMemo(() => units.filter(unit => {
         const { 'Rent': rentFilter, 'Apartment': apartmentFilter, 'Price': priceFilter, 'Beds & Baths': bedBathFilter, 'More Filters': moreFilters }: FilterValues = filters;
 
@@ -512,75 +525,68 @@ export function Residences() {
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-3 border mb-8">
-            <div className="flex flex-col md:flex-row items-center gap-3">
-                <div className="relative flex-grow w-full flex items-center gap-2 p-1 pl-3 rounded-lg bg-gray-50 border border-gray-200 h-12">
-                    <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto no-scrollbar">
-                        {searchTags.map(tag => (
-                            <div key={tag} className="flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/20 rounded-md px-2 py-0.5 text-sm font-medium shrink-0">
-                                <span>{tag}</span>
-                                <button onClick={() => removeSearchTag(tag)}>
-                                    <X className="h-3.5 w-3.5" />
-                                </button>
-                            </div>
-                        ))}
-                        <input
-                            type="text"
-                            placeholder={searchTags.length === 0 ? "Search by City, Community, or Building" : ""}
-                            className="bg-transparent focus:ring-0 border-0 p-0 h-10 flex-grow w-32 outline-none text-sm"
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            onKeyDown={addSearchTag}
-                        />
-                    </div>
+        <div className="bg-background rounded-lg shadow-sm p-3 border mb-8 space-y-4">
+            <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex flex-col sm:flex-row items-center gap-3">
+                <div className="relative flex-grow w-full">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
+                    <Input
+                        type="text"
+                        placeholder="Search with AI: e.g., 'a furnished 2 bed with canal view under 200k'"
+                        className="h-12 pl-11 w-full rounded-lg"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        disabled={isSearching}
+                    />
                 </div>
+                <Button type="submit" className="h-12 w-full sm:w-auto px-6 rounded-lg bg-primary-gradient text-primary-foreground font-semibold" disabled={isSearching || !searchQuery.trim()}>
+                    {isSearching ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Search'}
+                </Button>
+            </form>
+            <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-medium mr-2 hidden md:inline">Filters:</span>
+                <div className="grid w-full grid-cols-2 sm:flex sm:w-auto gap-2">
+                    {filterButtons.map(key => {
+                        const trigger = (
+                            <FilterButton filterKey={key} filters={filters} />
+                        );
+                        const content = renderFilterPopoverContent(key);
 
-                <div className="flex items-center gap-2 w-full md:w-auto">
-                    <div className="grid w-full grid-cols-2 md:grid-cols-none md:flex gap-2">
-                      {filterButtons.map(key => {
-                          const trigger = (
-                              <FilterButton filterKey={key} filters={filters} />
-                          );
-                          const content = renderFilterPopoverContent(key);
+                        if (isMobile) {
+                            return (
+                                <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                                    <DialogTrigger asChild>{trigger}</DialogTrigger>
+                                    <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
+                                        {content}
+                                    </DialogContent>
+                                </Dialog>
+                            );
+                        }
 
-                          if (isMobile) {
-                              return (
-                                  <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                                      <DialogTrigger asChild>{trigger}</DialogTrigger>
-                                      <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
-                                          {content}
-                                      </DialogContent>
-                                  </Dialog>
-                              );
-                          }
-
-                          return (
-                              <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                                  <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                                  <PopoverContent className="w-auto p-0" align="start">
-                                      {content}
-                                  </PopoverContent>
-                              </Popover>
-                          );
-                      })}
-                      <Dialog>
-                            <DialogTrigger asChild>
-                                 <FilterButton filterKey="More Filters" filters={filters}/>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl p-0 flex flex-col">
-                                <MoreFiltersModal
-                                    onApply={(values) => {
-                                      handleFilterChange('More Filters', values);
-                                    }}
-                                    onClear={() => clearFilter('More Filters')}
-                                    initialValues={filters['More Filters']}
-                                    isExpanded={isAmenitiesExpanded}
-                                    setIsExpanded={setIsAmenitiesExpanded}
-                                />
-                            </DialogContent>
-                        </Dialog>
-                    </div>
+                        return (
+                            <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                                <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    {content}
+                                </PopoverContent>
+                            </Popover>
+                        );
+                    })}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <FilterButton filterKey="More Filters" filters={filters}/>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl p-0 flex flex-col">
+                            <MoreFiltersModal
+                                onApply={(values) => {
+                                    handleFilterChange('More Filters', values);
+                                }}
+                                onClear={() => clearFilter('More Filters')}
+                                initialValues={filters['More Filters']}
+                                isExpanded={isAmenitiesExpanded}
+                                setIsExpanded={setIsAmenitiesExpanded}
+                            />
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
         </div>
