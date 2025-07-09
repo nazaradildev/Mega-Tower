@@ -1,6 +1,6 @@
+
 "use client";
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/header';
@@ -10,41 +10,21 @@ import { Location } from '@/components/location';
 import { Contact } from '@/components/contact';
 import { ImmersiveExperience } from '@/components/immersive-experience';
 
-const heroImages = [
-  { src: '/image1.jpg', alt: 'Hero image of Churchill Towers in Business Bay, Dubai', hint: 'dubai cityscape' },
-  { src: '/image5-3-1.jpg', alt: 'Alternate hero image of Churchill Towers', hint: 'modern architecture' }
-];
-
 export default function Home() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-    }, 5000); // 5 seconds
-
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-1">
         <section className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
           <div className="absolute inset-0 z-0">
-            {heroImages.map((image, index) => (
-               <Image
-                key={image.src}
-                src={image.src}
-                alt={image.alt}
-                data-ai-hint={image.hint}
-                fill
-                className={`object-cover transition-opacity duration-1000 ease-in-out ${
-                  index === currentImageIndex ? 'opacity-100 animate-zoom-in-ken-burns' : 'opacity-0'
-                }`}
-                priority={index === 0}
-              />
-            ))}
+             <Image
+              src="/mega tower1.png"
+              alt="Hero image of Churchill Towers in Business Bay, Dubai"
+              data-ai-hint="dubai cityscape"
+              fill
+              className="object-cover animate-zoom-in-ken-burns"
+              priority
+            />
             <div className="absolute inset-0 bg-black/50" />
           </div>
 
