@@ -10,7 +10,7 @@ export function Footer() {
           <div className="text-center sm:text-left">
             <Link href="/" className="inline-block">
               <div className="bg-foreground text-background p-2 rounded-md flex items-center justify-center">
-                <Image src="/ENI.png" alt="ENI Logo" width={100} height={34} />
+                <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} />
               </div>
             </Link>
             <p className="text-sm text-muted-foreground mt-2">

@@ -51,8 +51,8 @@ export default function Home() {
           <div className="relative z-10 h-full w-full flex flex-col items-center justify-center p-4">
             <div className="absolute top-8 left-1/2 -translate-x-1/2">
               <Image
-                src="/ENI.png"
-                alt="ENI Logo"
+                src="/MEGA.png"
+                alt="MEGA Logo"
                 width={120}
                 height={40}
                 priority

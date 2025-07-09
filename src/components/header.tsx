@@ -41,7 +41,7 @@ export function Header() {
       <div className="container flex h-16 max-w-7xl items-center justify-between">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <div className="bg-foreground text-background p-1 rounded-md flex items-center justify-center">
-            <Image src="/ENI.png" alt="ENI Logo" width={90} height={30} priority />
+            <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
           </div>
         </Link>
         
@@ -114,7 +114,7 @@ export function Header() {
                   <div className="p-6 border-b">
                       <Link href="/" onClick={() => setIsOpen(false)}>
                           <div className="bg-foreground text-background p-1 rounded-md flex items-center justify-center w-fit">
-                            <Image src="/ENI.png" alt="ENI Logo" width={90} height={30} priority />
+                            <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
                           </div>
                       </Link>
                   </div>
