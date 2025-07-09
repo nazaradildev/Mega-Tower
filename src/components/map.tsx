@@ -4,7 +4,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 // --- Leaflet Icon Fix ---
 const customMarkerIcon = new L.Icon({
@@ -22,32 +22,42 @@ const EsriAttribution = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, 
 const burjKhalifaPosition: L.LatLngExpression = [25.1972, 55.2744];
 
 export function Map() {
-  const mapRef = React.useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
 
-  const setMap = React.useCallback((mapInstance: L.Map) => {
-    // This is to prevent re-initialization error in dev environment with HMR
-    if (mapRef.current) return;
-    mapRef.current = mapInstance;
-  }, []);
+  useEffect(() => {
+    if (mapContainerRef.current && !mapRef.current) {
+        // Map is not initialized yet
+        const map = L.map(mapContainerRef.current, {
+            center: burjKhalifaPosition,
+            zoom: 15,
+            scrollWheelZoom: false,
+        });
+
+        L.tileLayer(EsriSatelliteURL, {
+            attribution: EsriAttribution,
+        }).addTo(map);
+
+        L.marker(burjKhalifaPosition, { icon: customMarkerIcon })
+            .addTo(map)
+            .bindPopup(
+                '<div class="font-bold font-headline">Churchill Towers</div><p class="text-sm">Business Bay, Dubai</p>'
+            );
+        
+        mapRef.current = map;
+    }
+
+    // Cleanup function
+    return () => {
+        if (mapRef.current) {
+            mapRef.current.remove();
+            mapRef.current = null;
+        }
+    };
+  }, []); // Empty dependency array ensures this runs only on mount and unmount
 
   return (
-    <MapContainer 
-      center={burjKhalifaPosition} 
-      zoom={15} 
-      className="h-full w-full rounded-lg"
-      scrollWheelZoom={false}
-      whenCreated={setMap}
-      >
-      <TileLayer
-        url={EsriSatelliteURL}
-        attribution={EsriAttribution}
-      />
-      <Marker position={burjKhalifaPosition} icon={customMarkerIcon}>
-        <Popup>
-          <div className="font-bold font-headline">Churchill Towers</div>
-          <p className="text-sm">Business Bay, Dubai</p>
-        </Popup>
-      </Marker>
-    </MapContainer>
+    <div ref={mapContainerRef} className="h-full w-full rounded-lg" />
   );
 }
+
