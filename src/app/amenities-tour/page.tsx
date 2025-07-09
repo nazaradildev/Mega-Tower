@@ -64,7 +64,7 @@ function AmenityTourCard({ amenity }: { amenity: typeof amenitiesWithTours[0] })
             variant="secondary" 
             size="icon"
             onClick={() => setShowTour(false)} 
-            className="absolute top-1 right-1 z-10 rounded-full h-10 w-10"
+            className="absolute top-0 right-0 z-10 rounded-full h-10 w-10"
             aria-label="Close virtual tour"
           >
             <X className="h-5 w-5" />
