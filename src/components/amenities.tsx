@@ -3,6 +3,15 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ScrollAnimation } from "./scroll-animation";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import * as React from "react";
 
 const featuredAmenities = [
   {
@@ -26,13 +35,17 @@ const featuredAmenities = [
   {
     name: "Lush Landscaped Gardens",
     description: "Find your peaceful oasis within the city in our beautifully landscaped gardens. An ideal space for a quiet stroll or peaceful contemplation.",
-    image: "https://placehold.co/600x450.png",
+    image: ["/garden2.jpg", "/garden3.jpg", "/garden4.jpg", "/garden1.jpg"],
     aiHint: "modern building garden",
   },
 ];
 
 
 export function Amenities() {
+  const autoplay = React.useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
+  );
+
   return (
     <section id="amenities" className="w-full py-16 md:py-24 bg-secondary overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
@@ -49,15 +62,40 @@ export function Amenities() {
           {featuredAmenities.map((amenity, index) => (
             <ScrollAnimation key={amenity.name} delay={index * 150}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
-                <div className={cn("aspect-[4/3] overflow-hidden rounded-lg shadow-xl", index % 2 === 0 ? 'md:order-last' : '')}>
-                  <Image
-                    src={amenity.image}
-                    alt={amenity.name}
-                    data-ai-hint={amenity.aiHint}
-                    width={600}
-                    height={450}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
+                <div className={cn("aspect-[4/3] overflow-hidden rounded-lg shadow-xl relative group", index % 2 === 0 ? 'md:order-last' : '')}>
+                  {Array.isArray(amenity.image) ? (
+                    <Carousel
+                      className="w-full h-full"
+                      plugins={[autoplay.current]}
+                      opts={{ loop: true }}
+                    >
+                      <CarouselContent className="m-0 h-full">
+                        {(amenity.image as string[]).map((img, i) => (
+                          <CarouselItem key={i} className="p-0">
+                            <Image
+                              src={img}
+                              alt={`${amenity.name} ${i + 1}`}
+                              data-ai-hint={amenity.aiHint}
+                              width={600}
+                              height={450}
+                              className="w-full h-full object-cover"
+                            />
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious className="absolute left-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <CarouselNext className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Carousel>
+                  ) : (
+                    <Image
+                      src={amenity.image as string}
+                      alt={amenity.name}
+                      data-ai-hint={amenity.aiHint}
+                      width={600}
+                      height={450}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                  )}
                 </div>
                 <div className="space-y-4 text-center md:text-left">
                   <h3 className="text-2xl md:text-3xl font-bold font-headline text-primary">{amenity.name}</h3>
