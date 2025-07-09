@@ -9,6 +9,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
@@ -45,6 +46,33 @@ export function Amenities() {
   const autoplay = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
   );
+  
+  const [gardenApi, setGardenApi] = React.useState<CarouselApi>();
+
+  React.useEffect(() => {
+    if (!gardenApi) return;
+
+    const onSelect = (api: CarouselApi) => {
+      api.slideNodes().forEach((node, index) => {
+        if (api.selectedScrollSnap() === index) {
+          node.classList.add('is-selected');
+        } else {
+          node.classList.remove('is-selected');
+        }
+      });
+    };
+    
+    gardenApi.on('select', onSelect);
+    gardenApi.on('reInit', onSelect);
+
+    onSelect(gardenApi);
+
+    return () => {
+      gardenApi.off('select', onSelect);
+      gardenApi.off('reInit', onSelect);
+    };
+  }, [gardenApi]);
+
 
   return (
     <section id="amenities" className="w-full py-16 md:py-24 bg-secondary overflow-hidden">
@@ -65,13 +93,17 @@ export function Amenities() {
                 <div className={cn("aspect-[4/3] overflow-hidden rounded-lg shadow-xl relative group", index % 2 === 0 ? 'md:order-last' : '')}>
                   {Array.isArray(amenity.image) ? (
                     <Carousel
+                      setApi={setGardenApi}
                       className="w-full h-full"
                       plugins={[autoplay.current]}
-                      opts={{ loop: true }}
+                      opts={{ loop: true, duration: 50 }}
                     >
-                      <CarouselContent className="m-0 h-full">
+                      <CarouselContent className="m-0 h-full grid [grid-auto-flow:row] [align-items:flex-start]">
                         {(amenity.image as string[]).map((img, i) => (
-                          <CarouselItem key={i} className="p-0">
+                          <CarouselItem key={i} className={cn(
+                            "p-0 [grid-area:1/1/2/2] opacity-0 transition-opacity duration-1000 ease-in-out",
+                            '[&.is-selected]:opacity-100'
+                          )}>
                             <Image
                               src={img}
                               alt={`${amenity.name} ${i + 1}`}
@@ -83,8 +115,8 @@ export function Amenities() {
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="absolute left-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <CarouselNext className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <CarouselPrevious className="absolute left-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+                      <CarouselNext className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
                     </Carousel>
                   ) : (
                     <Image
