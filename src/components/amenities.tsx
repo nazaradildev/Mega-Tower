@@ -21,7 +21,7 @@ const featuredAmenities = [
   {
     name: "Serene Sauna & Steam Rooms",
     description: "Rejuvenate your body and mind in our exclusive sauna and steam rooms. A sanctuary of tranquility designed for ultimate relaxation.",
-    image: "https://placehold.co/600x450.png",
+    image: "/sauna1.jpg",
     aiHint: "luxury spa sauna",
   },
   {
