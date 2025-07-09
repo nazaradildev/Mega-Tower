@@ -9,9 +9,9 @@ import React, { useEffect, useRef } from 'react';
 // --- Leaflet Icon Fix ---
 const customMarkerIcon = new L.Icon({
   iconUrl: '/khalifatower.png',
-  iconSize: [40, 40], // Adjust size as needed
-  iconAnchor: [20, 40], // Point of the icon which will correspond to marker's location
-  popupAnchor: [0, -40] // Point from which the popup should open relative to the iconAnchor
+  iconSize: [60, 60], // Adjust size as needed
+  iconAnchor: [30, 60], // Point of the icon which will correspond to marker's location
+  popupAnchor: [0, -60] // Point from which the popup should open relative to the iconAnchor
 });
 
 
