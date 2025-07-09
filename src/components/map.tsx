@@ -22,7 +22,13 @@ const EsriAttribution = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, 
 const burjKhalifaPosition: L.LatLngExpression = [25.1972, 55.2744];
 
 export function Map() {
-  const [map, setMap] = React.useState<L.Map | null>(null);
+  const mapRef = React.useRef<L.Map | null>(null);
+
+  const setMap = React.useCallback((mapInstance: L.Map) => {
+    // This is to prevent re-initialization error in dev environment with HMR
+    if (mapRef.current) return;
+    mapRef.current = mapInstance;
+  }, []);
 
   return (
     <MapContainer 
