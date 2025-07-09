@@ -9,7 +9,7 @@ const featuredAmenities = [
   {
     name: "Breathtaking Infinity Pool",
     description: "Immerse yourself in luxury with our stunning infinity pool, offering panoramic views of the Dubai skyline. The perfect escape from the city bustle.",
-    image: "https://placehold.co/600x450.png",
+    image: "/swim1.jpg",
     aiHint: "luxury infinity pool",
   },
   {
