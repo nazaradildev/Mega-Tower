@@ -15,7 +15,6 @@ const navLinks: NavLink[] = [
   { id: 'amenities', en: 'Amenities', ar: 'المرافق' },
   { id: 'experience', en: 'Experience', ar: 'التجربة' },
   { id: 'location', en: 'Location', ar: 'الموقع' },
-  { id: 'insights', en: 'Insights', ar: 'الرؤى' },
   { id: 'contact', en: 'Contact', ar: 'التواصل' },
 ];
 
@@ -30,9 +29,9 @@ export function StickyNav() {
     heroSectionRef.current = document.querySelector('main > section:first-of-type');
 
     const handleScroll = () => {
-      const heroBottom = heroSectionRef.current
-        ? heroSectionRef.current.offsetTop + heroSectionRef.current.offsetHeight
-        : 0;
+      if (!heroSectionRef.current) return;
+      
+      const heroBottom = heroSectionRef.current.offsetTop + heroSectionRef.current.offsetHeight;
       
       if (window.scrollY > heroBottom) {
         setIsVisible(true);
@@ -42,6 +41,7 @@ export function StickyNav() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
