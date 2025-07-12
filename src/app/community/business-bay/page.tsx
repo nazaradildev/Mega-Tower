@@ -38,11 +38,17 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
-import { Briefcase, Building, Sparkles, TrendingUp, HelpCircle, CheckCircle } from 'lucide-react';
+import { Briefcase, Building, Sparkles, TrendingUp, HelpCircle, CheckCircle, Expand, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb } from '@/components/breadcrumb';
 import { useLanguage } from '@/context/language-context';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 const galleryImages = [
   { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no0yA7u_I7LnFzqEjYWD-ejKyaTiAX9x8tPUhJiMM3Alult-tXPIPZ75iFP7dWbAvY0cSVvIRbZouETUbFu3HeLOW-tOm_3UMR3pI41vT-AARn83MrnMDvAe19BUem8XT87qyz4jg=s0", alt: "Business Bay Canal", hint: "dubai canal boats" },
@@ -226,6 +232,7 @@ export default function BusinessBayPage() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const { language, direction } = useLanguage();
   const t = content[language];
+  const [fullscreenImage, setFullscreenImage] = React.useState<string | null>(null);
   
   const rentDataTypes = t.priceInsights.rentData.map(d => d.type);
   const [selectedRentType, setSelectedRentType] = React.useState(rentDataTypes[0]);
@@ -284,6 +291,31 @@ export default function BusinessBayPage() {
                                       className="object-cover"
                                       priority={index === 0}
                                   />
+                                   <Dialog>
+                                      <DialogTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="absolute top-4 right-4 z-10 md:hidden bg-black/50 hover:bg-black/70 text-white rounded-full"
+                                          aria-label="View fullscreen"
+                                        >
+                                          <Expand className="h-5 w-5" />
+                                        </Button>
+                                      </DialogTrigger>
+                                      <DialogContent className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center">
+                                        <DialogClose asChild>
+                                          <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full">
+                                            <X className="h-6 w-6" />
+                                          </Button>
+                                        </DialogClose>
+                                        <Image
+                                          src={image.src}
+                                          alt={image.alt}
+                                          layout="fill"
+                                          className="object-contain"
+                                        />
+                                      </DialogContent>
+                                    </Dialog>
                               </div>
                           </CarouselItem>
                       ))}
