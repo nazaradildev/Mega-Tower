@@ -538,26 +538,27 @@ export default function BusinessBayPage() {
       <Dialog open={fullscreenImageIndex !== null} onOpenChange={(open) => !open && closeFullscreen()}>
         <DialogContent className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center outline-none ring-0">
           <DialogClose asChild>
-              <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-[9999] text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+              <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
                   <X className="h-6 w-6" />
+                  <span className="sr-only">Close</span>
               </Button>
           </DialogClose>
           
-          <Button variant="ghost" size="icon" onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 z-[9999] text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+          <Button variant="ghost" size="icon" onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
               <ChevronLeft className="h-6 w-6" />
           </Button>
 
-          <Button variant="ghost" size="icon" onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 z-[9999] text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+          <Button variant="ghost" size="icon" onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
               <ChevronRight className="h-6 w-6" />
           </Button>
 
           {fullscreenImageIndex !== null && (
-            <div className="relative w-full h-full flex items-center justify-center">
+            <div className="relative w-full h-full flex items-center justify-center p-8">
               <Image
                 src={galleryImages[fullscreenImageIndex].src}
                 alt={galleryImages[fullscreenImageIndex].alt}
                 layout="fill"
-                className="object-contain"
+                objectFit="contain"
               />
             </div>
           )}
