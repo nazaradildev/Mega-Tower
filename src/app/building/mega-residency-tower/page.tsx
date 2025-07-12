@@ -138,8 +138,7 @@ export default function BuildingDetailsPage() {
         api?.scrollTo(index);
     };
 
-    const aboutText = "MEGA Towers is a twin-tower complex located in Business Bay, Dubai. It was developed by MEGA in 2010 and consists of one residential tower called MEGA Residency and another commercial tower called MEGA Executive Tower. MEGA Residency has 57 levels and stands at 245 m (804 ft) high. It offers luxurious 1, 2, 3, and 4-bedroom apartments for sale and rent. These high-rise apartments overlook the Dubai Canal and Burj Khalifa and are serviced with a plethora of lifestyle amenities that echo Dubai’s luxurious lifestyle. Meanwhile, MEGA Executive Tower has 42 levels and is 172 m (564 ft) high. It’s a recognizable landmark in Business Bay as it’s home to various companies. It offers various offices for rent in Business Bay, as well as ones for sale. The towers boast an enviable location close to Burj Khalifa and Dubai Mall, while lying the vibrant community of Business Bay.";
-    const fullAboutText = aboutText;
+    const aboutText = "MEGA Residency Tower is a residential skyscraper located in Business Bay, Dubai. Developed by MEGA in 2010, the tower has 57 levels and stands at 245 m (804 ft) high. It offers luxurious 1, 2, 3, and 4-bedroom apartments for sale and rent. These high-rise apartments overlook the Dubai Canal and Burj Khalifa and are serviced with a plethora of lifestyle amenities that echo Dubai’s luxurious lifestyle. The tower boasts an enviable location close to Burj Khalifa and Dubai Mall, while lying in the vibrant community of Business Bay.";
 
     return (
         <div className="bg-background">
@@ -252,11 +251,11 @@ export default function BuildingDetailsPage() {
                              <section>
                                 <h2 className="text-2xl font-bold font-headline mb-4">Transportation</h2>
                                 <div className="space-y-4 text-muted-foreground prose prose-lg max-w-none">
-                                    <p>Transportation from MEGA Towers in Business Bay is very convenient thanks to their proximity to main roads like Sheikh Zayed Road and Al Khail Road. Moreover, they’re a few minutes away from the Business Bay Metro Station, and various bus stops are located nearby.</p>
+                                    <p>Transportation from MEGA Residency Tower in Business Bay is very convenient thanks to its proximity to main roads like Sheikh Zayed Road and Al Khail Road. Moreover, it's a few minutes away from the Business Bay Metro Station, and various bus stops are located nearby.</p>
                                     <h3 className="font-semibold !mt-6 !mb-2">Metro Stations:</h3>
                                     <p>The Business Bay metro station is about 5 minutes away by car.</p>
                                     <h3 className="font-semibold !mt-6 !mb-2">Bus stations:</h3>
-                                    <p>There are numerous bus stations near MEGA Towers such as XL Tower 1 and 2, U BORA Tower, Lillian Tower 1 and 2.</p>
+                                    <p>There are numerous bus stations near MEGA Residency Tower such as XL Tower 1 and 2, U BORA Tower, Lillian Tower 1 and 2.</p>
                                 </div>
                             </section>
                             
@@ -318,5 +317,3 @@ export default function BuildingDetailsPage() {
         </div>
     );
 }
-
-    

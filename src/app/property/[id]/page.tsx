@@ -198,7 +198,7 @@ export default function PropertyDetailsPage() {
   const breadcrumbItems = [
     { label: 'Apartments for rent in Dubai', href: '/#residences' },
     { label: 'Business Bay', href: '/community/business-bay' },
-    { label: 'MEGA Residency Tower', href: '/building/churchill-residency-tower' },
+    { label: 'MEGA Residency Tower', href: '/building/mega-residency-tower' },
     { label: unit.title }
   ];
 
@@ -223,7 +223,7 @@ export default function PropertyDetailsPage() {
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <MapPin className="h-4 w-4" />
                           <span>
-                            MEGA Residency Tower, MEGA Towers, Business
+                            MEGA Residency Tower, Business
                             Bay
                           </span>
                         </div>
@@ -382,7 +382,7 @@ export default function PropertyDetailsPage() {
                       <p>
                         Discover the pinnacle of urban living in this stunning{' '}
                         {unit.beds}-bedroom apartment located in the prestigious
-                        MEGA Towers, Business Bay. Offering breathtaking
+                        MEGA Residency Tower, Business Bay. Offering breathtaking
                         views of the {unit.view}, this residence combines
                         luxury, comfort, and convenience. The spacious layout
                         is perfect for both relaxation and entertaining,
@@ -503,7 +503,7 @@ export default function PropertyDetailsPage() {
                   <div className="h-64 w-full bg-muted rounded-lg flex items-center justify-center">
                     <p className="text-muted-foreground">Map will be here</p>
                   </div>
-                   <p className="font-semibold">MEGA Residency Tower, MEGA Towers, Business Bay, Dubai</p>
+                   <p className="font-semibold">MEGA Residency Tower, Business Bay, Dubai</p>
                    <Button variant="outline" className="w-full sm:w-auto">View on map</Button>
                 </CardContent>
               </Card>
@@ -511,7 +511,7 @@ export default function PropertyDetailsPage() {
               <div>
                 <h2 className="text-2xl font-bold font-headline mb-4">Insights</h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                   <Link href="/building/churchill-residency-tower" className="block">
+                   <Link href="/building/mega-residency-tower" className="block">
                     <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
                         <CardHeader>
                             <CardTitle className="text-lg">Residential Insights</CardTitle>
