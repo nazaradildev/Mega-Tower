@@ -39,13 +39,14 @@ import { Breadcrumb } from '@/components/breadcrumb';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const galleryImages = [
-  { src: "https://placehold.co/800x600.png", alt: "Building Exterior", hint: "building exterior" },
-  { src: "https://placehold.co/800x600.png", alt: "Lobby", hint: "luxury lobby" },
-  { src: "https://placehold.co/800x600.png", alt: "Swimming Pool", hint: "rooftop pool" },
-  { src: "https://placehold.co/800x600.png", alt: "Gym", hint: "modern gym" },
-  { src: "https://placehold.co/800x600.png", alt: "Apartment View", hint: "city view apartment" },
-  { src: "https://placehold.co/800x600.png", alt: "Play Area", hint: "kids play area" },
-  { src: "https://placehold.co/800x600.png", alt: "Tennis Court", hint: "tennis court" },
+  { src: "/mega tower1.png", alt: "Building Exterior", hint: "dubai cityscape" },
+  { src: "/swim1.jpg", alt: "Swimming Pool", hint: "luxury infinity pool" },
+  { src: "/gym1.jpg", alt: "Gym", hint: "modern gym interior" },
+  { src: "/sauna1.jpg", alt: "Sauna", hint: "luxury spa sauna" },
+  { src: "/garden1.jpg", alt: "Garden", hint: "modern building garden" },
+  { src: "/swim2.jpg", alt: "Apartment View", hint: "city view apartment" },
+  { src: "/gym2.jpg", alt: "Play Area", hint: "kids play area" },
+  { src: "/garden2.jpg", alt: "Lush Gardens", hint: "lush gardens" },
 ];
 
 const facilities = [
@@ -365,5 +366,3 @@ export default function BuildingDetailsPage() {
         </div>
     );
 }
-
-    
