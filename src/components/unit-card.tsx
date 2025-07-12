@@ -81,7 +81,7 @@ export function UnitCard({ unit }: UnitCardProps) {
   const { toast } = useToast();
 
   const autoplay = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true, playOnInit: false })
+    Autoplay({ delay: 3000, stopOnInteraction: true, playOnInit: false })
   );
 
   const handleShare = (e: React.MouseEvent) => {
@@ -125,8 +125,9 @@ export function UnitCard({ unit }: UnitCardProps) {
         }
     });
 
-    if (api.emblaApi) {
-      intersectionObserver.observe(api.emblaApi.containerNode());
+    const emblaNode = api.emblaApi?.containerNode();
+    if (emblaNode) {
+      intersectionObserver.observe(emblaNode);
     }
 
     setCurrentImageIndex(api.selectedScrollSnap());
@@ -136,8 +137,8 @@ export function UnitCard({ unit }: UnitCardProps) {
     return () => {
       clearTimeout(startAutoplayTimeout);
       api.off('select', onSelect);
-      if (api.emblaApi) {
-        intersectionObserver.unobserve(api.emblaApi.containerNode());
+      if (emblaNode) {
+        intersectionObserver.unobserve(emblaNode);
       }
     };
   }, [api]);
@@ -369,7 +370,7 @@ export function UnitCard({ unit }: UnitCardProps) {
       </div>
 
       {/* Footer / Contact Part */}
-      <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4 flex-wrap">
         <div className="flex items-center gap-3 flex-shrink-0">
           <Avatar className="h-10 w-10">
             <AvatarImage
@@ -422,17 +423,15 @@ export function UnitCard({ unit }: UnitCardProps) {
             </svg>
             <span>WhatsApp</span>
           </Button>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary" onClick={handleShare}>
-                <Share2 className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-amber-500" onClick={toggleBookmark}>
-                <Bookmark className={cn("w-5 h-5 transition-colors", isBookmarked && "fill-current text-amber-500")} />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-red-500" onClick={toggleLike}>
-                <Heart className={cn("w-5 h-5 transition-colors", isLiked && "fill-current text-red-500")} />
-            </Button>
-          </div>
+          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary" onClick={handleShare}>
+              <Share2 className="w-5 h-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-amber-500" onClick={toggleBookmark}>
+              <Bookmark className={cn("w-5 h-5 transition-colors", isBookmarked && "fill-current text-amber-500")} />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-red-500" onClick={toggleLike}>
+              <Heart className={cn("w-5 h-5 transition-colors", isLiked && "fill-current text-red-500")} />
+          </Button>
         </div>
       </div>
     </Card>
