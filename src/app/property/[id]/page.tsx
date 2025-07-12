@@ -513,12 +513,21 @@ export default function PropertyDetailsPage() {
                 <h2 className="text-2xl font-bold font-headline mb-4">Insights</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                    <Link href="/building/mega-residency-tower" className="block">
-                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
+                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full flex flex-col overflow-hidden">
+                        <div className="relative w-full aspect-video">
+                            <Image
+                                src="/mega tower1.png"
+                                alt="MEGA Residency Tower"
+                                data-ai-hint="dubai cityscape"
+                                layout="fill"
+                                className="object-cover"
+                            />
+                        </div>
                         <CardHeader>
                             <CardTitle className="text-lg">Residential Insights</CardTitle>
                             <p className="text-sm text-muted-foreground">MEGA Residency Tower</p>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="flex-grow flex flex-col">
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="flex text-yellow-500">
                                     <Star fill="currentColor" className="h-5 w-5" />
@@ -529,9 +538,11 @@ export default function PropertyDetailsPage() {
                                 </div>
                                 <span className="font-semibold">4.5/5</span>
                             </div>
-                            <p className="text-sm text-muted-foreground mb-4">32 Reviews</p>
-                            <p className="text-sm text-muted-foreground">Price Range:</p>
-                            <p className="font-semibold">1.2M - 2.8M AED</p>
+                            <p className="text-sm text-muted-foreground mb-4">163 Reviews</p>
+                             <div className="mt-auto">
+                                <p className="text-sm text-muted-foreground">Price Range:</p>
+                                <p className="font-semibold">80K - 220K AED</p>
+                            </div>
                         </CardContent>
                     </Card>
                    </Link>
