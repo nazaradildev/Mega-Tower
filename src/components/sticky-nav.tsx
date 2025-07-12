@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -8,10 +9,12 @@ type NavLink = {
   id: string;
   en: string;
   ar: string;
+  mobileOnly?: boolean;
 };
 
 const navLinks: NavLink[] = [
   { id: 'residences', en: 'Residences', ar: 'الوحدات السكنية' },
+  { id: 'insights', en: 'Insights', ar: 'الرؤى', mobileOnly: true },
   { id: 'amenities', en: 'Amenities', ar: 'المرافق' },
   { id: 'experience', en: 'Experience', ar: 'التجربة' },
   { id: 'location', en: 'Location', ar: 'الموقع' },
@@ -87,7 +90,7 @@ export function StickyNav() {
       <div className="container mx-auto px-4 md:px-6 h-14 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <ul className="flex items-center justify-start md:justify-center h-full gap-4 md:gap-8">
           {navLinks.map((link) => (
-            <li key={link.id}>
+            <li key={link.id} className={cn(link.mobileOnly && 'lg:hidden')}>
               <button
                 onClick={() => scrollToSection(link.id)}
                 className={cn(
