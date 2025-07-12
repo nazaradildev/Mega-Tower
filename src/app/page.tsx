@@ -10,6 +10,7 @@ import { Location } from '@/components/location';
 import { Contact } from '@/components/contact';
 import { ImmersiveExperience } from '@/components/immersive-experience';
 import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
+import { Footer } from '@/components/footer';
 
 export default function Home() {
   return (
@@ -81,6 +82,7 @@ export default function Home() {
 
         <Contact />
       </main>
+      <Footer />
     </div>
   );
 }
