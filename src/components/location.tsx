@@ -68,16 +68,18 @@ export function Location() {
                     </div>
                     <ScrollAnimation delay={200}>
                          <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
-                            <div className="relative group/map">
+                            <div className="relative">
                                 <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg overflow-hidden">
                                     <Map />
                                 </div>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline" className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm hover:bg-background opacity-0 group-hover/map:opacity-100 transition-opacity rounded-full">
-                                        <Expand className="mr-2 h-4 w-4" />
-                                        Full Screen
-                                    </Button>
-                                </DialogTrigger>
+                                <div className="mt-4 flex justify-center">
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" className="bg-background/80 backdrop-blur-sm hover:bg-background rounded-full">
+                                            <Expand className="mr-2 h-4 w-4" />
+                                            Full Screen
+                                        </Button>
+                                    </DialogTrigger>
+                                </div>
                             </div>
                             <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 outline-none ring-0">
                                 <DialogTitle className="sr-only">Site Location Map</DialogTitle>
