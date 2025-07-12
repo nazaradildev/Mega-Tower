@@ -76,6 +76,7 @@ import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/breadcrumb';
 import Image from 'next/image';
 import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
+import { InteractiveMap } from '@/components/interactive-map';
 
 const priceData = [
   { month: 'Jan', price: 140000 },
@@ -500,11 +501,7 @@ export default function PropertyDetailsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="h-64 w-full bg-muted rounded-lg flex items-center justify-center">
-                    <p className="text-muted-foreground">Map will be here</p>
-                  </div>
-                   <p className="font-semibold">MEGA Residency Tower, Business Bay, Dubai</p>
-                   <Button variant="outline" className="w-full sm:w-auto">View on map</Button>
+                  <InteractiveMap />
                 </CardContent>
               </Card>
               
