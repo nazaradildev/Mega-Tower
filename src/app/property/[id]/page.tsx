@@ -38,7 +38,6 @@ import {
   Ruler,
   Share2,
   Shirt,
-  Star,
   ToyBrick,
   Users,
   Video,
@@ -50,7 +49,6 @@ import {
   ZoomOut,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Carousel,
@@ -77,6 +75,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/breadcrumb';
 import Image from 'next/image';
+import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
 
 const priceData = [
   { month: 'Jan', price: 140000 },
@@ -512,70 +511,8 @@ export default function PropertyDetailsPage() {
               <div>
                 <h2 className="text-2xl font-bold font-headline mb-4">Insights</h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                   <Link href="/building/mega-residency-tower" className="block">
-                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full flex flex-col overflow-hidden">
-                        <div className="relative w-full aspect-video">
-                            <Image
-                                src="/mega tower1.png"
-                                alt="MEGA Residency Tower"
-                                data-ai-hint="dubai cityscape"
-                                layout="fill"
-                                className="object-cover"
-                            />
-                        </div>
-                        <CardHeader>
-                            <CardTitle className="text-lg">Residential Insights</CardTitle>
-                            <p className="text-sm text-muted-foreground">MEGA Residency Tower</p>
-                        </CardHeader>
-                        <CardContent className="flex-grow flex flex-col">
-                            <div className="flex items-center gap-2 mb-2">
-                                <div className="flex text-yellow-500">
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star className="h-5 w-5" />
-                                </div>
-                                <span className="font-semibold">4.5/5</span>
-                            </div>
-                            <p className="text-sm text-muted-foreground mb-4">163 Reviews</p>
-                             <div className="mt-auto">
-                                <p className="text-sm text-muted-foreground">Price Range:</p>
-                                <p className="font-semibold">80K - 220K AED</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                   </Link>
-                   <Link href="/community/business-bay" className="block">
-                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full flex flex-col overflow-hidden">
-                        <div className="relative w-full aspect-video">
-                            <Image
-                                src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4noldjGXcXOg-uoslPy8Hjgq3WR9Y6IAIyKKM0JT0ydIvjOE0m9hQwHxdynDt9ndQ6pAnvTPPMJ5Y6UUDl23eU1FvAYjzhitCRy05lGw_uEvOLQU6_J9Rppag6swelRcuMPQk02q=s0"
-                                alt="Business Bay Community"
-                                data-ai-hint="dubai architecture"
-                                layout="fill"
-                                className="object-cover"
-                            />
-                        </div>
-                        <CardHeader>
-                            <CardTitle className="text-lg">Community Insights</CardTitle>
-                            <p className="text-sm text-muted-foreground">Business Bay</p>
-                        </CardHeader>
-                        <CardContent className="flex-grow flex flex-col">
-                            <div className="flex-grow space-y-4">
-                                <div className="flex flex-wrap gap-2">
-                                    <Badge variant="secondary">Mostly apartments</Badge>
-                                    <Badge variant="secondary">Luxury</Badge>
-                                    <Badge variant="secondary">Well connected</Badge>
-                                </div>
-                            </div>
-                            <div className="mt-4">
-                                <p className="text-sm text-muted-foreground">Price Range:</p>
-                                <p className="font-semibold">370K - 750M AED</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                   </Link>
+                   <ResidentialInsightCard />
+                   <CommunityInsightCard />
                 </div>
               </div>
 
