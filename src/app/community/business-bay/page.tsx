@@ -281,7 +281,7 @@ export default function BusinessBayPage() {
                                       data-ai-hint={image.hint}
                                       alt={image.alt}
                                       fill
-                                      className="object-contain"
+                                      className="object-cover"
                                       priority={index === 0}
                                   />
                               </div>
@@ -502,5 +502,3 @@ export default function BusinessBayPage() {
     </div>
   );
 }
-
-    
