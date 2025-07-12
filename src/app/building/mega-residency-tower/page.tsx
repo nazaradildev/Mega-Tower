@@ -210,7 +210,7 @@ export default function BuildingDetailsPage() {
                                     {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" className="h-5 w-5" />)}
                                 </div>
                                 <span className="font-semibold">5.0/5</span>
-                                <span>(Based on 45 Reviews)</span>
+                                <span>(Based on 163 Reviews)</span>
                             </div>
                         </div>
                     </div>

@@ -156,7 +156,7 @@ export default function BuildingDetailsPage() {
                                     <Star fill="currentColor" className="h-5 w-5 opacity-50" />
                                 </div>
                                 <span className="font-semibold">4.5/5</span>
-                                <span>(32 Reviews)</span>
+                                <span>(163 Reviews)</span>
                             </div>
                         </div>
                     </div>
