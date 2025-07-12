@@ -275,13 +275,13 @@ export default function BusinessBayPage() {
                   <CarouselContent className="m-0">
                       {galleryImages.map((image, index) => (
                           <CarouselItem key={index} className="p-0">
-                               <div className="aspect-[16/9] relative rounded-lg overflow-hidden">
+                               <div className="aspect-[16/9] relative rounded-lg overflow-hidden max-h-[80vh]">
                                   <Image
                                       src={image.src}
                                       data-ai-hint={image.hint}
                                       alt={image.alt}
                                       fill
-                                      className="object-cover"
+                                      className="object-contain"
                                       priority={index === 0}
                                   />
                               </div>
@@ -502,3 +502,5 @@ export default function BusinessBayPage() {
     </div>
   );
 }
+
+    
