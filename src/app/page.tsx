@@ -19,7 +19,7 @@ const content = {
       <>
         Live Exceptionally.
         <br />
-        Rent at MEGA Towers.
+        Elevate your living at MEGA Towers.
       </>
     ),
     subtitle: 'Discover luxury apartments where elegance meets comfort in the heart of Business Bay.',
@@ -30,7 +30,7 @@ const content = {
       <>
         عيش استثنائي.
         <br />
-        استأجر في أبراج ميغا.
+        ارتقِ بأسلوب حياتك في أبراج ميغا.
       </>
     ),
     subtitle: 'اكتشف شققاً فاخرة حيث تجتمع الأناقة والراحة في قلب الخليج التجاري.',
