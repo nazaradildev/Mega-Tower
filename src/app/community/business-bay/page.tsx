@@ -102,7 +102,6 @@ const content = {
         { type: '3 Bedrooms', price: '216,000' },
         { type: '4 Bedrooms', price: '360,000' },
       ],
-      disclaimer: "Data shown is based on Property Finder listing data for the last 12 months.",
       trendChartTitle: "Studio Apartment Price Trends",
       trendData: [
         { name: 'Jul 24', value: 75000 },
@@ -172,7 +171,6 @@ const content = {
         { type: '3 غرف نوم', price: '216,000' },
         { type: '4 غرف نوم', price: '360,000' },
       ],
-      disclaimer: "البيانات المعروضة تستند إلى بيانات قوائم Property Finder لآخر 12 شهرًا.",
       trendChartTitle: "اتجاهات أسعار شقق الاستوديو",
       trendData: [
         { name: 'يوليو 24', value: 75000 },
@@ -388,9 +386,6 @@ export default function BusinessBayPage() {
                         ))}
                       </TableBody>
                     </Table>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t.priceInsights.disclaimer}
-                    </p>
                   </CardContent>
                 </Card>
                 <Card className="mt-6">
