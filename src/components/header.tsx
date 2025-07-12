@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Menu, Settings, Heart, User, Search, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -25,9 +26,10 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/language-context';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { href: '/#residences', label: 'Search', icon: Search },
+  { href: '/#residences', label: 'Search', icon: Search, matchPath: '/' },
   { href: '/saved', label: 'Saved', icon: Heart },
   { href: '/account', label: 'Account', icon: User },
 ];
@@ -36,6 +38,7 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -46,23 +49,29 @@ export function Header() {
         
         <div className="flex items-center">
           <nav className="hidden md:flex md:items-center md:gap-6 text-sm font-medium">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-2"
-              >
-                <link.icon className="h-4 w-4" />
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={cn(
+                    "transition-colors hover:text-primary flex items-center gap-2",
+                    isActive ? 'text-primary' : 'text-foreground/60'
+                  )}
+                >
+                  <link.icon className="h-4 w-4" />
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2 ml-6">
              <div className="hidden md:flex items-center gap-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="rounded-lg h-9 text-foreground/70 hover:text-foreground/90">
+                        <Button variant="ghost" className="rounded-lg h-9 text-foreground/70 hover:text-primary">
                             <Settings className="h-5 w-5 mr-2" />
                             Settings
                         </Button>
@@ -124,17 +133,23 @@ export function Header() {
                       </Link>
                   </div>
                   <nav className="flex-1 flex flex-col gap-4 p-6">
-                      {navLinks.map((link) => (
-                      <Link
-                          key={link.label}
-                          href={link.href}
-                          className="text-xl font-medium flex items-center gap-3"
-                          onClick={() => setIsOpen(false)}
-                      >
-                          <link.icon className="h-5 w-5" />
-                          {link.label}
-                      </Link>
-                      ))}
+                      {navLinks.map((link) => {
+                        const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
+                        return (
+                          <Link
+                              key={link.label}
+                              href={link.href}
+                              className={cn(
+                                "text-xl font-medium flex items-center gap-3",
+                                isActive ? 'text-primary' : ''
+                              )}
+                              onClick={() => setIsOpen(false)}
+                          >
+                              <link.icon className="h-5 w-5" />
+                              {link.label}
+                          </Link>
+                        )
+                      })}
                       <Link
                           href="#"
                           className="text-xl font-medium flex items-center gap-3"
