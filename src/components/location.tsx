@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, TowerControl, Train, Plane, MapPin, Expand } from 'lucide-react';
 import { ScrollAnimation } from "./scroll-animation";
 import dynamic from 'next/dynamic';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -70,7 +70,7 @@ export function Location() {
                            </div>
                            <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button variant="secondary" className="absolute bottom-3 right-3 rounded-full opacity-80 group-hover:opacity-100 transition-opacity">
+                                    <Button variant="secondary" className="absolute bottom-3 right-3 rounded-full opacity-80 group-hover:opacity-100 transition-opacity z-10">
                                         <Expand className="mr-2 h-4 w-4" />
                                         Full Screen
                                     </Button>
