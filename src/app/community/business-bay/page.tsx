@@ -271,11 +271,11 @@ export default function BusinessBayPage() {
           </div>
 
           <div className="space-y-2 mb-8">
-              <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
+              <Carousel setApi={setApi} className="w-full mx-auto max-w-7xl" opts={{ loop: true }}>
                   <CarouselContent className="m-0">
                       {galleryImages.map((image, index) => (
                           <CarouselItem key={index} className="p-0">
-                               <div className="aspect-[16/9] relative rounded-lg overflow-hidden max-h-[80vh]">
+                               <div className="aspect-[16/9] relative rounded-lg overflow-hidden w-full mx-auto max-h-[80vh]">
                                   <Image
                                       src={image.src}
                                       data-ai-hint={image.hint}
@@ -298,7 +298,7 @@ export default function BusinessBayPage() {
                       containScroll: 'keepSnaps',
                       dragFree: true,
                   }}
-                  className="w-full"
+                  className="w-full mx-auto max-w-7xl"
               >
                   <CarouselContent className="m-0">
                       {galleryImages.map((image, index) => (
