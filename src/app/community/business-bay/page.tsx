@@ -38,7 +38,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
-import { Briefcase, Building, Sparkles, TrendingUp, HelpCircle, CheckCircle, Expand, X } from 'lucide-react';
+import { Briefcase, Building, Sparkles, TrendingUp, HelpCircle, CheckCircle, Expand, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb } from '@/components/breadcrumb';
 import { useLanguage } from '@/context/language-context';
@@ -232,7 +232,7 @@ export default function BusinessBayPage() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const { language, direction } = useLanguage();
   const t = content[language];
-  const [fullscreenImage, setFullscreenImage] = React.useState<string | null>(null);
+  const [fullscreenImageIndex, setFullscreenImageIndex] = React.useState<number | null>(null);
   
   const rentDataTypes = t.priceInsights.rentData.map(d => d.type);
   const [selectedRentType, setSelectedRentType] = React.useState(rentDataTypes[0]);
@@ -264,6 +264,26 @@ export default function BusinessBayPage() {
   };
   
   const chartData = t.priceInsights.trendData[selectedRentType as keyof typeof t.priceInsights.trendData] || [];
+  
+  const openFullscreen = (index: number) => {
+    setFullscreenImageIndex(index);
+  };
+
+  const closeFullscreen = () => {
+    setFullscreenImageIndex(null);
+  };
+
+  const nextImage = () => {
+    if (fullscreenImageIndex !== null) {
+      setFullscreenImageIndex((prev) => (prev! + 1) % galleryImages.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (fullscreenImageIndex !== null) {
+      setFullscreenImageIndex((prev) => (prev! - 1 + galleryImages.length) % galleryImages.length);
+    }
+  };
 
   return (
     <div className="bg-background" dir={direction}>
@@ -291,31 +311,15 @@ export default function BusinessBayPage() {
                                       className="object-cover"
                                       priority={index === 0}
                                   />
-                                   <Dialog>
-                                      <DialogTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          className="absolute top-4 right-4 z-10 md:hidden bg-black/50 hover:bg-black/70 text-white rounded-full"
-                                          aria-label="View fullscreen"
-                                        >
-                                          <Expand className="h-5 w-5" />
-                                        </Button>
-                                      </DialogTrigger>
-                                      <DialogContent className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center">
-                                        <DialogClose asChild>
-                                          <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full">
-                                            <X className="h-6 w-6" />
-                                          </Button>
-                                        </DialogClose>
-                                        <Image
-                                          src={image.src}
-                                          alt={image.alt}
-                                          layout="fill"
-                                          className="object-contain"
-                                        />
-                                      </DialogContent>
-                                    </Dialog>
+                                   <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="absolute top-4 right-4 z-10 md:hidden bg-black/50 hover:bg-black/70 text-white rounded-full"
+                                      aria-label="View fullscreen"
+                                      onClick={() => openFullscreen(index)}
+                                    >
+                                      <Expand className="h-5 w-5" />
+                                    </Button>
                               </div>
                           </CarouselItem>
                       ))}
@@ -530,6 +534,36 @@ export default function BusinessBayPage() {
           </div>
         </div>
       </main>
+      
+      <Dialog open={fullscreenImageIndex !== null} onOpenChange={(open) => !open && closeFullscreen()}>
+        <DialogContent className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center outline-none ring-0">
+          <DialogClose asChild>
+              <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-[9999] text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+                  <X className="h-6 w-6" />
+              </Button>
+          </DialogClose>
+          
+          <Button variant="ghost" size="icon" onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 z-[9999] text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+              <ChevronLeft className="h-6 w-6" />
+          </Button>
+
+          <Button variant="ghost" size="icon" onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 z-[9999] text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+              <ChevronRight className="h-6 w-6" />
+          </Button>
+
+          {fullscreenImageIndex !== null && (
+            <div className="relative w-full h-full flex items-center justify-center">
+              <Image
+                src={galleryImages[fullscreenImageIndex].src}
+                alt={galleryImages[fullscreenImageIndex].alt}
+                layout="fill"
+                className="object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+      
       <Footer />
     </div>
   );
