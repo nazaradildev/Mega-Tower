@@ -16,7 +16,6 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Accordion,
   AccordionContent,
@@ -39,7 +38,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
-import { CheckCircle } from 'lucide-react';
+import { Briefcase, Building, Sparkles, TrendingUp, HelpCircle, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb } from '@/components/breadcrumb';
 
@@ -72,25 +71,17 @@ const trendData = [
 ];
 
 const faqItems = [
-    { q: "Where is Business Bay located?", a: "Business Bay is located south of Downtown Dubai and is bordered by Sheikh Zayed Road and Al Khail Road, making it one of the most well-connected areas in the city." },
-    { q: "How far is Business Bay to the most popular attractions?", a: "Business Bay is extremely close to major attractions. It's about a 5-minute drive to The Dubai Mall and Burj Khalifa, and a 15-minute drive to Dubai International Airport (DXB)." },
-    { q: "What are the transportation options in Business Bay?", a: "The area is well-serviced by public transport, including the Business Bay Metro Station on the Red Line, numerous bus routes, and readily available taxis. The Dubai Canal also offers water taxi services." },
-    { q: "What are the community facilities in Business Bay?", a: "Business Bay offers a wide range of facilities including supermarkets, gyms, swimming pools, parks, children's play areas, and waterfront promenades along the Dubai Canal." },
-    { q: "What are the best hotels within Business Bay?", a: "Business Bay is home to many luxury hotels, including the JW Marriott Marquis Hotel (one of the tallest hotels in the world), The St. Regis Downtown Dubai, and the V Hotel Dubai." },
-    { q: "What are the best schools and nurseries in Business Bay?", a: "While there are many options in nearby areas, some notable nurseries within Business Bay include Hummingbird Nursery and Jumeirah International Nursery. For schools, residents often choose from top-rated institutions in nearby Jumeirah or Nad Al Sheba." },
-    { q: "What are the best supermarkets and grocery stores in Business Bay?", a: "There are several supermarkets available, including Spinneys and Carrefour Market in Bay Avenue, as well as various smaller grocery stores throughout the community." },
-    { q: "What are the best health clinics and hospitals in Business Bay?", a: "Residents have access to several clinics within Business Bay, such as Emirates Hospital Clinic and Aster Clinic. The nearest major hospitals are in Downtown Dubai and Oud Metha." },
-    { q: "What are the most popular restaurants in Business Bay?", a: "The area is a foodie destination with countless options, from fine dining at hotels like the JW Marriott Marquis to casual eateries in Bay Square and along the canal." },
-    { q: "What are things to do in Business Bay?", a: "Activities include watching the spectacular La Perle by Dragone show, strolling or cycling along the Dubai Canal, dining at world-class restaurants, and enjoying the vibrant nightlife." },
-    { q: "What are the best shopping destinations in Business Bay?", a: "Bay Avenue Mall is the primary shopping center within the community. For a world-class shopping experience, The Dubai Mall is just a 5-minute drive away." },
-    { q: "What property types are available in Business Bay?", a: "Business Bay primarily consists of apartments, ranging from studios to spacious 4-bedroom units and luxurious penthouses. There are also a few podium villas available in some towers." },
-    { q: "What are the best towers and communities in Business Bay?", a: "Some of the most sought-after residential towers include Executive Towers, Peninsula, DAMAC Towers by Paramount, and Aykon City." },
-    { q: "What are the events in Business Bay?", a: "Business Bay hosts various events throughout the year, especially around the Dubai Canal and Bay Square, including food festivals, pop-up markets, and celebrations for national holidays." },
+    { q: "أين يقع الخليج التجاري؟", a: "يقع الخليج التجاري في قلب دبي، جنوب داون تاون دبي مباشرةً. تحده الطرق الرئيسية مثل شارع الشيخ زايد وشارع الخيل، مما يجعله المحور الأكثر اتصالاً في المدينة، ويوفر وصولاً سهلاً إلى جميع الوجهات الرئيسية." },
+    { q: "ما هي أبرز مميزات السكن في الخليج التجاري؟", a: "يوفر الخليج التجاري أسلوب حياة عالمي يجمع بين الفخامة والعمل والترفيه. يتميز بقربه من المعالم الشهيرة، وإطلالاته الخلابة على قناة دبي المائية وناطحات السحاب، وتوفر جميع المرافق العصرية من مطاعم فاخرة وفنادق عالمية ومراكز تسوق." },
+    { q: "ما هي خيارات النقل والمواصلات المتاحة؟", a: "تخدم المنطقة شبكة مواصلات متكاملة تشمل محطة مترو الخليج التجاري على الخط الأحمر، وخطوط حافلات متعددة، وسيارات أجرة متوفرة بكثرة. كما توفر قناة دبي المائية خدمة التاكسي المائي، مما يضيف وسيلة نقل فريدة وممتعة." },
+    { q: "هل تعتبر منطقة مناسبة للعائلات؟", a: "نعم، بالتأكيد. توفر المنطقة مجموعة واسعة من المرافق التي تلبي احتياجات العائلات، بما في ذلك محلات السوبر ماركت، والنوادي الرياضية، وحمامات السباحة، والحدائق، ومناطق لعب الأطفال، بالإضافة إلى قربها من أفضل المدارس والحضانات العالمية في المناطق المجاورة." },
+    { q: "ما هي أبرز وجهات الترفيه والتسوق؟", a: "تعتبر المنطقة وجهة ترفيهية بحد ذاتها، حيث يمكنك الاستمتاع بعرض لابيرل باي دراغون المائي، أو التنزه على طول ممشى قناة دبي. ولتجربة تسوق عالمية، يقع دبي مول، أكبر مركز تسوق في العالم، على بعد 5 دقائق فقط بالسيارة." },
+    { q: "ما أنواع العقارات المتوفرة في الخليج التجاري؟", a: "تتألف المنطقة بشكل أساسي من الشقق السكنية الفاخرة التي تتنوع من شقق الاستوديو إلى البنتهاوس الفسيحة المكونة من 4 غرف نوم، مما يوفر خيارات تناسب جميع الأذواق والاحتياجات. كما تتوفر بعض الفلل ضمن منصات الأبراج (البوديوم) في بعض المشاريع." },
 ];
 
 const breadcrumbItems = [
-    { label: 'Apartments for rent in Dubai', href: '/#residences' },
-    { label: 'Business Bay' },
+    { label: 'شقق للإيجار في دبي', href: '/#residences' },
+    { label: 'الخليج التجاري' },
 ];
 
 export default function BusinessBayPage() {
@@ -128,7 +119,7 @@ export default function BusinessBayPage() {
           <Breadcrumb items={breadcrumbItems} className="mb-4" />
           <div className="mb-8">
             <h1 className="text-4xl font-bold font-headline mb-2">
-              Business Bay
+              الخليج التجاري: قلب دبي النابض بالحياة
             </h1>
           </div>
 
@@ -197,42 +188,45 @@ export default function BusinessBayPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-3 space-y-12">
               <section id="about">
-                <h2 className="text-2xl font-bold font-headline mb-4">
-                  About Business Bay
-                </h2>
+                 <div className="flex items-center gap-3 mb-4">
+                    <Building className="h-8 w-8 text-primary" />
+                    <h2 className="text-2xl font-bold font-headline">
+                      نبذة عن الخليج التجاري
+                    </h2>
+                </div>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge variant="secondary">Luxurious</Badge>
+                  <Badge variant="secondary">نمط حياة فاخر</Badge>
                   <Badge variant="secondary">
-                    Residential & Commercial Skyscrapers
+                    مركز أعمال وترفيه
                   </Badge>
-                  <Badge variant="secondary">Ideal for Working Professionals</Badge>
-                  <Badge variant="secondary">Centrally Located</Badge>
-                  <Badge variant="secondary">Metro Station</Badge>
+                  <Badge variant="secondary">مثالي للمهنيين والعائلات</Badge>
+                  <Badge variant="secondary">موقع استراتيجي</Badge>
+                  <Badge variant="secondary">بنية تحتية متكاملة</Badge>
                 </div>
                 <div className="space-y-4 text-muted-foreground prose prose-lg max-w-none">
-                    <p>One of Dubai’s most iconic neighbourhoods, Business Bay is where work and play cross paths. It’s a commercial, residential, and business community consisting mainly of skyscrapers.</p>
-                    <p>Located next to Downtown Dubai, Sheikh Zayed Road, and DIFC, It’s a stone’s throw away from the city’s most happening areas.</p>
-                    <p>Business Bay is home to jaw-dropping architecture, the stunning Dubai Canal, and endless entertainment and nightlife options like rooftop restaurants, lounges, and upscale hotels. It also houses plenty of businesses and commercial buildings, hence its name.</p>
-                    <p>The area boasts over 240 buildings and is one of the most popular communities in Dubai. It covers 46,900,000 sq. ft. with 18.5% of the area dedicated to commercial developments, 59.4% to mixed-use developments, and 22.1% to residential developments.</p>
-                    <p>If you want to live close to Downtown Dubai at a more manageable housing price, Business Bay is a great option. This glitzy community is a key part of Dubai’s skyline and is one of the best places for renting and buying luxury apartments in Dubai.</p>
+                    <p>يعد الخليج التجاري أحد أرقى وأكثر الأحياء حيوية في دبي، حيث تتناغم فيه الحياة العصرية مع عالم الأعمال. صُممت هذه المنطقة لتكون "مدينة داخل مدينة"، فهي تجمع بين ناطحات السحاب السكنية الشاهقة، والمقرات التجارية العالمية، ووجهات الترفيه الفاخرة.</p>
+                    <p>بفضل موقعه الاستراتيجي بجوار داون تاون دبي، وعلى بعد دقائق من برج خليفة ودبي مول، يمثل الخليج التجاري العنوان الأمثل للباحثين عن أسلوب حياة لا مثيل له. سواء كنت تتطلع للعيش بالقرب من مكان عملك، أو ترغب في الاستمتاع بأفضل ما تقدمه دبي من مطاعم ومرافق ترفيهية، فإن الخليج التجاري يلبي جميع تطلعاتك.</p>
+                    <p>تمتد المنطقة على مساحة تزيد عن 4 ملايين متر مربع، وتتميز بإطلالاتها الساحرة على قناة دبي المائية، مما يضيف لمسة من الجمال والهدوء إلى أفقها المزدحم. إنها ليست مجرد مكان للعيش، بل هي تجربة حياة متكاملة تجمع بين الفخامة والراحة والعملية.</p>
                 </div>
               </section>
 
               <section id="highlights">
-                <h2 className="text-2xl font-bold font-headline mb-4">
-                  Highlights of Business Bay, Dubai
-                </h2>
-                <ul className="space-y-2 text-muted-foreground">
+                <div className="flex items-center gap-3 mb-4">
+                    <Sparkles className="h-8 w-8 text-primary" />
+                    <h2 className="text-2xl font-bold font-headline">
+                      مميزات استثنائية
+                    </h2>
+                </div>
+                <ul className="space-y-3 text-muted-foreground text-base">
                   {[
-                    'Central Business Hub in Dubai',
-                    'Close to Downtown Dubai, Burj Khalifa, and Dubai Mall',
-                    'Luxurious home with Dubai Canal views',
-                    'Location of La Perle by Dragone',
-                    'Home to JW Marriott Marquis Hotel',
-                    'Very popular because of its many amenities, dining and leisure facilities',
-                    'Apartments, offices and business centers available',
-                    'Access to transportation including Business Bay Metro station',
-                    'Near key highways like Sheikh Zayed Road and Al Khail Road',
+                    'موقع مركزي لا مثيل له في قلب دبي الحيوي.',
+                    'على بعد دقائق من برج خليفة، دبي مول، ومركز دبي المالي العالمي.',
+                    'إطلالات مائية خلابة على قناة دبي المائية.',
+                    'يحتضن وجهات ترفيهية عالمية مثل عرض " لابيرل باي دراغون".',
+                    'مجموعة واسعة من الفنادق الفاخرة مثل فندق "جي دبليو ماريوت ماركيز".',
+                    'مجتمع نابض بالحياة يضم أرقى المطاعم والمقاهي ومرافق الترفيه.',
+                    'بنية تحتية متطورة وشبكة مواصلات متكاملة تشمل محطة مترو وتاكسي مائي.',
+                    'قربه من الطرق السريعة الرئيسية كشارع الشيخ زايد وشارع الخيل.',
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
@@ -243,36 +237,40 @@ export default function BusinessBayPage() {
               </section>
 
               <section id="lifestyle">
-                <h2 className="text-2xl font-bold font-headline mb-4">Lifestyle & Things to Do in Business Bay</h2>
+                <div className="flex items-center gap-3 mb-4">
+                    <Briefcase className="h-8 w-8 text-primary" />
+                    <h2 className="text-2xl font-bold font-headline">أسلوب حياة متكامل</h2>
+                </div>
                 <div className="space-y-4 text-muted-foreground prose prose-lg max-w-none">
-                    <p>The lifestyle in Business Bay is vibrant and buzzing with activities. From entertainment and waterfront strolls to restaurants and hotels, there’s always something to do here.</p>
-                    <h3 className="text-xl font-bold font-headline !text-foreground !mt-6 !mb-2">Iconic Attractions</h3>
-                    <p>One of the most popular attractions in Business Bay is La Perle by Dragone, Dubai’s permanent show. The mastermind behind it was Franco Dragone, the theatre director who worked with Cirque du Soleil. La Perle is located in V Hotel at Al Habtoor City. It’s inspired by Dubai’s pearl-diving history and displays impressive acrobatics, stunts, and choreography with a cast of 65 performers.</p>
-                    <p>Another iconic attraction in Business Bay is the Dubai Canal. This man-made project features a 3.2 km promenade that overlooks Dubai’s stunning skyscrapers and has restaurants, hotels, luxury homes, and walking and cycling paths.</p>
-                    <h3 className="text-xl font-bold font-headline !text-foreground !mt-6 !mb-2">Dining & Nightlife</h3>
-                    <p>For more leisure options, visitors and residents can head to Bay Square. It is a mixed-use complex with waterfront promenades, shops, and restaurants where residents and visitors can shop, dine, and stroll to their heart’s contentment.</p>
-                    <p>On top of that, Business Bay boasts a vibrant nightlife, with a large variety of clubs, lounges and pubs, such as BLU Dubai and 1OAK, while JW Marriott Marquis Hotel includes a variety of nightlife options.</p>
+                    <p>الحياة في الخليج التجاري هي تجسيد للتنوع والديناميكية. من التنزه على ضفاف القناة المائية عند شروق الشمس، إلى اجتماعات العمل في المقاهي العصرية، وصولاً إلى الاستمتاع بأمسية فاخرة في أحد المطاعم العالمية، كل يوم هنا يحمل تجربة جديدة.</p>
+                    <h3 className="text-xl font-bold font-headline !text-foreground !mt-6 !mb-2">ترفيه لا ينتهي</h3>
+                    <p>تعد قناة دبي المائية شريان الحياة في المنطقة، حيث يوفر ممشاها البالغ طوله 3.2 كم مسارات للمشي وركوب الدراجات، محاطة بالمطاعم والمساحات الخضراء. كما أن عرض "لابيرل" المائي المذهل في الحبتور سيتي يقدم تجربة فنية وبصرية لا تُنسى.</p>
+                    <h3 className="text-xl font-bold font-headline !text-foreground !mt-6 !mb-2">وجهة الذواقة والحياة الليلية</h3>
+                    <p>يعج الخليج التجاري بأفخم المطاعم والوجهات التي ترضي جميع الأذواق، من المطابخ العالمية في الفنادق الفاخرة إلى المقاهي العصرية في "باي سكوير". وعندما يحل المساء، تضيء المنطقة بمجموعة متنوعة من النوادي والصالات الراقية، مما يجعلها وجهة رئيسية للحياة الليلية في دبي.</p>
                 </div>
               </section>
 
               <section id="price-insights">
-                <h2 className="text-2xl font-bold font-headline mb-4">
-                  Price Insights
-                </h2>
+                <div className="flex items-center gap-3 mb-4">
+                    <TrendingUp className="h-8 w-8 text-primary" />
+                    <h2 className="text-2xl font-bold font-headline">
+                      مؤشرات الأسعار
+                    </h2>
+                </div>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Rent</CardTitle>
+                    <CardTitle>متوسط الإيجارات السنوية</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                      Average prices for apartments.
+                      متوسط الأسعار للشقق السكنية.
                     </p>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Type</TableHead>
+                          <TableHead>نوع الوحدة</TableHead>
                           <TableHead className="text-right">
-                            Avg. Price (AED/year)
+                            متوسط السعر (درهم إماراتي/سنوياً)
                           </TableHead>
                         </TableRow>
                       </TableHeader>
@@ -290,14 +288,13 @@ export default function BusinessBayPage() {
                       </TableBody>
                     </Table>
                     <p className="text-xs text-muted-foreground mt-2">
-                      The data displayed is based on Property Finder’s last 12
-                      months listing data.
+                      البيانات المعروضة تستند إلى بيانات قوائم Property Finder لآخر 12 شهرًا.
                     </p>
                   </CardContent>
                 </Card>
                 <Card className="mt-6">
                   <CardHeader>
-                    <CardTitle>Price Trends for Studio Apartments</CardTitle>
+                    <CardTitle>اتجاهات أسعار شقق الاستوديو</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="h-80 w-full">
@@ -338,14 +335,17 @@ export default function BusinessBayPage() {
               </section>
 
               <section id="faq">
-                <h2 className="text-2xl font-bold font-headline mb-4">
-                  Frequently Asked Questions
-                </h2>
+                <div className="flex items-center gap-3 mb-4">
+                    <HelpCircle className="h-8 w-8 text-primary" />
+                    <h2 className="text-2xl font-bold font-headline">
+                      أسئلة شائعة
+                    </h2>
+                </div>
                 <Accordion type="single" collapsible className="w-full">
                   {faqItems.map((item, index) => (
                       <AccordionItem value={`item-${index+1}`} key={index}>
-                          <AccordionTrigger>{index+1}. {item.q}</AccordionTrigger>
-                          <AccordionContent>
+                          <AccordionTrigger className="text-right text-lg">{index+1}. {item.q}</AccordionTrigger>
+                          <AccordionContent className="text-base text-muted-foreground">
                               {item.a}
                           </AccordionContent>
                       </AccordionItem>
@@ -360,5 +360,3 @@ export default function BusinessBayPage() {
     </div>
   );
 }
-
-    
