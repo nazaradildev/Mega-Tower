@@ -76,9 +76,9 @@ export function Location() {
                                     </Button>
                                 </DialogTrigger>
                             </div>
-                            <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex items-center justify-center outline-none ring-0">
+                            <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 outline-none ring-0">
                                 <DialogClose asChild>
-                                    <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-foreground bg-background/50 hover:bg-background/70 rounded-full h-10 w-10">
+                                    <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-[9999] text-foreground bg-background/50 hover:bg-background/70 rounded-full h-10 w-10">
                                         <X className="h-6 w-6" />
                                     </Button>
                                 </DialogClose>
