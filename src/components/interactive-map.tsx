@@ -22,61 +22,72 @@ import * as ReactDOM from 'react-dom/client';
 
 const homeCoords = { lat: 25.18117216279701, lng: 55.2751394965599 };
 
-const pois = {
+type PoiName = {
+  en: string;
+  ar: string;
+}
+
+type Poi = {
+  lat: number;
+  lng: number;
+  name: PoiName;
+}
+
+const pois: Record<string, Poi[]> = {
     supermarket: [
-        { lat: 25.1883, lng: 55.2688, name: "Spinneys Bay Avenue" },
-        { lat: 25.1835, lng: 55.2580, name: "Choithrams" },
-        { lat: 25.1910, lng: 55.2621, name: "W Mart Supermarket" }
+        { lat: 25.1883, lng: 55.2688, name: { en: "Spinneys Bay Avenue", ar: "سبينيس باي أفينيو" } },
+        { lat: 25.1835, lng: 55.2580, name: { en: "Choithrams", ar: "شويترام" } },
+        { lat: 25.1910, lng: 55.2621, name: { en: "W Mart Supermarket", ar: "دبليو مارت سوبر ماركت" } }
     ],
     gym: [
-        { lat: 25.1875, lng: 55.2543, name: "Warehouse Gym" },
-        { lat: 25.1892, lng: 55.2691, name: "UFC Gym Business Bay" },
-        { lat: 25.1798, lng: 55.2599, name: "F45 Training" }
+        { lat: 25.1875, lng: 55.2543, name: { en: "Warehouse Gym", ar: "ويرهاوس جيم" } },
+        { lat: 25.1892, lng: 55.2691, name: { en: "UFC Gym Business Bay", ar: "يو إف سي جيم الخليج التجاري" } },
+        { lat: 25.1798, lng: 55.2599, name: { en: "F45 Training", ar: "إف 45 ترينينج" } }
     ],
     school: [
-        { lat: 25.1664, lng: 55.2501, name: "JSS Private School" },
-        { lat: 25.2111, lng: 55.2789, name: "GEMS Jumeirah Primary School" },
+        { lat: 25.1664, lng: 55.2501, name: { en: "JSS Private School", ar: "مدرسة JSS الخاصة" } },
+        { lat: 25.2111, lng: 55.2789, name: { en: "GEMS Jumeirah Primary School", ar: "مدرسة جيمس جميرا الابتدائية" } },
     ],
     restaurant: [
-        { lat: 25.1845, lng: 55.2632, name: "Tong Thai" },
-        { lat: 25.1811, lng: 55.2575, name: "The Maine Land Brasserie" },
-        { lat: 25.1899, lng: 55.2701, name: "Mama'esh" }
+        { lat: 25.1845, lng: 55.2632, name: { en: "Tong Thai", ar: "تونغ تاي" } },
+        { lat: 25.1811, lng: 55.2575, name: { en: "The Maine Land Brasserie", ar: "ذا ماين لاند براسيري" } },
+        { lat: 25.1899, lng: 55.2701, name: { en: "Mama'esh", ar: "ماما إيش" } }
     ],
     cafe: [
-        { lat: 25.1888, lng: 55.2680, name: "Starbucks Bay Avenue" },
-        { lat: 25.1820, lng: 55.2590, name: "The Kana Cafe" },
-        { lat: 25.1865, lng: 55.2655, name: "Espresso Lab" }
+        { lat: 25.1888, lng: 55.2680, name: { en: "Starbucks Bay Avenue", ar: "ستاربكس باي أفينيو" } },
+        { lat: 25.1820, lng: 55.2590, name: { en: "The Kana Cafe", ar: "ذا كنافة كافيه" } },
+        { lat: 25.1865, lng: 55.2655, name: { en: "Espresso Lab", ar: "اسبريسو لاب" } }
     ],
     shop: [
-        { lat: 25.1885, lng: 55.2686, name: "Bay Avenue Mall" },
-        { lat: 25.1955, lng: 55.2742, name: "Dubai Mall (nearby)" },
+        { lat: 25.1885, lng: 55.2686, name: { en: "Bay Avenue Mall", ar: "باي أفينيو مول" } },
+        { lat: 25.1955, lng: 55.2742, name: { en: "Dubai Mall (nearby)", ar: "دبي مول (قريب)" } },
     ],
     park: [
-        { lat: 25.1878, lng: 55.2677, name: "Bay Avenue Park" },
-        { lat: 25.1972, lng: 55.2598, name: "Safa Park (nearby)" },
+        { lat: 25.1878, lng: 55.2677, name: { en: "Bay Avenue Park", ar: "حديقة باي أفينيو" } },
+        { lat: 25.1972, lng: 55.2598, name: { en: "Safa Park (nearby)", ar: "حديقة الصفا (قريبة)" } },
     ],
     attraction: [
-        { lat: 25.1860, lng: 55.2620, name: "Dubai Water Canal Walk" },
-        { lat: 25.1972, lng: 55.2744, name: "Burj Khalifa (nearby)" },
+        { lat: 25.1860, lng: 55.2620, name: { en: "Dubai Water Canal Walk", ar: "ممشى قناة دبي المائية" } },
+        { lat: 25.1972, lng: 55.2744, name: { en: "Burj Khalifa (nearby)", ar: "برج خليفة (قريب)" } },
     ],
     hospital: [
-        { lat: 25.1805, lng: 55.2550, name: "Aster Clinic, Business Bay" },
-        { lat: 25.1940, lng: 55.2510, name: "Medcare Hospital Al Safa" },
+        { lat: 25.1805, lng: 55.2550, name: { en: "Aster Clinic, Business Bay", ar: "عيادة أستر، الخليج التجاري" } },
+        { lat: 25.1940, lng: 55.2510, name: { en: "Medcare Hospital Al Safa", ar: "مستشفى ميدكير الصفا" } },
     ],
     landmark: [
-        { lat: 25.2532, lng: 55.3657, name: "مطار دبي الدولي (DXB)" },
-        { lat: 25.1972, lng: 55.2744, name: "برج خليفة" },
-        { lat: 25.1983, lng: 55.2795, name: "دبي مول" },
-        { lat: 25.1412, lng: 55.1852, name: "برج العرب" },
-        { lat: 25.1200, lng: 55.1494, name: "نخلة جميرا" },
-        { lat: 25.0783, lng: 55.1378, name: "مرسى دبي" },
-        { lat: 25.2191, lng: 55.2811, name: "متحف المستقبل" },
-        { lat: 25.2359, lng: 55.3009, name: "برواز دبي" },
-        { lat: 25.0798, lng: 55.1245, name: "عين دبي" }
+        { lat: 25.2532, lng: 55.3657, name: { en: "Dubai International Airport (DXB)", ar: "مطار دبي الدولي (DXB)" } },
+        { lat: 25.1972, lng: 55.2744, name: { en: "Burj Khalifa", ar: "برج خليفة" } },
+        { lat: 25.1983, lng: 55.2795, name: { en: "The Dubai Mall", ar: "دبي مول" } },
+        { lat: 25.1412, lng: 55.1852, name: { en: "Burj Al Arab", ar: "برج العرب" } },
+        { lat: 25.1200, lng: 55.1494, name: { en: "The Palm Jumeirah", ar: "نخلة جميرا" } },
+        { lat: 25.0783, lng: 55.1378, name: { en: "Dubai Marina", ar: "مرسى دبي" } },
+        { lat: 25.2191, lng: 55.2811, name: { en: "Museum of the Future", ar: "متحف المستقبل" } },
+        { lat: 25.2359, lng: 55.3009, name: { en: "Dubai Frame", ar: "برواز دبي" } },
+        { lat: 25.0798, lng: 55.1245, name: { en: "Ain Dubai", ar: "عين دبي" } }
     ],
     worship: [
-        { lat: 25.1895, lng: 55.2755, name: "مسجد الغفور" },
-        { lat: 25.1765, lng: 55.2593, name: "مسجد الشيخ زايد بن منصور آل نهيان" },
+        { lat: 25.1895, lng: 55.2755, name: { en: "Al Ghafoor Mosque", ar: "مسجد الغفور" } },
+        { lat: 25.1765, lng: 55.2593, name: { en: "Sheikh Zayed bin Mansour Al Nahyan Mosque", ar: "مسجد الشيخ زايد بن منصور آل نهيان" } },
     ]
 };
 
@@ -114,6 +125,7 @@ export function InteractiveMap() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const { language, direction } = useLanguage();
   const categories = categoriesData[language];
+  const homeLocationName = language === 'en' ? 'Your Apartment Location' : 'موقع شقتك';
 
   useEffect(() => {
     if (!mapRef.current || leafletMapRef.current) return;
@@ -146,14 +158,30 @@ export function InteractiveMap() {
       zIndexOffset: 1000,
     })
       .addTo(leafletMapRef.current)
-      .bindTooltip("Your Apartment Location", { permanent: false, direction: 'top', offset: [0, -64] });
+      .bindTooltip(homeLocationName, { permanent: false, direction: 'top', offset: [0, -64] });
 
+    return () => {
+      if (leafletMapRef.current) {
+        leafletMapRef.current.remove();
+        leafletMapRef.current = null;
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+     if (!leafletMapRef.current) return;
+     // Clear all markers
+     Object.values(markersRef.current).flat().forEach(marker => marker.removeFrom(leafletMapRef.current!));
+     markersRef.current = {};
+
+    // Create markers for the current language
     for (const category of categories) {
       const categoryId = category.id;
       markersRef.current[categoryId] = [];
 
-      if (pois[categoryId as keyof typeof pois]) {
-        (pois[categoryId as keyof typeof pois]).forEach(poi => {
+      if (pois[categoryId]) {
+        (pois[categoryId]).forEach(poi => {
           const poiIcon = L.divIcon({
             html: `<div class="w-9 h-9 bg-background rounded-full shadow-lg border-2 border-primary/80 flex items-center justify-center">
                    </div>`,
@@ -162,13 +190,19 @@ export function InteractiveMap() {
             iconAnchor: [18, 18],
           });
           
-          const marker = L.marker([poi.lat, poi.lng], { icon: poiIcon }).bindTooltip(poi.name);
+          const marker = L.marker([poi.lat, poi.lng], { icon: poiIcon })
+            .bindTooltip(poi.name[language]); // Use name based on language
           markersRef.current[categoryId].push(marker);
         });
       }
     }
     
-    // Hack to inject dynamic SVGs, as Leaflet's divIcon doesn't play well with React components directly.
+    // Show markers for the active category
+    if (activeCategory && markersRef.current[activeCategory]) {
+      markersRef.current[activeCategory].forEach(marker => marker.addTo(leafletMapRef.current!));
+    }
+    
+    // Inject icon components
     setTimeout(() => {
       categories.forEach(category => {
         const wrappers = document.querySelectorAll(`.poi-icon-wrapper-${category.id}`);
@@ -183,28 +217,11 @@ export function InteractiveMap() {
       })
     }, 100);
 
+  }, [language, categories, activeCategory]);
 
-    return () => {
-      if (leafletMapRef.current) {
-        leafletMapRef.current.remove();
-        leafletMapRef.current = null;
-      }
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const toggleCategory = (categoryId: string) => {
-    const newActiveCategory = activeCategory === categoryId ? null : categoryId;
-    setActiveCategory(newActiveCategory);
-
-    // This is not a great pattern, but we need to clear all markers from all categories
-    // because the categories object itself can change when language changes.
-    Object.values(markersRef.current).flat().forEach(marker => marker.removeFrom(leafletMapRef.current!));
-
-
-    if (newActiveCategory && markersRef.current[newActiveCategory]) {
-      markersRef.current[newActiveCategory].forEach(marker => marker.addTo(leafletMapRef.current!));
-    }
+    setActiveCategory(prev => prev === categoryId ? null : categoryId);
   };
 
   return (
@@ -236,3 +253,4 @@ export function InteractiveMap() {
     </div>
   );
 }
+
