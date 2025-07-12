@@ -81,23 +81,14 @@ export function UnitCard({ unit }: UnitCardProps) {
   const { toast } = useToast();
 
   const autoplay = React.useRef(
-    Autoplay(
-      { delay: 4000, stopOnInteraction: true, playOnInit: false },
-      (emblaRoot) => emblaRoot.parentElement
-    )
+    Autoplay({ delay: 5000, stopOnInteraction: true, playOnInit: false })
   );
-  
-  const handleShare = () => {
-    if (navigator.share) {
-        navigator.share({
-            title: unit.title,
-            text: `Check out this property: ${unit.title}`,
-            url: window.location.origin + `/property/${unit.id}`,
-        }).catch(console.error);
-    } else {
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Check out this property: ${unit.title} - ${window.location.origin}/property/${unit.id}`)}`;
-        window.open(whatsappUrl, '_blank');
-    }
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Check out this property: ${unit.title} - ${window.location.origin}/property/${unit.id}`)}`;
+    window.open(whatsappUrl, '_blank');
   };
   
   const toggleLike = (e: React.MouseEvent) => {
@@ -122,31 +113,40 @@ export function UnitCard({ unit }: UnitCardProps) {
 
 
   useEffect(() => {
-    if (!api) {
-      return;
+    if (!api) return;
+
+    let startAutoplayTimeout: NodeJS.Timeout;
+    const intersectionObserver = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+            startAutoplayTimeout = setTimeout(() => autoplay.current.play(), 3000);
+        } else {
+            clearTimeout(startAutoplayTimeout);
+            autoplay.current.stop();
+        }
+    });
+
+    if (api.emblaApi) {
+      intersectionObserver.observe(api.emblaApi.containerNode());
     }
-    
-    const startAutoplayTimeout = setTimeout(() => {
-      autoplay.current.play();
-    }, 3000);
 
     setCurrentImageIndex(api.selectedScrollSnap());
-    const onSelect = () => {
-      setCurrentImageIndex(api.selectedScrollSnap());
-    };
+    const onSelect = () => setCurrentImageIndex(api.selectedScrollSnap());
     api.on('select', onSelect);
 
     return () => {
       clearTimeout(startAutoplayTimeout);
       api.off('select', onSelect);
+      if (api.emblaApi) {
+        intersectionObserver.unobserve(api.emblaApi.containerNode());
+      }
     };
   }, [api]);
 
   return (
     <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
-      <div className="md:grid md:grid-cols-2">
+      <div className="md:grid md:grid-cols-12">
         {/* Image Part */}
-        <div className="relative group/image aspect-[4/3] flex-shrink-0">
+        <div className="relative group/image aspect-[4/3] flex-shrink-0 md:col-span-5">
           <Carousel
             setApi={setApi}
             className="w-full h-full"
@@ -212,7 +212,7 @@ export function UnitCard({ unit }: UnitCardProps) {
         </div>
 
         {/* Main Content Part */}
-        <div className="p-4 flex flex-col relative">
+        <div className="p-4 flex flex-col relative md:col-span-7">
            <Link
                 href={`/property/${unit.id}`}
                 className="absolute inset-0 z-0"
@@ -380,7 +380,7 @@ export function UnitCard({ unit }: UnitCardProps) {
       </div>
 
       {/* Footer / Contact Part */}
-      <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex items-center gap-3 flex-shrink-0">
           <Avatar className="h-10 w-10">
             <AvatarImage
@@ -397,7 +397,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-start sm:justify-end gap-2 w-full flex-wrap">
+        <div className="flex items-center justify-start gap-2 w-full flex-wrap sm:w-auto">
           <Button
             variant="outline"
             size="sm"
@@ -419,7 +419,7 @@ export function UnitCard({ unit }: UnitCardProps) {
           <Button
             size="sm"
             className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center flex-grow sm:flex-grow-0"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleShare() }}
+            onClick={handleShare}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
