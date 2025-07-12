@@ -26,22 +26,35 @@ export function StickyNav() {
   const { language } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
   const lastScrollY = useRef(0);
+  const heroSectionHeight = useRef(0);
 
   useEffect(() => {
+    // We only need to calculate this once on mount
+    heroSectionHeight.current = window.innerHeight * 0.8;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      // Show only if scrolling down and past the hero section
-      if (currentScrollY > lastScrollY.current && currentScrollY > window.innerHeight * 0.8) {
+      
+      if (currentScrollY <= heroSectionHeight.current) {
+        setIsVisible(false);
+        return;
+      }
+      
+      if (currentScrollY > lastScrollY.current) {
+        // Scrolling down
         setIsVisible(true);
       } else {
+        // Scrolling up
         setIsVisible(false);
       }
+
       lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
 
   useEffect(() => {
     observer.current = new IntersectionObserver(
@@ -80,7 +93,7 @@ export function StickyNav() {
       )}
     >
       <div className="container mx-auto px-4 md:px-6 h-full overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <ul className="flex items-center justify-start h-full gap-4 md:gap-8 [&::-webkit-scrollbar]:hidden">
+        <ul className="flex items-center justify-start md:justify-center h-full gap-4 md:gap-8 [&::-webkit-scrollbar]:hidden">
           {navLinks.map((link) => (
             <li key={link.id}>
               <button
