@@ -76,6 +76,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/breadcrumb';
+import Image from 'next/image';
 
 const priceData = [
   { month: 'Jan', price: 140000 },
@@ -535,30 +536,32 @@ export default function PropertyDetailsPage() {
                     </Card>
                    </Link>
                    <Link href="/community/business-bay" className="block">
-                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
+                    <Card className="hover:shadow-lg transition-shadow duration-300 h-full flex flex-col overflow-hidden">
+                        <div className="relative w-full aspect-video">
+                            <Image
+                                src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4noldjGXcXOg-uoslPy8Hjgq3WR9Y6IAIyKKM0JT0ydIvjOE0m9hQwHxdynDt9ndQ6pAnvTPPMJ5Y6UUDl23eU1FvAYjzhitCRy05lGw_uEvOLQU6_J9Rppag6swelRcuMPQk02q=s0"
+                                alt="Business Bay Community"
+                                data-ai-hint="dubai architecture"
+                                layout="fill"
+                                className="object-cover"
+                            />
+                        </div>
                         <CardHeader>
                             <CardTitle className="text-lg">Community Insights</CardTitle>
                             <p className="text-sm text-muted-foreground">Business Bay</p>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-2 mb-2">
-                                <div className="flex text-yellow-500">
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star fill="currentColor" className="h-5 w-5" />
-                                    <Star className="h-5 w-5" />
+                        <CardContent className="flex-grow flex flex-col">
+                            <div className="flex-grow space-y-4">
+                                <div className="flex flex-wrap gap-2">
+                                    <Badge variant="secondary">Mostly apartments</Badge>
+                                    <Badge variant="secondary">Luxury</Badge>
+                                    <Badge variant="secondary">Well connected</Badge>
                                 </div>
-                                <span className="font-semibold">4/5</span>
                             </div>
-                            <p className="text-sm text-muted-foreground mb-4">476 building reviews</p>
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                <Badge variant="secondary">Mostly apartments</Badge>
-                                <Badge variant="secondary">Luxury</Badge>
-                                <Badge variant="secondary">Well connected</Badge>
+                            <div className="mt-4">
+                                <p className="text-sm text-muted-foreground">Price Range:</p>
+                                <p className="font-semibold">370K - 750M AED</p>
                             </div>
-                            <p className="text-sm text-muted-foreground">Price Range:</p>
-                            <p className="font-semibold">370K - 750M AED</p>
                         </CardContent>
                     </Card>
                    </Link>
