@@ -25,46 +25,35 @@ export function StickyNav() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { language } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
-  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  const hideTimeout = useRef<NodeJS.Timeout | null>(null);
   const heroSectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    // Find the hero section once on mount
     heroSectionRef.current = document.querySelector('main > section:first-of-type');
-  }, []);
-
-  useEffect(() => {
+    
     const handleScroll = () => {
-      if (!heroSectionRef.current) return;
-
-      const heroSectionBottom = heroSectionRef.current.offsetTop + heroSectionRef.current.offsetHeight;
-      const currentScrollY = window.scrollY;
-
-      // Clear the previous timeout if it exists
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
+      if (hideTimeout.current) {
+        clearTimeout(hideTimeout.current);
       }
-
-      // Show the nav immediately if scrolling past the hero section
-      if (currentScrollY > heroSectionBottom) {
+      
+      const heroBottom = heroSectionRef.current ? heroSectionRef.current.offsetTop + heroSectionRef.current.offsetHeight : 0;
+      
+      if (window.scrollY > heroBottom) {
         setIsVisible(true);
+        hideTimeout.current = setTimeout(() => {
+          setIsVisible(false);
+        }, 2000); // Hide after 2 seconds of inactivity
       } else {
         setIsVisible(false);
       }
-      
-      // Set a timeout to hide the nav when scrolling stops, but only if it's already past the hero
-      scrollTimeout.current = setTimeout(() => {
-         if (window.scrollY > heroSectionBottom) {
-            setIsVisible(false);
-         }
-      }, 250); // Hide after 250ms of inactivity
     };
-
+    
     window.addEventListener('scroll', handleScroll, { passive: true });
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
+      if (hideTimeout.current) {
+        clearTimeout(hideTimeout.current);
       }
     };
   }, []);
@@ -102,11 +91,11 @@ export function StickyNav() {
   return (
     <nav
       className={cn(
-        'sticky top-16 z-40 w-full bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/80 transition-all duration-300',
-        isVisible ? 'h-14 border-b' : 'h-0 border-b-0 overflow-hidden'
+        'sticky top-16 z-40 w-full bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/80 transition-transform duration-300',
+        isVisible ? 'transform-none border-b' : '-translate-y-full border-b-0'
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 h-full overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="container mx-auto px-4 md:px-6 h-14 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         <ul className="flex items-center justify-start md:justify-center h-full gap-4 md:gap-8 [&::-webkit-scrollbar]:hidden">
           {navLinks.map((link) => (
             <li key={link.id}>
