@@ -9,10 +9,10 @@ import Link from 'next/link';
 const features = [
   {
     icon: View,
-    title: "3D Virtual Tours",
-    description: "Walk through our apartments from the comfort of your home. Explore every room and detail with our high-fidelity virtual tours.",
+    title: "Amenities Virtual Tours",
+    description: "Step inside our world-class amenities. Explore each space in stunning 3D detail from the comfort of your home.",
     link: "/amenities-tour",
-    linkText: "Start Touring",
+    linkText: "Explore Amenities",
   },
 ];
 
@@ -23,7 +23,7 @@ export function ImmersiveExperience() {
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-bold font-headline">Step Inside, Virtually</h2>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-lg">
-            Get a true feel for your future home with our immersive virtual tours.
+            Get a true feel for the lifestyle that awaits you with our immersive virtual tours.
           </p>
         </div>
         <div className="flex justify-center">
