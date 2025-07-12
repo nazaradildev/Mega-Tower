@@ -17,6 +17,8 @@ import {
   Dumbbell,
   FerrisWheel
 } from 'lucide-react';
+import { useLanguage } from '@/context/language-context';
+import * as ReactDOM from 'react-dom/client';
 
 const homeCoords = { lat: 25.18117216279701, lng: 55.2751394965599 };
 
@@ -78,7 +80,8 @@ const pois = {
     ]
 };
 
-const categories = [
+const categoriesData = {
+  ar: [
     { id: 'landmark', name: 'معالم بارزة', Icon: Landmark },
     { id: 'worship', name: 'دور عبادة', Icon: Building2 },
     { id: 'supermarket', name: 'سوبر ماركت', Icon: ShoppingCart },
@@ -89,13 +92,28 @@ const categories = [
     { id: 'park', name: 'حدائق', Icon: TreePine },
     { id: 'attraction', name: 'مناطق جذب', Icon: FerrisWheel },
     { id: 'hospital', name: 'مستشفيات', Icon: HeartPulse },
-];
+  ],
+  en: [
+    { id: 'landmark', name: 'Landmarks', Icon: Landmark },
+    { id: 'worship', name: 'Worship', Icon: Building2 },
+    { id: 'supermarket', name: 'Supermarkets', Icon: ShoppingCart },
+    { id: 'gym', name: 'Gyms', Icon: Dumbbell },
+    { id: 'school', name: 'Schools', Icon: School },
+    { id: 'restaurant', name: 'Restaurants', Icon: Utensils },
+    { id: 'cafe', name: 'Cafes', Icon: Coffee },
+    { id: 'park', name: 'Parks', Icon: TreePine },
+    { id: 'attraction', name: 'Attractions', Icon: FerrisWheel },
+    { id: 'hospital', name: 'Hospitals', Icon: HeartPulse },
+  ]
+};
 
 export function InteractiveMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker[]>>({});
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const { language, direction } = useLanguage();
+  const categories = categoriesData[language];
 
   useEffect(() => {
     if (!mapRef.current || leafletMapRef.current) return;
@@ -155,7 +173,7 @@ export function InteractiveMap() {
       categories.forEach(category => {
         const wrappers = document.querySelectorAll(`.poi-icon-wrapper-${category.id}`);
         const iconContainer = document.createElement('div');
-        const root = require('react-dom/client').createRoot(iconContainer);
+        const root = ReactDOM.createRoot(iconContainer);
         root.render(<category.Icon className="w-5 h-5 text-primary" />);
         wrappers.forEach(wrapper => {
           if(wrapper.firstChild) {
@@ -179,9 +197,10 @@ export function InteractiveMap() {
     const newActiveCategory = activeCategory === categoryId ? null : categoryId;
     setActiveCategory(newActiveCategory);
 
-    if (activeCategory && markersRef.current[activeCategory]) {
-      markersRef.current[activeCategory].forEach(marker => marker.removeFrom(leafletMapRef.current!));
-    }
+    // This is not a great pattern, but we need to clear all markers from all categories
+    // because the categories object itself can change when language changes.
+    Object.values(markersRef.current).flat().forEach(marker => marker.removeFrom(leafletMapRef.current!));
+
 
     if (newActiveCategory && markersRef.current[newActiveCategory]) {
       markersRef.current[newActiveCategory].forEach(marker => marker.addTo(leafletMapRef.current!));
@@ -189,9 +208,9 @@ export function InteractiveMap() {
   };
 
   return (
-    <div className="w-full bg-card rounded-2xl shadow-lg border p-4 md:p-6">
+    <div className="w-full bg-card rounded-2xl shadow-lg border p-4 md:p-6" dir={direction}>
       <div className="mb-4 overflow-x-auto pb-3 -mx-1" style={{ scrollbarWidth: 'thin' }}>
-        <div className="flex space-x-3 whitespace-nowrap px-1">
+        <div className={cn("flex space-x-3 whitespace-nowrap px-1", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
             <button
               key={category.id}
