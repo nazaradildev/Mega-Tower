@@ -32,6 +32,7 @@ export function Map() {
             center: burjKhalifaPosition,
             zoom: 15,
             scrollWheelZoom: false,
+            attributionControl: false, // This will hide the attribution control
         });
 
         L.tileLayer(EsriSatelliteURL, {
