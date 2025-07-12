@@ -12,6 +12,7 @@ import { ImmersiveExperience } from '@/components/immersive-experience';
 import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
 import { Footer } from '@/components/footer';
 import { useLanguage } from '@/context/language-context';
+import { StickyNav } from '@/components/sticky-nav';
 
 const content = {
   en: {
@@ -45,6 +46,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
+      <StickyNav />
       <main className="flex-1">
         <section className="relative w-full">
           <div className="container mx-auto px-4 md:px-6 py-10">
