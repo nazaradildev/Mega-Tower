@@ -2,10 +2,19 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, TowerControl, Train, Plane, MapPin } from 'lucide-react';
+import { ShoppingCart, TowerControl, Train, Plane, MapPin, Expand } from 'lucide-react';
 import { ScrollAnimation } from "./scroll-animation";
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+
 
 const destinations = [
     { icon: ShoppingCart, name: "Dubai Mall", time: "5 mins" },
@@ -16,7 +25,7 @@ const destinations = [
 
 export function Location() {
     const Map = useMemo(() => dynamic(() => import('@/components/map').then(mod => mod.Map), {
-        loading: () => <p className="text-center p-4">Loading map...</p>,
+        loading: () => <div className="h-full w-full bg-muted flex items-center justify-center"><p className="text-center p-4">Loading map...</p></div>,
         ssr: false
     }), []);
 
@@ -55,8 +64,28 @@ export function Location() {
                         </div>
                     </div>
                     <ScrollAnimation delay={200}>
-                        <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg">
-                           <Map />
+                        <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg relative group">
+                           <div className="h-full w-full rounded-lg overflow-hidden">
+                             <Map />
+                           </div>
+                           <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button variant="secondary" className="absolute bottom-3 right-3 rounded-full opacity-80 group-hover:opacity-100 transition-opacity">
+                                        <Expand className="mr-2 h-4 w-4" />
+                                        Full Screen
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex items-center justify-center outline-none ring-0">
+                                    <DialogClose asChild>
+                                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-foreground bg-background/50 hover:bg-background/70 rounded-full h-10 w-10">
+                                            <X className="h-6 w-6" />
+                                        </Button>
+                                    </DialogClose>
+                                    <div className="h-full w-full">
+                                      <Map isInDialog={true} />
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                         </div>
                     </ScrollAnimation>
                 </div>

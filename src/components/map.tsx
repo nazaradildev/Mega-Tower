@@ -8,9 +8,9 @@ import React, { useEffect, useRef } from 'react';
 // --- Leaflet Icon Fix ---
 const customMarkerIcon = new L.Icon({
   iconUrl: '/khalifatower.png',
-  iconSize: [80, 80], // Adjust size as needed
-  iconAnchor: [40, 80], // Point of the icon which will correspond to marker's location
-  popupAnchor: [0, -80] // Point from which the popup should open relative to the iconAnchor
+  iconSize: [120, 120], // Adjust size as needed
+  iconAnchor: [60, 120], // Point of the icon which will correspond to marker's location
+  popupAnchor: [0, -120] // Point from which the popup should open relative to the iconAnchor
 });
 
 
@@ -20,44 +20,49 @@ const EsriAttribution = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, 
 // Coordinates for Burj Khalifa
 const burjKhalifaPosition: L.LatLngExpression = [25.1972, 55.2744];
 
-export function Map() {
+export function Map({ isInDialog = false }: { isInDialog?: boolean }) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    let map: L.Map;
+    // Ensure the cleanup happens only once by checking if a map instance already exists on the ref
     if (mapContainerRef.current && !mapRef.current) {
-        // Map is not initialized yet
-        map = L.map(mapContainerRef.current, {
+        mapRef.current = L.map(mapContainerRef.current, {
             center: burjKhalifaPosition,
             zoom: 15,
             scrollWheelZoom: false,
-            attributionControl: false, // This will hide the attribution control
+            attributionControl: false, 
         });
 
-        L.tileLayer(EsriSatelliteURL, {
-            attribution: EsriAttribution,
-        }).addTo(map);
+        L.tileLayer(EsriSatelliteURL).addTo(mapRef.current);
 
         L.marker(burjKhalifaPosition, { icon: customMarkerIcon })
-            .addTo(map)
+            .addTo(mapRef.current)
             .bindPopup(
                 '<div class="font-bold font-headline">Burj Khalifa</div>'
             );
-        
-        mapRef.current = map;
+    }
+    
+    // Invalidate size when map is shown in a dialog to fix tile loading issues
+    if (isInDialog && mapRef.current) {
+      setTimeout(() => {
+          mapRef.current?.invalidateSize();
+      }, 100);
     }
 
     // Cleanup function
     return () => {
         if (mapRef.current) {
-            mapRef.current.remove();
+            // This check prevents error during fast refresh in development
+            if ((mapRef.current as any)._container) {
+                mapRef.current.remove();
+            }
             mapRef.current = null;
         }
     };
-  }, []); // Empty dependency array ensures this runs only on mount and unmount
+  }, [isInDialog]);
 
   return (
-    <div ref={mapContainerRef} className="h-full w-full rounded-lg" />
+    <div ref={mapContainerRef} className="h-full w-full" />
   );
 }
