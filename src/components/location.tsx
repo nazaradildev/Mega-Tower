@@ -64,29 +64,29 @@ export function Location() {
                         </div>
                     </div>
                     <ScrollAnimation delay={200}>
-                        <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg relative group">
-                           <div className="h-full w-full rounded-lg overflow-hidden">
-                             <Map />
-                           </div>
-                           <Dialog>
+                         <Dialog>
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg overflow-hidden">
+                                    <Map />
+                                </div>
                                 <DialogTrigger asChild>
-                                    <Button variant="secondary" className="absolute bottom-3 right-3 rounded-full opacity-80 group-hover:opacity-100 transition-opacity z-10">
+                                    <Button variant="outline" className="rounded-full">
                                         <Expand className="mr-2 h-4 w-4" />
                                         Full Screen
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex items-center justify-center outline-none ring-0">
-                                    <DialogClose asChild>
-                                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-foreground bg-background/50 hover:bg-background/70 rounded-full h-10 w-10">
-                                            <X className="h-6 w-6" />
-                                        </Button>
-                                    </DialogClose>
-                                    <div className="h-full w-full">
-                                      <Map isInDialog={true} />
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
+                            </div>
+                            <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex items-center justify-center outline-none ring-0">
+                                <DialogClose asChild>
+                                    <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-foreground bg-background/50 hover:bg-background/70 rounded-full h-10 w-10">
+                                        <X className="h-6 w-6" />
+                                    </Button>
+                                </DialogClose>
+                                <div className="h-full w-full">
+                                    <Map isInDialog={true} />
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </ScrollAnimation>
                 </div>
             </div>
