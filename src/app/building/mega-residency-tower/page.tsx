@@ -37,6 +37,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
+  Award,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb } from '@/components/breadcrumb';
@@ -45,7 +47,7 @@ import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 
 const galleryImages = [
   { src: "/mega tower1.png", alt: "Building Exterior", hint: "dubai cityscape" },
-  { src: "/swim1.jpg", alt: "Swimming Pool", hint: "luxury infinity pool" },
+  { src: "/swim1.jpg", alt: "Infinity Pool", hint: "luxury infinity pool" },
   { src: "/gym1.jpg", alt: "Gym", hint: "modern gym interior" },
   { src: "/sauna1.jpg", alt: "Sauna", hint: "luxury spa sauna" },
   { src: "/garden1.jpg", alt: "Garden", hint: "modern building garden" },
@@ -382,15 +384,15 @@ export default function BuildingDetailsPage() {
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
                                         <div className="flex items-center gap-2 text-muted-foreground"><Layers className="h-4 w-4"/> Floors</div>
-                                        <div className="font-semibold">57</div>
+                                        <div className="font-semibold">42</div>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
                                         <div className="flex items-center gap-2 text-muted-foreground"><Percent className="h-4 w-4"/> Occupancy Rate</div>
-                                        <div className="font-semibold">98.5%</div>
+                                        <div className="font-semibold">97.5%</div>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
                                         <div className="flex items-center gap-2 text-muted-foreground"><RefreshCcw className="h-4 w-4"/> Resident Retention</div>
-                                        <div className="font-semibold">Avg. 85%</div>
+                                        <div className="font-semibold">Avg. 86%</div>
                                     </div>
                                 </CardContent>
                             </Card>
