@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -25,17 +24,16 @@ export function StickyNav() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { language } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
-  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const heroSectionRef = useRef<HTMLElement | null>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Find the hero section once on mount
     heroSectionRef.current = document.querySelector('main > section:first-of-type');
 
     const handleScroll = () => {
-      // Clear any existing timeout to prevent hiding while scrolling
-      if (hideTimeoutRef.current) {
-        clearTimeout(hideTimeoutRef.current);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
       }
 
       const heroBottom = heroSectionRef.current
@@ -44,13 +42,11 @@ export function StickyNav() {
 
       if (window.scrollY > heroBottom) {
         setIsVisible(true);
-
-        // Set a new timeout to hide the nav after 2 seconds of inactivity
-        hideTimeoutRef.current = setTimeout(() => {
+        
+        scrollTimeoutRef.current = setTimeout(() => {
           setIsVisible(false);
-        }, 2000);
+        }, 2000); // Hide after 2 seconds of inactivity
       } else {
-        // Hide immediately if we scroll back to the top
         setIsVisible(false);
       }
     };
@@ -59,8 +55,8 @@ export function StickyNav() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (hideTimeoutRef.current) {
-        clearTimeout(hideTimeoutRef.current);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
       }
     };
   }, []);
