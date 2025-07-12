@@ -25,18 +25,21 @@ export function StickyNav() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { language } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show the nav bar after scrolling past the hero section (approx 100vh)
-      if (window.scrollY > window.innerHeight * 0.8) {
+      const currentScrollY = window.scrollY;
+      // Show only if scrolling down and past the hero section
+      if (currentScrollY > lastScrollY.current && currentScrollY > window.innerHeight * 0.8) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
+      lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -76,8 +79,8 @@ export function StickyNav() {
         isVisible ? 'h-14 border-b' : 'h-0 border-b-0 overflow-hidden'
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 h-full overflow-x-auto">
-        <ul className="flex items-center justify-start h-full gap-4 md:gap-8">
+      <div className="container mx-auto px-4 md:px-6 h-full overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <ul className="flex items-center justify-start h-full gap-4 md:gap-8 [&::-webkit-scrollbar]:hidden">
           {navLinks.map((link) => (
             <li key={link.id}>
               <button
