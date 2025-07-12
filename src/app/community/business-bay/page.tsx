@@ -271,17 +271,17 @@ export default function BusinessBayPage() {
           </div>
 
           <div className="space-y-2 mb-8">
-              <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
-                  <CarouselContent className="m-0">
+              <Carousel setApi={setApi} className="w-full max-h-[calc(100vh-200px)]" opts={{ loop: true }}>
+                  <CarouselContent className="m-0 h-full">
                       {galleryImages.map((image, index) => (
-                          <CarouselItem key={index} className="p-0">
-                              <div className="aspect-[16/9] relative rounded-lg overflow-hidden">
+                          <CarouselItem key={index} className="p-0 h-full">
+                              <div className="relative rounded-lg overflow-hidden h-full">
                                   <Image
                                       src={image.src}
                                       data-ai-hint={image.hint}
                                       alt={image.alt}
                                       fill
-                                      className="object-cover"
+                                      className="object-contain"
                                       priority={index === 0}
                                   />
                               </div>
