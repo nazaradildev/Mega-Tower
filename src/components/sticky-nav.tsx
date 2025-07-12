@@ -26,18 +26,18 @@ export function StickyNav() {
   const { language } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-  const heroSectionHeight = useRef(0);
+  const heroSectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    // Calculate hero section height once on mount
-    const heroSection = document.querySelector('section');
-    if (heroSection) {
-      heroSectionHeight.current = heroSection.offsetHeight * 0.9;
-    } else {
-      heroSectionHeight.current = window.innerHeight * 0.8;
-    }
+    // Find the hero section once on mount
+    heroSectionRef.current = document.querySelector('main > section:first-of-type');
+  }, []);
 
+  useEffect(() => {
     const handleScroll = () => {
+      if (!heroSectionRef.current) return;
+
+      const heroSectionBottom = heroSectionRef.current.offsetTop + heroSectionRef.current.offsetHeight;
       const currentScrollY = window.scrollY;
 
       // Clear the previous timeout if it exists
@@ -45,16 +45,18 @@ export function StickyNav() {
         clearTimeout(scrollTimeout.current);
       }
 
-      // Show the nav if scrolling and past the hero section
-      if (currentScrollY > heroSectionHeight.current) {
+      // Show the nav immediately if scrolling past the hero section
+      if (currentScrollY > heroSectionBottom) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
       
-      // Set a timeout to hide the nav when scrolling stops
+      // Set a timeout to hide the nav when scrolling stops, but only if it's already past the hero
       scrollTimeout.current = setTimeout(() => {
-        setIsVisible(false);
+         if (window.scrollY > heroSectionBottom) {
+            setIsVisible(false);
+         }
       }, 250); // Hide after 250ms of inactivity
     };
 
