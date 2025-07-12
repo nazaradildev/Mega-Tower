@@ -336,12 +336,12 @@ export function UnitCard({ unit }: UnitCardProps) {
                 data-ai-hint="agent portrait"
                 alt="Agent"
               />
-              <AvatarFallback>EN</AvatarFallback>
+              <AvatarFallback>AE</AvatarFallback>
             </Avatar>
             <div>
               <p className="text-xs text-muted-foreground">Marketing by</p>
               <p className="font-semibold text-foreground text-sm">
-                Prime Properties
+                Apex Estates
               </p>
             </div>
           </div>

@@ -604,10 +604,10 @@ export default function PropertyDetailsPage() {
                         data-ai-hint="agent portrait"
                         alt="Agent"
                       />
-                      <AvatarFallback>EN</AvatarFallback>
+                      <AvatarFallback>AE</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold">Prime Properties</p>
+                      <p className="font-semibold">Apex Estates</p>
                       <p className="text-sm text-muted-foreground">
                         Marketing by
                       </p>
