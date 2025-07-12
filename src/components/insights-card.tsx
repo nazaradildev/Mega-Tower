@@ -59,7 +59,7 @@ export function ResidentialInsightCard() {
                     <Star fill="currentColor" className="h-5 w-5" />
                     <Star fill="currentColor" className="h-5 w-5" />
                     <Star fill="currentColor" className="h-5 w-5" />
-                    <Star fill="currentColor" className="h-5 w-5 opacity-50" />
+                    <Star fill="currentColor" className="h-5 w-5" />
                 </div>
                 <span className="font-semibold">5.0/5</span>
             </div>
@@ -91,7 +91,7 @@ export function CommunityInsightCard() {
             </div>
             <div className="mt-4">
                 <p className="text-sm text-muted-foreground">Price Range:</p>
-                <p className="font-semibold">370K - 750M AED</p>
+                <p className="font-semibold">70K - 300K AED</p>
             </div>
         </InsightCard>
     );
