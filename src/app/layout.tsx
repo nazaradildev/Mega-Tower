@@ -7,7 +7,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'eni | Churchill Towers',
+  title: 'eni | MEGA Towers',
   description: 'Luxury 1, 2, 3, and 4 Bedroom Apartments in the Heart of Business Bay.',
 };
 

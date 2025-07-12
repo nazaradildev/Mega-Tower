@@ -14,7 +14,7 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-sm text-muted-foreground mt-2">
-              © {new Date().getFullYear()} Churchill Living. All rights reserved.
+              © {new Date().getFullYear()} MEGA Living. All rights reserved.
             </p>
           </div>
           <div className="flex items-center space-x-4">

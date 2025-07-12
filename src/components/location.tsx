@@ -5,12 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, TowerControl, Train, Plane, MapPin, Expand } from 'lucide-react';
 import { ScrollAnimation } from "./scroll-animation";
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
   DialogClose,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
@@ -28,6 +29,8 @@ export function Location() {
         loading: () => <div className="h-full w-full bg-muted flex items-center justify-center"><p className="text-center p-4">Loading map...</p></div>,
         ssr: false
     }), []);
+    const [isMapOpen, setIsMapOpen] = useState(false);
+
 
     return (
         <section id="location" className="w-full py-16 md:py-24 bg-background overflow-hidden">
@@ -42,7 +45,7 @@ export function Location() {
                         <ScrollAnimation>
                             <h3 className="text-2xl font-bold font-headline mb-4 flex items-center gap-2"><MapPin className="text-primary h-7 w-7" /> Perfectly Positioned in Business Bay</h3>
                             <p className="text-muted-foreground mb-8">
-                                Churchill Towers places you at the heart of Dubai's most dynamic district. Enjoy unparalleled access to world-class shopping, dining, and entertainment, with major highways and transport links connecting you to the rest of the city and beyond.
+                                MEGA Towers places you at the heart of Dubai's most dynamic district. Enjoy unparalleled access to world-class shopping, dining, and entertainment, with major highways and transport links connecting you to the rest of the city and beyond.
                             </p>
                         </ScrollAnimation>
                         <div className="grid grid-cols-2 gap-6">
@@ -64,19 +67,20 @@ export function Location() {
                         </div>
                     </div>
                     <ScrollAnimation delay={200}>
-                         <Dialog>
-                            <div className="flex flex-col items-center gap-4">
+                         <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
+                            <div className="relative group/map">
                                 <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg overflow-hidden">
                                     <Map />
                                 </div>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline" className="rounded-full">
+                                    <Button variant="outline" className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm hover:bg-background opacity-0 group-hover/map:opacity-100 transition-opacity rounded-full">
                                         <Expand className="mr-2 h-4 w-4" />
                                         Full Screen
                                     </Button>
                                 </DialogTrigger>
                             </div>
                             <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 outline-none ring-0">
+                                <DialogTitle className="sr-only">Site Location Map</DialogTitle>
                                 <DialogClose asChild>
                                     <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-[9999] text-foreground bg-background/50 hover:bg-background/70 rounded-full h-10 w-10">
                                         <X className="h-6 w-6" />

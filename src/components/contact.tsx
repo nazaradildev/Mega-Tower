@@ -61,7 +61,7 @@ export function Contact() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold font-headline">Your New Home Awaits</h2>
           <p className="text-muted-foreground mt-2 max-w-xl mx-auto">
-            Schedule a viewing or get in touch with our leasing team. We're here to help you find your perfect home at Churchill Towers.
+            Schedule a viewing or get in touch with our leasing team. We're here to help you find your perfect home at MEGA Towers.
           </p>
         </div>
 
@@ -157,9 +157,9 @@ export function Contact() {
                     <Phone className="w-5 h-5" />
                     <span className="font-medium">+971 (4) 123 4567</span>
                 </a>
-                <a href="mailto:leasing@churchill.com" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <a href="mailto:leasing@mega.com" className="flex items-center gap-2 hover:text-primary transition-colors">
                     <Mail className="w-5 h-5" />
-                    <span className="font-medium">leasing@churchill.com</span>
+                    <span className="font-medium">leasing@mega.com</span>
                 </a>
             </div>
         </div>

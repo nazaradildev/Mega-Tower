@@ -181,7 +181,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4 flex-shrink-0" />
               <span>
-                Churchill Residency Tower, Churchill Towers, Business Bay
+                MEGA Residency Tower, MEGA Towers, Business Bay
               </span>
             </div>
             <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">

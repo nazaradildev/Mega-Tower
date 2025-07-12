@@ -69,7 +69,7 @@ const pointsOfInterest = [
         category: 'Groceries',
         icon: ShoppingCart,
         items: [
-            { name: 'Malco Trading (Churchill Mart)', distance: '101 m' },
+            { name: 'Malco Trading (MEGA Mart)', distance: '101 m' },
             { name: 'allday Market - Manara Tower', distance: '446 m' },
             { name: 'New F Mart Supermarket', distance: '503 m' },
             { name: 'Zoom', distance: '577 m' },
@@ -114,7 +114,7 @@ const pointsOfInterest = [
 const breadcrumbItems = [
     { label: 'Apartments for rent in Dubai', href: '/#residences' },
     { label: 'Business Bay', href: '/community/business-bay' },
-    { label: 'Churchill Residency Tower' },
+    { label: 'MEGA Residency Tower' },
 ];
 
 export default function BuildingDetailsPage() {
@@ -138,7 +138,7 @@ export default function BuildingDetailsPage() {
         api?.scrollTo(index);
     };
 
-    const aboutText = "Churchill Towers is a twin-tower complex located in Business Bay, Dubai. It was developed by Emirates National Investment in 2010 and consists of one residential tower called Churchill Residency and another commercial tower called Churchill Executive Tower. Churchill Residency has 57 levels and stands at 245 m (804 ft) high. It offers luxurious 1, 2, 3, and 4-bedroom apartments for sale and rent. These high-rise apartments overlook the Dubai Canal and Burj Khalifa and are serviced with a plethora of lifestyle amenities that echo Dubai’s luxurious lifestyle. Meanwhile, Churchill Executive Tower has 42 levels and is 172 m (564 ft) high. It’s a recognizable landmark in Business Bay as it’s home to various companies. It offers various offices for rent in Business Bay, as well as ones for sale. The towers boast an enviable location close to Burj Khalifa and Dubai Mall, while lying the vibrant community of Business Bay.";
+    const aboutText = "MEGA Towers is a twin-tower complex located in Business Bay, Dubai. It was developed by Emirates National Investment in 2010 and consists of one residential tower called MEGA Residency and another commercial tower called MEGA Executive Tower. MEGA Residency has 57 levels and stands at 245 m (804 ft) high. It offers luxurious 1, 2, 3, and 4-bedroom apartments for sale and rent. These high-rise apartments overlook the Dubai Canal and Burj Khalifa and are serviced with a plethora of lifestyle amenities that echo Dubai’s luxurious lifestyle. Meanwhile, MEGA Executive Tower has 42 levels and is 172 m (564 ft) high. It’s a recognizable landmark in Business Bay as it’s home to various companies. It offers various offices for rent in Business Bay, as well as ones for sale. The towers boast an enviable location close to Burj Khalifa and Dubai Mall, while lying the vibrant community of Business Bay.";
     const fullAboutText = aboutText;
 
     return (
@@ -149,7 +149,7 @@ export default function BuildingDetailsPage() {
                     <Breadcrumb items={breadcrumbItems} className="mb-4" />
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                         <div>
-                            <h1 className="text-4xl font-bold font-headline mb-1">Churchill Residency Tower</h1>
+                            <h1 className="text-4xl font-bold font-headline mb-1">MEGA Residency Tower</h1>
                             <div className="flex items-center gap-2 text-muted-foreground">
                                 <div className="flex text-yellow-500">
                                     {[...Array(4)].map((_, i) => <Star key={i} fill="currentColor" className="h-5 w-5" />)}
@@ -201,7 +201,7 @@ export default function BuildingDetailsPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2 space-y-12">
                             <section>
-                                <h2 className="text-2xl font-bold font-headline mb-4">About Churchill Residency Tower</h2>
+                                <h2 className="text-2xl font-bold font-headline mb-4">About MEGA Residency Tower</h2>
                                 <div className={cn("space-y-4 text-muted-foreground prose prose-lg max-w-none", !isExpanded && "max-h-48 overflow-hidden relative")}>
                                     <p>{aboutText}</p>
                                     {!isExpanded && <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-background to-transparent" />}
@@ -244,19 +244,19 @@ export default function BuildingDetailsPage() {
                              <section>
                                 <h2 className="text-2xl font-bold font-headline mb-4">Types of Apartments</h2>
                                 <div className="space-y-4 text-muted-foreground prose prose-lg max-w-none">
-                                    <p>Churchill Residency Tower has 250 1-bedroom apartments, 208 2-bedroom apartments, 12 3-bedroom apartments, and a few 4-bedroom apartments and penthouses. The apartments here are available for rent and sale, and the apartments for sale in Churchill Residency are freehold.</p>
-                                    <p>Apartments in Churchill Residency have en-suite bathrooms, built-in wardrobes, and balconies. Some 2 and 3-bedroom apartments have a maid’s room, and the 3-bedroom apartments have a powder room and dedicated laundry space.</p>
+                                    <p>MEGA Residency Tower has 250 1-bedroom apartments, 208 2-bedroom apartments, 12 3-bedroom apartments, and a few 4-bedroom apartments and penthouses. The apartments here are available for rent and sale, and the apartments for sale in MEGA Residency are freehold.</p>
+                                    <p>Apartments in MEGA Residency have en-suite bathrooms, built-in wardrobes, and balconies. Some 2 and 3-bedroom apartments have a maid’s room, and the 3-bedroom apartments have a powder room and dedicated laundry space.</p>
                                 </div>
                             </section>
                             
                              <section>
                                 <h2 className="text-2xl font-bold font-headline mb-4">Transportation</h2>
                                 <div className="space-y-4 text-muted-foreground prose prose-lg max-w-none">
-                                    <p>Transportation from Churchill Towers in Business Bay is very convenient thanks to their proximity to main roads like Sheikh Zayed Road and Al Khail Road. Moreover, they’re a few minutes away from the Business Bay Metro Station, and various bus stops are located nearby.</p>
+                                    <p>Transportation from MEGA Towers in Business Bay is very convenient thanks to their proximity to main roads like Sheikh Zayed Road and Al Khail Road. Moreover, they’re a few minutes away from the Business Bay Metro Station, and various bus stops are located nearby.</p>
                                     <h3 className="font-semibold !mt-6 !mb-2">Metro Stations:</h3>
                                     <p>The Business Bay metro station is about 5 minutes away by car.</p>
                                     <h3 className="font-semibold !mt-6 !mb-2">Bus stations:</h3>
-                                    <p>There are numerous bus stations near Churchill Towers such as XL Tower 1 and 2, U BORA Tower, Lillian Tower 1 and 2.</p>
+                                    <p>There are numerous bus stations near MEGA Towers such as XL Tower 1 and 2, U BORA Tower, Lillian Tower 1 and 2.</p>
                                 </div>
                             </section>
                             

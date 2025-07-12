@@ -779,7 +779,7 @@ export function Residences() {
           <Breadcrumb items={[]} className="mb-4" />
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in Churchill Residency Tower</h1>
+              <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in MEGA Residency Tower</h1>
               <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch gap-2">

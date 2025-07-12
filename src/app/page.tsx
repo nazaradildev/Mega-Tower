@@ -19,7 +19,7 @@ export default function Home() {
           <div className="absolute inset-0 z-0">
              <Image
               src="/mega tower1.png"
-              alt="Hero image of Churchill Towers in Business Bay, Dubai"
+              alt="Hero image of MEGA Towers in Business Bay, Dubai"
               data-ai-hint="dubai cityscape"
               fill
               className="object-contain"
@@ -40,7 +40,7 @@ export default function Home() {
             </div>
             <div className="text-center text-white">
               <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-7xl !leading-tight">
-                Live Exceptionally. <br /> Rent at Churchill Towers.
+                Live Exceptionally. <br /> Rent at MEGA Towers.
               </h1>
               <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-neutral-200">
                 Luxury 1, 2, 3, and 4 Bedroom Apartments in the Heart of Business Bay.
