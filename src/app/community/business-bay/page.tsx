@@ -42,6 +42,7 @@ import { Briefcase, Building, Sparkles, TrendingUp, HelpCircle, CheckCircle } fr
 import { cn } from '@/lib/utils';
 import { Breadcrumb } from '@/components/breadcrumb';
 import { useLanguage } from '@/context/language-context';
+import { Button } from '@/components/ui/button';
 
 const galleryImages = [
   { src: "https://placehold.co/800x600.png", alt: "Business Bay Overview", hint: "dubai business bay" },
@@ -102,15 +103,26 @@ const content = {
         { type: '3 Bedrooms', price: '216,000' },
         { type: '4 Bedrooms', price: '360,000' },
       ],
-      trendChartTitle: "Studio Apartment Price Trends",
-      trendData: [
-        { name: 'Jul 24', value: 75000 },
-        { name: 'Sep 24', value: 76000 },
-        { name: 'Nov 24', value: 78000 },
-        { name: 'Jan 25', value: 79000 },
-        { name: 'Mar 25', value: 81000 },
-        { name: 'May 25', value: 82000 },
-      ],
+      trendChartTitle: "Apartment Price Trends",
+      trendDataType: 'Studio',
+      trendData: {
+        'Studio': [
+          { name: 'Jul 24', value: 75000 }, { name: 'Sep 24', value: 76000 }, { name: 'Nov 24', value: 78000 },
+          { name: 'Jan 25', value: 79000 }, { name: 'Mar 25', value: 81000 }, { name: 'May 25', value: 82000 },
+        ],
+        '1 Bedroom': [
+          { name: 'Jul 24', value: 105000 }, { name: 'Sep 24', value: 106000 }, { name: 'Nov 24', value: 107500 },
+          { name: 'Jan 25', value: 109000 }, { name: 'Mar 25', value: 110000 }, { name: 'May 25', value: 112000 },
+        ],
+        '2 Bedrooms': [
+          { name: 'Jul 24', value: 145000 }, { name: 'Sep 24', value: 147000 }, { name: 'Nov 24', value: 148000 },
+          { name: 'Jan 25', value: 150000 }, { name: 'Mar 25', value: 152000 }, { name: 'May 25', value: 154000 },
+        ],
+        '3 Bedrooms': [
+          { name: 'Jul 24', value: 210000 }, { name: 'Sep 24', value: 212000 }, { name: 'Nov 24', value: 214000 },
+          { name: 'Jan 25', value: 216000 }, { name: 'Mar 25', value: 218000 }, { name: 'May 25', value: 220000 },
+        ],
+      },
     },
     faq: {
       title: "Frequently Asked Questions",
@@ -167,19 +179,30 @@ const content = {
       rentData: [
         { type: 'استوديو', price: '79,000' },
         { type: 'غرفة نوم واحدة', price: '109,000' },
-        { type: 'غرفتي نوم', price: '150,000' },
+        { type: 'غرفتا نوم', price: '150,000' },
         { type: '3 غرف نوم', price: '216,000' },
         { type: '4 غرف نوم', price: '360,000' },
       ],
-      trendChartTitle: "اتجاهات أسعار شقق الاستوديو",
-      trendData: [
-        { name: 'يوليو 24', value: 75000 },
-        { name: 'سبتمبر 24', value: 76000 },
-        { name: 'نوفمبر 24', value: 78000 },
-        { name: 'يناير 25', value: 79000 },
-        { name: 'مارس 25', value: 81000 },
-        { name: 'مايو 25', value: 82000 },
-      ],
+      trendChartTitle: "اتجاهات أسعار الشقق",
+      trendDataType: 'استوديو',
+      trendData: {
+        'استوديو': [
+            { name: 'يوليو 24', value: 75000 }, { name: 'سبتمبر 24', value: 76000 }, { name: 'نوفمبر 24', value: 78000 },
+            { name: 'يناير 25', value: 79000 }, { name: 'مارس 25', value: 81000 }, { name: 'مايو 25', value: 82000 },
+        ],
+        'غرفة نوم واحدة': [
+            { name: 'يوليو 24', value: 105000 }, { name: 'سبتمبر 24', value: 106000 }, { name: 'نوفمبر 24', value: 107500 },
+            { name: 'يناير 25', value: 109000 }, { name: 'مارس 25', value: 110000 }, { name: 'مايو 25', value: 112000 },
+        ],
+        'غرفتا نوم': [
+            { name: 'يوليو 24', value: 145000 }, { name: 'سبتمبر 24', value: 147000 }, { name: 'نوفمبر 24', value: 148000 },
+            { name: 'يناير 25', value: 150000 }, { name: 'مارس 25', value: 152000 }, { name: 'مايو 25', value: 154000 },
+        ],
+        '3 غرف نوم': [
+            { name: 'يوليو 24', value: 210000 }, { name: 'سبتمبر 24', value: 212000 }, { name: 'نوفمبر 24', value: 214000 },
+            { name: 'يناير 25', value: 216000 }, { name: 'مارس 25', value: 218000 }, { name: 'مايو 25', value: 220000 },
+        ],
+      },
     },
     faq: {
       title: "أسئلة شائعة",
@@ -203,6 +226,13 @@ export default function BusinessBayPage() {
   const { language, direction } = useLanguage();
   const t = content[language];
   
+  const rentDataTypes = t.priceInsights.rentData.map(d => d.type);
+  const [selectedRentType, setSelectedRentType] = React.useState(rentDataTypes[0]);
+
+  React.useEffect(() => {
+    setSelectedRentType(t.priceInsights.rentData.map(d => d.type)[0]);
+  }, [language, t.priceInsights.rentData]);
+  
   React.useEffect(() => {
       if (!api || !thumbApi) {
           return;
@@ -224,6 +254,8 @@ export default function BusinessBayPage() {
   const onThumbClick = (index: number) => {
       api?.scrollTo(index);
   };
+  
+  const chartData = t.priceInsights.trendData[selectedRentType as keyof typeof t.priceInsights.trendData] || [];
 
   return (
     <div className="bg-background" dir={direction}>
@@ -391,11 +423,24 @@ export default function BusinessBayPage() {
                 <Card className="mt-6">
                   <CardHeader>
                     <CardTitle>{t.priceInsights.trendChartTitle}</CardTitle>
+                    <div className="flex flex-wrap gap-2 pt-2">
+                        {rentDataTypes.slice(0, 4).map((type) => (
+                            <Button
+                                key={type}
+                                variant={selectedRentType === type ? 'default' : 'outline'}
+                                size="sm"
+                                onClick={() => setSelectedRentType(type)}
+                                className="rounded-full"
+                            >
+                                {type}
+                            </Button>
+                        ))}
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <div className="h-80 w-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={t.priceInsights.trendData}>
+                        <AreaChart data={chartData} key={selectedRentType}>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="name" />
                           <YAxis
