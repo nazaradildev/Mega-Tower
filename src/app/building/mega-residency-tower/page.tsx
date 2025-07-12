@@ -214,11 +214,11 @@ export default function BuildingDetailsPage() {
                     </div>
 
                     <div className="space-y-2 mb-8">
-                        <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
+                        <Carousel setApi={setApi} className="w-full mx-auto max-w-7xl" opts={{ loop: true }}>
                             <CarouselContent className="m-0">
                                 {galleryImages.map((image, index) => (
                                     <CarouselItem key={index} className="p-0">
-                                        <div className="aspect-[16/9] relative rounded-lg overflow-hidden">
+                                        <div className="aspect-[16/9] relative rounded-lg overflow-hidden w-full mx-auto max-h-[80vh]">
                                             <Image
                                                 src={image.src}
                                                 alt={image.alt}
@@ -244,7 +244,7 @@ export default function BuildingDetailsPage() {
                             <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10" />
                         </Carousel>
 
-                        <Carousel setApi={setThumbApi} opts={{ containScroll: 'keepSnaps', dragFree: true }} className="w-full">
+                        <Carousel setApi={setThumbApi} opts={{ containScroll: 'keepSnaps', dragFree: true }} className="w-full mx-auto max-w-7xl">
                             <CarouselContent className="m-0">
                                 {galleryImages.map((image, index) => (
                                     <CarouselItem key={index} onClick={() => onThumbClick(index)} className="pl-2 basis-1/4 md:basis-1/6 cursor-pointer">
