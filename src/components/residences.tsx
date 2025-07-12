@@ -804,7 +804,7 @@ export function Residences() {
 
 
         {/* --- Unit Listings --- */}
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
           {sortedUnits.length > 0 ? (
             sortedUnits.map((unit) => (
               <UnitCard key={unit.id} unit={unit} />
