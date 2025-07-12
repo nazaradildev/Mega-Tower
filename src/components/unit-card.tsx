@@ -42,10 +42,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import type { Unit } from '@/data/units';
+import { useToast } from "@/hooks/use-toast";
 
 function Icon360(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -76,12 +76,50 @@ export function UnitCard({ unit }: UnitCardProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [planView, setPlanView] = useState('2D');
+  const [isLiked, setIsLiked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { toast } = useToast();
+
   const autoplay = React.useRef(
     Autoplay(
       { delay: 4000, stopOnInteraction: true, playOnInit: false },
       (emblaRoot) => emblaRoot.parentElement
     )
   );
+  
+  const handleShare = () => {
+    if (navigator.share) {
+        navigator.share({
+            title: unit.title,
+            text: `Check out this property: ${unit.title}`,
+            url: window.location.origin + `/property/${unit.id}`,
+        }).catch(console.error);
+    } else {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Check out this property: ${unit.title} - ${window.location.origin}/property/${unit.id}`)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+  };
+  
+  const toggleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsLiked(!isLiked);
+    toast({
+      title: isLiked ? "Removed from favourites" : "Added to favourites!",
+      description: unit.title,
+    });
+  };
+  
+   const toggleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsBookmarked(!isBookmarked);
+    toast({
+      title: isBookmarked ? "Removed from saved" : "Property saved!",
+      description: "You can view your saved properties in your account.",
+    });
+  };
+
 
   useEffect(() => {
     if (!api) {
@@ -105,119 +143,132 @@ export function UnitCard({ unit }: UnitCardProps) {
   }, [api]);
 
   return (
-    <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col md:flex-row">
-      {/* Image Part */}
-      <div className="w-full md:w-1/2 relative group/image aspect-[4/3] flex-shrink-0">
-        <Carousel
-          setApi={setApi}
-          className="w-full h-full"
-          plugins={[autoplay.current]}
-          opts={{ loop: true }}
-        >
-          <CarouselContent className="m-0 h-full">
-            {unit.images.map((imgSrc, index) => (
-              <CarouselItem key={index} className="p-0">
-                <img
-                  src={imgSrc}
-                  alt={`${unit.title} - Image ${index + 1}`}
-                  data-ai-hint={unit.aiHint}
-                  className="w-full h-full object-cover"
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
-          <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
+    <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
+      <div className="md:grid md:grid-cols-2">
+        {/* Image Part */}
+        <div className="relative group/image aspect-[4/3] flex-shrink-0">
+          <Carousel
+            setApi={setApi}
+            className="w-full h-full"
+            plugins={[autoplay.current]}
+            opts={{ loop: true }}
+          >
+            <CarouselContent className="m-0 h-full">
+              {unit.images.map((imgSrc, index) => (
+                <CarouselItem key={index} className="p-0">
+                   <Link href={`/property/${unit.id}`} className="block w-full h-full" aria-label={`View details for ${unit.title}`}>
+                    <img
+                        src={imgSrc}
+                        alt={`${unit.title} - Image ${index + 1}`}
+                        data-ai-hint={unit.aiHint}
+                        className="w-full h-full object-cover"
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                    />
+                   </Link>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
+            <CarouselNext className="absolute right-3 h-8 w-8 bg-white/80 hover:bg-white text-gray-800 opacity-0 group-hover/image:opacity-100 transition-opacity z-10" />
 
-          <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10">
-            {unit.images.map((_, index) => (
-              <button
-                key={index}
-                onClick={(e) => {
-                  api?.scrollTo(index);
-                }}
-                className="p-1"
-                aria-label={`Go to image ${index + 1}`}
-              >
-                <div
-                  className={cn(
-                    'w-2 h-2 rounded-full border-2 transition-all',
-                    currentImageIndex === index
-                      ? 'bg-primary border-primary'
-                      : 'border-white/80 bg-black/30'
-                  )}
-                ></div>
-              </button>
-            ))}
-          </div>
+            <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-2 z-10">
+              {unit.images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={(e) => {
+                    api?.scrollTo(index);
+                  }}
+                  className="p-1"
+                  aria-label={`Go to image ${index + 1}`}
+                >
+                  <div
+                    className={cn(
+                      'w-2 h-2 rounded-full border-2 transition-all',
+                      currentImageIndex === index
+                        ? 'bg-primary border-primary'
+                        : 'border-white/80 bg-black/30'
+                    )}
+                  ></div>
+                </button>
+              ))}
+            </div>
 
-          <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
-            <Camera className="w-4 h-4" />
-            <span>{unit.images.length}</span>
-          </div>
-        </Carousel>
-      </div>
+            <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold py-1 px-2 rounded-md flex items-center gap-1.5 z-10">
+              <Camera className="w-4 h-4" />
+              <span>{unit.images.length}</span>
+            </div>
+             <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-black/50 hover:bg-black/70 text-white" onClick={handleShare}>
+                    <Share2 className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-black/50 hover:bg-black/70 text-white" onClick={toggleBookmark}>
+                    <Bookmark className={cn("w-5 h-5 transition-colors", isBookmarked && "fill-current text-amber-400")} />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-black/50 hover:bg-black/70 text-white" onClick={toggleLike}>
+                    <Heart className={cn("w-5 h-5 transition-colors", isLiked && "fill-current text-red-500")} />
+                </Button>
+            </div>
+          </Carousel>
+        </div>
 
-      {/* Content Part */}
-      <div className="w-full md:w-1/2 flex flex-col relative">
-        <Link
-          href={`/property/${unit.id}`}
-          className="absolute inset-0 z-0"
-          aria-label={`View details for ${unit.title}`}
-        />
-        {/* Main Content */}
-        <div className="p-4 flex flex-col flex-grow">
-          <span className="text-sm text-muted-foreground">
-            {unit.propertyType}
-          </span>
-          <p className="text-2xl font-bold text-foreground my-1">
-            AED {unit.rent.toLocaleString()}{' '}
-            <span className="text-base font-normal text-muted-foreground">
-              / year
+        {/* Main Content Part */}
+        <div className="p-4 flex flex-col relative">
+           <Link
+                href={`/property/${unit.id}`}
+                className="absolute inset-0 z-0"
+                aria-label={`View details for ${unit.title}`}
+            />
+          <div className="flex-grow">
+            <span className="text-sm text-muted-foreground">
+              {unit.propertyType}
             </span>
-          </p>
-          <span className="text-lg font-semibold text-foreground block truncate">
-            {unit.title}
-          </span>
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
-            <Calendar className="h-4 w-4" />
-            <span>{unit.status}</span>
-          </div>
-
-          <div className="space-y-3 text-sm mt-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <MapPin className="w-4 h-4 flex-shrink-0" />
-              <span>
-                MEGA Residency Tower, Business Bay
+            <p className="text-2xl font-bold text-foreground my-1">
+              AED {unit.rent.toLocaleString()}{' '}
+              <span className="text-base font-normal text-muted-foreground">
+                / year
               </span>
+            </p>
+            <span className="text-lg font-semibold text-foreground block truncate">
+              {unit.title}
+            </span>
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
+              <Calendar className="h-4 w-4" />
+              <span>{unit.status}</span>
             </div>
-            <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Bed className="w-4 h-4" />
-                <span>{unit.beds} Beds</span>
+
+            <div className="space-y-3 text-sm mt-4">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <MapPin className="w-4 h-4 flex-shrink-0" />
+                <span>
+                  MEGA Residency Tower, Business Bay
+                </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Bath className="w-4 h-4" />
-                <span>{unit.baths} Baths</span>
+              <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <Bed className="w-4 h-4" />
+                  <span>{unit.beds} Beds</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Bath className="w-4 h-4" />
+                  <span>{unit.baths} Baths</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Ruler className="w-4 h-4" />
+                  <span>{unit.area.toLocaleString()} sqft</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Ruler className="w-4 h-4" />
-                <span>{unit.area.toLocaleString()} sqft</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Armchair className="w-4 h-4" />
-                <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <View className="w-4 h-4" />
-                <span>{unit.view}</span>
+              <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <Armchair className="w-4 h-4" />
+                  <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <View className="w-4 h-4" />
+                  <span>{unit.view}</span>
+                </div>
               </div>
             </div>
           </div>
-
           <div className="relative z-10 mt-auto pt-4 flex items-center flex-wrap justify-start gap-2">
             <Dialog>
               <DialogTrigger asChild>
@@ -326,88 +377,62 @@ export function UnitCard({ unit }: UnitCardProps) {
             </Dialog>
           </div>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="relative z-10 p-4 border-t bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Avatar className="h-10 w-10">
-              <AvatarImage
-                src="https://placehold.co/40x40.png"
-                data-ai-hint="agent portrait"
-                alt="Agent"
-              />
-              <AvatarFallback>AE</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-xs text-muted-foreground">Marketing by</p>
-              <p className="font-semibold text-foreground text-sm">
-                Apex Estates
-              </p>
-            </div>
+      {/* Footer / Contact Part */}
+      <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <Avatar className="h-10 w-10">
+            <AvatarImage
+              src="https://placehold.co/40x40.png"
+              data-ai-hint="agent portrait"
+              alt="Agent"
+            />
+            <AvatarFallback>AE</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-xs text-muted-foreground">Marketing by</p>
+            <p className="font-semibold text-foreground text-sm">
+              Apex Estates
+            </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto justify-end gap-2">
-            <div className="w-full sm:w-auto grid grid-cols-3 gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-md justify-center"
-              >
-                <Phone className="mr-1.5 h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Call</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-md justify-center"
-              >
-                <Mail className="mr-1.5 h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Email</span>
-              </Button>
-              <Button
-                size="sm"
-                className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                  className="mr-1.5 h-4 w-4"
-                >
-                  <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z" />
-                </svg>
-                <span className="hidden sm:inline">WhatsApp</span>
-              </Button>
-            </div>
-            <div className="flex items-center justify-center gap-0">
-              <Separator
-                orientation="vertical"
-                className="h-6 mx-1 bg-border hidden sm:block"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full"
-              >
-                <Share2 className="w-5 h-5 text-muted-foreground" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full"
-              >
-                <Bookmark className="w-5 h-5 text-muted-foreground" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full"
-              >
-                <Heart className="w-5 h-5 text-muted-foreground" />
-              </Button>
-            </div>
-          </div>
+        </div>
+        <div className="flex items-center justify-start sm:justify-end gap-2 w-full flex-wrap">
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-md justify-center flex-grow sm:flex-grow-0"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = 'tel:12345'; }}
+          >
+            <Phone className="mr-1.5 h-3.5 w-3.5" />
+            <span>Call</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-md justify-center flex-grow sm:flex-grow-0"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = 'mailto:test@example.com'; }}
+          >
+            <Mail className="mr-1.5 h-3.5 w-3.5" />
+            <span>Email</span>
+          </Button>
+          <Button
+            size="sm"
+            className="bg-[#25D366] text-white hover:bg-[#1EBE56] border-[#25D366] rounded-md justify-center flex-grow sm:flex-grow-0"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleShare() }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+              className="mr-1.5 h-4 w-4"
+            >
+              <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z" />
+            </svg>
+            <span>WhatsApp</span>
+          </Button>
         </div>
       </div>
     </Card>
