@@ -25,35 +25,42 @@ export function StickyNav() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { language } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
-  const hideTimeout = useRef<NodeJS.Timeout | null>(null);
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const heroSectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
+    // Find the hero section once on mount
     heroSectionRef.current = document.querySelector('main > section:first-of-type');
-    
+
     const handleScroll = () => {
-      if (hideTimeout.current) {
-        clearTimeout(hideTimeout.current);
+      // Clear any existing timeout to prevent hiding while scrolling
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
       }
-      
-      const heroBottom = heroSectionRef.current ? heroSectionRef.current.offsetTop + heroSectionRef.current.offsetHeight : 0;
-      
+
+      const heroBottom = heroSectionRef.current
+        ? heroSectionRef.current.offsetTop + heroSectionRef.current.offsetHeight
+        : 0;
+
       if (window.scrollY > heroBottom) {
         setIsVisible(true);
-        hideTimeout.current = setTimeout(() => {
+
+        // Set a new timeout to hide the nav after 2 seconds of inactivity
+        hideTimeoutRef.current = setTimeout(() => {
           setIsVisible(false);
-        }, 2000); // Hide after 2 seconds of inactivity
+        }, 2000);
       } else {
+        // Hide immediately if we scroll back to the top
         setIsVisible(false);
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (hideTimeout.current) {
-        clearTimeout(hideTimeout.current);
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
       }
     };
   }, []);
@@ -95,8 +102,8 @@ export function StickyNav() {
         isVisible ? 'transform-none border-b' : '-translate-y-full border-b-0'
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 h-14 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <ul className="flex items-center justify-start md:justify-center h-full gap-4 md:gap-8 [&::-webkit-scrollbar]:hidden">
+      <div className="container mx-auto px-4 md:px-6 h-14 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <ul className="flex items-center justify-start md:justify-center h-full gap-4 md:gap-8">
           {navLinks.map((link) => (
             <li key={link.id}>
               <button
