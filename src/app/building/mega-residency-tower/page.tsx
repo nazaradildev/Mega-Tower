@@ -279,7 +279,7 @@ export default function BuildingDetailsPage() {
                                     <div>
                                       <h3 className="font-semibold mb-3">Lifestyle Amenities</h3>
                                       <ul className="space-y-2 text-muted-foreground">
-                                        {['Rooftop Infinity Pool', 'State-of-the-Art Fitness Center', 'Luxury Spa, Sauna & Jacuzzi', 'Championship Tennis & Basketball Courts', 'Landscaped Gardens & BBQ Area', 'Secure Children’s Playground', 'Exclusive Residents Lounge'].map(item => (
+                                        {['Infinity Pool', 'State-of-the-Art Fitness Center', 'Luxury Spa, Sauna & Jacuzzi', 'Championship Tennis & Basketball Courts', 'Landscaped Gardens & BBQ Area', 'Secure Children’s Playground', 'Exclusive Residents Lounge'].map(item => (
                                           <li key={item} className="flex items-start gap-3">
                                             <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                                             <span>{item}</span>
