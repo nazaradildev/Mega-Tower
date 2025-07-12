@@ -77,13 +77,20 @@ export function UnitCard({ unit }: UnitCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [planView, setPlanView] = useState('2D');
   const autoplay = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })
+    Autoplay(
+      { delay: 4000, stopOnInteraction: true, playOnInit: false },
+      (emblaRoot) => emblaRoot.parentElement
+    )
   );
 
   useEffect(() => {
     if (!api) {
       return;
     }
+    
+    const startAutoplayTimeout = setTimeout(() => {
+      autoplay.current.play();
+    }, 3000);
 
     setCurrentImageIndex(api.selectedScrollSnap());
     const onSelect = () => {
@@ -92,6 +99,7 @@ export function UnitCard({ unit }: UnitCardProps) {
     api.on('select', onSelect);
 
     return () => {
+      clearTimeout(startAutoplayTimeout);
       api.off('select', onSelect);
     };
   }, [api]);
