@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, Settings } from 'lucide-react';
+import { Menu, Settings, Heart, User, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useTheme } from "next-themes";
@@ -27,10 +27,9 @@ import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/language-context';
 
 const navLinks = [
-  { href: '#residences', label: 'Residences' },
-  { href: '#amenities', label: 'Amenities' },
-  { href: '#location', label: 'Location' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/', label: 'Search', icon: Search },
+  { href: '/saved', label: 'Saved', icon: Heart },
+  { href: '/account', label: 'Account', icon: User },
 ];
 
 export function Header() {
@@ -51,8 +50,9 @@ export function Header() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-2"
               >
+                <link.icon className="h-4 w-4" />
                 {link.label}
               </Link>
             ))}
@@ -121,9 +121,10 @@ export function Header() {
                       <Link
                           key={link.label}
                           href={link.href}
-                          className="text-xl font-medium"
+                          className="text-xl font-medium flex items-center gap-3"
                           onClick={() => setIsOpen(false)}
                       >
+                          <link.icon className="h-5 w-5" />
                           {link.label}
                       </Link>
                       ))}
