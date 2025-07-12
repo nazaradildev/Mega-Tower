@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { useLanguage } from '@/context/language-context';
 
 const navLinks = [
   { href: '#residences', label: 'Residences' },
@@ -35,7 +36,7 @@ const navLinks = [
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [language, setLanguage] = useState("english");
+  const { language, setLanguage } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -90,9 +91,9 @@ export function Header() {
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
-                                    <DropdownMenuRadioItem value="english">English</DropdownMenuRadioItem>
-                                    <DropdownMenuRadioItem value="arabic">العربية</DropdownMenuRadioItem>
+                                <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as 'en' | 'ar')}>
+                                    <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="ar">العربية</DropdownMenuRadioItem>
                                 </DropdownMenuRadioGroup>
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
@@ -141,13 +142,13 @@ export function Header() {
                           <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                   <Button variant="outline" className="rounded-lg">
-                                      {language === 'english' ? 'English' : 'العربية'}
+                                      {language === 'en' ? 'English' : 'العربية'}
                                   </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                  <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
-                                      <DropdownMenuRadioItem value="english">English</DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="arabic">العربية</DropdownMenuRadioItem>
+                                  <DropdownMenuRadioGroup value={language} onValueChange={(value) => setLanguage(value as 'en' | 'ar')}>
+                                      <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
+                                      <DropdownMenuRadioItem value="ar">العربية</DropdownMenuRadioItem>
                                   </DropdownMenuRadioGroup>
                               </DropdownMenuContent>
                           </DropdownMenu>
