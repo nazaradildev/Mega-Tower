@@ -76,8 +76,8 @@ export function StickyNav() {
         isVisible ? 'h-14 border-b' : 'h-0 border-b-0 overflow-hidden'
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 h-full">
-        <ul className="flex items-center justify-center md:justify-start h-full gap-4 md:gap-8 overflow-x-auto">
+      <div className="container mx-auto px-4 md:px-6 h-full overflow-x-auto">
+        <ul className="flex items-center justify-start h-full gap-4 md:gap-8">
           {navLinks.map((link) => (
             <li key={link.id}>
               <button
