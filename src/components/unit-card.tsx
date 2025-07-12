@@ -144,9 +144,9 @@ export function UnitCard({ unit }: UnitCardProps) {
 
   return (
     <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
-      <div className="md:grid md:grid-cols-12">
+      <div className="lg:grid lg:grid-cols-12">
         {/* Image Part */}
-        <div className="relative group/image aspect-[4/3] flex-shrink-0 md:col-span-5">
+        <div className="relative group/image aspect-[4/3] flex-shrink-0 lg:col-span-5">
           <Carousel
             setApi={setApi}
             className="w-full h-full"
@@ -197,22 +197,11 @@ export function UnitCard({ unit }: UnitCardProps) {
               <Camera className="w-4 h-4" />
               <span>{unit.images.length}</span>
             </div>
-             <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
-                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-black/50 hover:bg-black/70 text-white" onClick={handleShare}>
-                    <Share2 className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-black/50 hover:bg-black/70 text-white" onClick={toggleBookmark}>
-                    <Bookmark className={cn("w-5 h-5 transition-colors", isBookmarked && "fill-current text-amber-400")} />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-black/50 hover:bg-black/70 text-white" onClick={toggleLike}>
-                    <Heart className={cn("w-5 h-5 transition-colors", isLiked && "fill-current text-red-500")} />
-                </Button>
-            </div>
           </Carousel>
         </div>
 
         {/* Main Content Part */}
-        <div className="p-4 flex flex-col relative md:col-span-7">
+        <div className="p-4 flex flex-col relative lg:col-span-7">
            <Link
                 href={`/property/${unit.id}`}
                 className="absolute inset-0 z-0"
@@ -380,7 +369,7 @@ export function UnitCard({ unit }: UnitCardProps) {
       </div>
 
       {/* Footer / Contact Part */}
-      <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3 flex-shrink-0">
           <Avatar className="h-10 w-10">
             <AvatarImage
@@ -433,6 +422,17 @@ export function UnitCard({ unit }: UnitCardProps) {
             </svg>
             <span>WhatsApp</span>
           </Button>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary" onClick={handleShare}>
+                <Share2 className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-amber-500" onClick={toggleBookmark}>
+                <Bookmark className={cn("w-5 h-5 transition-colors", isBookmarked && "fill-current text-amber-500")} />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-red-500" onClick={toggleLike}>
+                <Heart className={cn("w-5 h-5 transition-colors", isLiked && "fill-current text-red-500")} />
+            </Button>
+          </div>
         </div>
       </div>
     </Card>
