@@ -783,16 +783,6 @@ export function Residences() {
               <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch gap-2">
-              <div className="flex items-center gap-2">
-                <Button variant="outline" className="rounded-lg justify-center flex-1">
-                  <MapPin className="mr-2 h-4 w-4" />
-                  Map view
-                </Button>
-                <Button variant="outline" className="rounded-lg justify-center flex-1">
-                  <Eye className="mr-2 h-4 w-4" />
-                  Insights
-                </Button>
-              </div>
                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="rounded-lg justify-center data-[state=open]:bg-accent w-full sm:w-auto">
