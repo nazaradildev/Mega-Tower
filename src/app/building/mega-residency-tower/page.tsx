@@ -32,11 +32,16 @@ import {
   School,
   Stethoscope,
   Landmark,
-  Quote
+  Quote,
+  Expand,
+  X,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb } from '@/components/breadcrumb';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
 
 const galleryImages = [
   { src: "/mega tower1.png", alt: "Building Exterior", hint: "dubai cityscape" },
@@ -149,6 +154,7 @@ export default function BuildingDetailsPage() {
     const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [isExpanded, setIsExpanded] = React.useState(false);
+    const [fullscreenImageIndex, setFullscreenImageIndex] = React.useState<number | null>(null);
 
     React.useEffect(() => {
         if (!api || !thumbApi) return;
@@ -164,6 +170,27 @@ export default function BuildingDetailsPage() {
     const onThumbClick = (index: number) => {
         api?.scrollTo(index);
     };
+    
+    const openFullscreen = (index: number) => {
+      setFullscreenImageIndex(index);
+    };
+
+    const closeFullscreen = () => {
+      setFullscreenImageIndex(null);
+    };
+
+    const nextImage = () => {
+      if (fullscreenImageIndex !== null) {
+        setFullscreenImageIndex((prev) => (prev! + 1) % galleryImages.length);
+      }
+    };
+
+    const prevImage = () => {
+      if (fullscreenImageIndex !== null) {
+        setFullscreenImageIndex((prev) => (prev! - 1 + galleryImages.length) % galleryImages.length);
+      }
+    };
+
 
     const aboutText = "Discover a new standard of elevated living at MEGA Residency Tower, an architectural masterpiece nestled in the vibrant heart of Business Bay. Soaring 57 stories high, this iconic residence offers an exclusive collection of 1, 2, 3, and 4-bedroom apartments and penthouses, each meticulously crafted to perfection. Wake up to breathtaking, panoramic views of the Dubai Canal and the majestic Burj Khalifa. Every residence is a sanctuary of style, featuring high-end finishes, expansive living spaces, and floor-to-ceiling windows that bathe your home in natural light. Here, luxury is not just an option—it's the standard.";
 
@@ -200,6 +227,15 @@ export default function BuildingDetailsPage() {
                                                 className="object-cover"
                                                 priority={index === 0}
                                             />
+                                            <Button
+                                              variant="ghost"
+                                              size="icon"
+                                              className="absolute top-4 right-4 z-10 md:hidden bg-black/50 hover:bg-black/70 text-white rounded-full"
+                                              aria-label="View fullscreen"
+                                              onClick={() => openFullscreen(index)}
+                                            >
+                                              <Expand className="h-5 w-5" />
+                                            </Button>
                                         </div>
                                     </CarouselItem>
                                 ))}
@@ -362,6 +398,37 @@ export default function BuildingDetailsPage() {
                     </div>
                 </div>
             </main>
+            
+            <Dialog open={fullscreenImageIndex !== null} onOpenChange={(open) => !open && closeFullscreen()}>
+              <DialogContent className="p-0 w-screen h-screen max-w-none bg-black/80 border-0 flex items-center justify-center outline-none ring-0">
+                <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+                        <X className="h-6 w-6" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
+                
+                <Button variant="ghost" size="icon" onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+                    <ChevronLeft className="h-6 w-6" />
+                </Button>
+
+                <Button variant="ghost" size="icon" onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 z-50 text-white hover:text-white bg-black/50 hover:bg-black/70 rounded-full h-10 w-10">
+                    <ChevronRight className="h-6 w-6" />
+                </Button>
+
+                {fullscreenImageIndex !== null && (
+                  <div className="relative w-full h-full flex items-center justify-center p-8">
+                    <Image
+                      src={galleryImages[fullscreenImageIndex].src}
+                      alt={galleryImages[fullscreenImageIndex].alt}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
             <Footer />
         </div>
     );
