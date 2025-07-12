@@ -27,7 +27,7 @@ import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/language-context';
 
 const navLinks = [
-  { href: '/', label: 'Search', icon: Search },
+  { href: '/#residences', label: 'Search', icon: Search },
   { href: '/saved', label: 'Saved', icon: Heart },
   { href: '/account', label: 'Account', icon: User },
 ];
