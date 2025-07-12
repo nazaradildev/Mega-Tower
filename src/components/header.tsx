@@ -41,10 +41,12 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-zinc-900/80">
       <div className="container flex h-16 max-w-7xl items-center justify-between">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
+          <div className="bg-foreground text-background p-2 rounded-md flex items-center justify-center">
+            <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
+          </div>
         </Link>
         
         <div className="flex items-center">
@@ -129,7 +131,9 @@ export function Header() {
               <SheetContent side="right" className="w-[300px] p-0 flex flex-col">
                   <div className="p-6 border-b">
                       <Link href="/" onClick={() => setIsOpen(false)}>
-                          <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
+                          <div className="bg-foreground text-background p-2 rounded-md flex items-center justify-center w-fit">
+                             <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority />
+                          </div>
                       </Link>
                   </div>
                   <nav className="flex-1 flex flex-col gap-4 p-6">
