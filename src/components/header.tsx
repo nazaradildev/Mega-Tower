@@ -97,14 +97,14 @@ export function Header() {
                         </DropdownMenuSub>
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <Button asChild className="bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">
-                    <Link href="#contact">Book a Viewing</Link>
-                </Button>
                  <Button asChild variant="outline" className="rounded-lg">
                     <Link href="#">
                         <LogIn className="mr-2 h-4 w-4" />
                         Login
                     </Link>
+                </Button>
+                <Button asChild className="bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">
+                    <Link href="#contact">Book a Viewing</Link>
                 </Button>
             </div>
           </div>
