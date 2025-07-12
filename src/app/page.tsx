@@ -11,8 +11,37 @@ import { Contact } from '@/components/contact';
 import { ImmersiveExperience } from '@/components/immersive-experience';
 import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
 import { Footer } from '@/components/footer';
+import { useLanguage } from '@/context/language-context';
+
+const content = {
+  en: {
+    title: (
+      <>
+        Live Exceptionally.
+        <br />
+        Rent at MEGA Towers.
+      </>
+    ),
+    subtitle: 'Discover luxury apartments where elegance meets comfort in the heart of Business Bay.',
+    button: 'Explore Residences',
+  },
+  ar: {
+    title: (
+      <>
+        عيش استثنائي.
+        <br />
+        استأجر في أبراج ميغا.
+      </>
+    ),
+    subtitle: 'اكتشف شققاً فاخرة حيث تجتمع الأناقة والراحة في قلب الخليج التجاري.',
+    button: 'اكتشف الوحدات السكنية',
+  },
+};
 
 export default function Home() {
+  const { language, direction } = useLanguage();
+  const t = content[language];
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
@@ -33,16 +62,16 @@ export default function Home() {
               </div>
 
               <div className="relative z-10 h-full w-full flex flex-col items-center justify-center p-4">
-                <div className="text-center text-white">
-                  <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-7xl !leading-tight" dir="rtl">
-                    عيش استثنائي. <br /> استأجر في أبراج ميغا.
+                <div className="text-center text-white" dir={direction}>
+                  <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-7xl !leading-tight">
+                    {t.title}
                   </h1>
-                  <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-neutral-200" dir="rtl">
-                    شقق فاخرة بغرفة نوم واحدة، غرفتين، ثلاث، وأربع غرف نوم في قلب الخليج التجاري.
+                  <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-neutral-200">
+                    {t.subtitle}
                   </p>
                   <div className="mt-8">
                     <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
-                      <a href="#residences">Explore Residences</a>
+                      <a href="#residences">{t.button}</a>
                     </Button>
                   </div>
                 </div>
