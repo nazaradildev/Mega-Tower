@@ -45,6 +45,7 @@ import { useLanguage } from '@/context/language-context';
 import { Button } from '@/components/ui/button';
 
 const galleryImages = [
+  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no0yA7u_I7LnFzqEjYWD-ejKyaTiAX9x8tPUhJiMM3Alult-tXPIPZ75iFP7dWbAvY0cSVvIRbZouETUbFu3HeLOW-tOm_3UMR3pI41vT-AARn83MrnMDvAe19BUem8XT87qyz4jg=s0", alt: "Business Bay Canal", hint: "dubai canal boats" },
   { src: "https://placehold.co/800x600.png", alt: "Business Bay Overview", hint: "dubai business bay" },
   { src: "https://placehold.co/800x600.png", alt: "Dubai Canal", hint: "dubai canal" },
   { src: "https://placehold.co/800x600.png", alt: "Business Bay Skyline", hint: "dubai skyline" },
