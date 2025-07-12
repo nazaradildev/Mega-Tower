@@ -82,25 +82,47 @@ export default function Home() {
           </div>
         </section>
 
-        <Residences />
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8">
+               <Residences />
+            </div>
+            <aside className="lg:col-span-4 lg:sticky lg:top-32 self-start hidden lg:block">
+              <div className="space-y-6">
+                 <div className="text-left">
+                    <h2 className="text-2xl font-bold font-headline">Deeper Insights</h2>
+                    <p className="text-muted-foreground mt-1">
+                      Explore detailed information about the property and the surrounding community.
+                    </p>
+                  </div>
+                  <ResidentialInsightCard />
+                  <CommunityInsightCard />
+              </div>
+            </aside>
+          </div>
+        </div>
+
         <Amenities />
         <ImmersiveExperience />
         <Location />
 
-        <section id="insights" className="w-full py-16 md:py-24 bg-background">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline">Deeper Insights</h2>
-              <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-lg">
-                Explore detailed information about the property and the surrounding community.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              <ResidentialInsightCard />
-              <CommunityInsightCard />
-            </div>
-          </div>
-        </section>
+        <div className="lg:hidden">
+            <section id="insights" className="w-full py-16 md:py-24 bg-background">
+              <div className="container mx-auto px-4 md:px-6">
+                <div className="text-center mb-12 md:mb-16">
+                  <h2 className="text-3xl md:text-4xl font-bold font-headline">Deeper Insights</h2>
+                  <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-lg">
+                    Explore detailed information about the property and the surrounding community.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                  <ResidentialInsightCard />
+                  <CommunityInsightCard />
+                </div>
+              </div>
+            </section>
+        </div>
+
 
         <Contact />
       </main>

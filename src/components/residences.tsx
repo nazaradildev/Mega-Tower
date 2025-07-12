@@ -700,16 +700,16 @@ export function Residences() {
     const filterButtons: FilterKey[] = ['Rent', 'Apartment', 'Beds & Baths', 'Price'];
     
     return (
-    <section id="residences" className="w-full py-16 md:py-24 bg-secondary/30">
-      <div className="container mx-auto px-1 sm:px-2 md:px-6">
-        <div className="text-center mb-12">
+    <section id="residences" className="w-full py-16 md:py-24 bg-transparent">
+      <div className="space-y-8">
+        <div className="text-center lg:text-left">
           <h2 className="text-3xl md:text-4xl font-bold font-headline">Find Your Perfect Home</h2>
-          <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
+          <p className="text-muted-foreground mt-2 max-w-2xl mx-auto lg:mx-0">
             Explore our collection of meticulously designed apartments, each offering a unique blend of luxury and comfort.
           </p>
         </div>
 
-        <div className="bg-background rounded-lg shadow-sm p-3 border mb-8 space-y-4">
+        <div className="bg-background rounded-lg shadow-sm p-3 border space-y-4">
             <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex flex-col sm:flex-row items-center gap-3">
                 <div className="relative flex-grow w-full">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
@@ -775,7 +775,7 @@ export function Residences() {
         </div>
 
         {/* --- Results Header --- */}
-        <div className="mb-8">
+        <div>
           <Breadcrumb items={[]} className="mb-4" />
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
@@ -804,7 +804,7 @@ export function Residences() {
 
 
         {/* --- Unit Listings --- */}
-        <div className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 gap-6">
           {sortedUnits.length > 0 ? (
             sortedUnits.map((unit) => (
               <UnitCard key={unit.id} unit={unit} />
