@@ -25,34 +25,46 @@ export function StickyNav() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { language } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
-  const lastScrollY = useRef(0);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const heroSectionHeight = useRef(0);
 
   useEffect(() => {
-    // We only need to calculate this once on mount
-    heroSectionHeight.current = window.innerHeight * 0.8;
+    // Calculate hero section height once on mount
+    const heroSection = document.querySelector('section');
+    if (heroSection) {
+      heroSectionHeight.current = heroSection.offsetHeight * 0.9;
+    } else {
+      heroSectionHeight.current = window.innerHeight * 0.8;
+    }
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
-      if (currentScrollY <= heroSectionHeight.current) {
-        setIsVisible(false);
-        return;
-      }
-      
-      if (currentScrollY > lastScrollY.current) {
-        // Scrolling down
-        setIsVisible(true);
-      } else {
-        // Scrolling up
-        setIsVisible(false);
+
+      // Clear the previous timeout if it exists
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
       }
 
-      lastScrollY.current = currentScrollY;
+      // Show the nav if scrolling and past the hero section
+      if (currentScrollY > heroSectionHeight.current) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+      
+      // Set a timeout to hide the nav when scrolling stops
+      scrollTimeout.current = setTimeout(() => {
+        setIsVisible(false);
+      }, 250); // Hide after 250ms of inactivity
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
   }, []);
 
 
