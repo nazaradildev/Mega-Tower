@@ -48,80 +48,78 @@ export default function Home() {
       <Header />
       <StickyNav />
       
-      <div className="flex-grow">
-        <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center">
-            <div className="absolute inset-0 z-0">
-                <Image
-                    src="/mega tower1.png"
-                    alt="Hero image of MEGA Towers in Business Bay, Dubai"
-                    data-ai-hint="dubai cityscape"
-                    fill
-                    sizes="100vw"
-                    className="object-cover"
-                    priority
-                />
-                <div className="absolute inset-0 bg-black/50" />
-            </div>
-            <div className="relative z-10 text-center text-white p-4" dir={direction}>
-                <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-7xl !leading-tight">
-                {t.title}
-                </h1>
-                <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-neutral-200">
-                {t.subtitle}
-                </p>
-                <div className="mt-8">
-                <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
-                    <a href="#residences">{t.button}</a>
-                </Button>
-                </div>
-            </div>
-        </section>
-
-        <main className="relative z-20 flex-1 bg-background">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-              <div className="lg:col-span-8">
-                 <Residences />
-              </div>
-              <aside className="lg:col-span-4 lg:sticky lg:top-32 self-start hidden lg:block">
-                <div className="space-y-6">
-                   <div className="text-left">
-                      <h2 className="text-2xl font-bold font-headline">Deeper Insights</h2>
-                      <p className="text-muted-foreground mt-1">
-                        Explore detailed information about the property and the surrounding community.
-                      </p>
-                    </div>
-                    <ResidentialInsightCard />
-                    <CommunityInsightCard />
-                </div>
-              </aside>
-            </div>
+      <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center -mt-16">
+          <div className="absolute inset-0 z-0">
+              <Image
+                  src="/mega tower1.png"
+                  alt="Hero image of MEGA Towers in Business Bay, Dubai"
+                  data-ai-hint="dubai cityscape"
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
+              />
+              <div className="absolute inset-0 bg-black/50" />
           </div>
+          <div className="relative z-10 text-center text-white p-4" dir={direction}>
+              <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-7xl !leading-tight">
+              {t.title}
+              </h1>
+              <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-neutral-200">
+              {t.subtitle}
+              </p>
+              <div className="mt-8">
+              <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
+                  <a href="#residences">{t.button}</a>
+              </Button>
+              </div>
+          </div>
+      </section>
 
-          <Amenities />
-          <ImmersiveExperience />
-          <Location />
-
-          <div className="lg:hidden">
-              <section id="insights" className="w-full py-16 md:py-24 bg-background">
-                <div className="container mx-auto px-4 md:px-6">
-                  <div className="text-center mb-12 md:mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold font-headline">Deeper Insights</h2>
-                    <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-lg">
+      <main className="relative z-20 flex-1 bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8">
+                <Residences />
+            </div>
+            <aside className="lg:col-span-4 lg:sticky lg:top-32 self-start hidden lg:block">
+              <div className="space-y-6">
+                  <div className="text-left">
+                    <h2 className="text-2xl font-bold font-headline">Deeper Insights</h2>
+                    <p className="text-muted-foreground mt-1">
                       Explore detailed information about the property and the surrounding community.
                     </p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                    <ResidentialInsightCard />
-                    <CommunityInsightCard />
-                  </div>
-                </div>
-              </section>
+                  <ResidentialInsightCard />
+                  <CommunityInsightCard />
+              </div>
+            </aside>
           </div>
+        </div>
 
-          <Contact />
-        </main>
-      </div>
+        <Amenities />
+        <ImmersiveExperience />
+        <Location />
+
+        <div className="lg:hidden">
+            <section id="insights" className="w-full py-16 md:py-24 bg-background">
+              <div className="container mx-auto px-4 md:px-6">
+                <div className="text-center mb-12 md:mb-16">
+                  <h2 className="text-3xl md:text-4xl font-bold font-headline">Deeper Insights</h2>
+                  <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-lg">
+                    Explore detailed information about the property and the surrounding community.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                  <ResidentialInsightCard />
+                  <CommunityInsightCard />
+                </div>
+              </div>
+            </section>
+        </div>
+
+        <Contact />
+      </main>
       <Footer />
     </div>
   );
