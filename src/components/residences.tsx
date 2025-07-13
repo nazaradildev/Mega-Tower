@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -728,61 +729,71 @@ export function Residences() {
                     {'Search'}
                 </Button>
             </form>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:flex lg:flex-wrap items-center gap-2">
+            <div className="flex flex-wrap gap-2">
                 {filterButtons.map(key => {
                     const trigger = (
                         <FilterButton filterKey={key} filters={filters} />
                     );
                     const content = renderFilterPopoverContent(key);
+                    
+                    const buttonWrapperClass = "basis-full sm:basis-[calc(50%-0.25rem)] md:basis-[calc(33.33%-0.34rem)] lg:basis-[calc(16.66%-0.42rem)]";
 
                     if (isMobile) {
                         return (
-                            <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                                <DialogTrigger asChild>{trigger}</DialogTrigger>
-                                <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
-                                    {content}
-                                </DialogContent>
-                            </Dialog>
+                            <div key={key} className={buttonWrapperClass}>
+                                <Dialog open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                                    <DialogTrigger asChild>{trigger}</DialogTrigger>
+                                    <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
+                                        {content}
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
                         );
                     }
 
                     return (
-                        <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                            <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                {content}
-                            </PopoverContent>
-                        </Popover>
+                        <div key={key} className={buttonWrapperClass}>
+                            <Popover open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                                <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    {content}
+                                </PopoverContent>
+                            </Popover>
+                        </div>
                     );
                 })}
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <FilterButton filterKey="More Filters" filters={filters}/>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl p-0 flex flex-col">
-                        <MoreFiltersModal
-                            onApply={(values) => {
-                                handleFilterChange('More Filters', values);
-                            }}
-                            onClear={() => clearFilter('More Filters')}
-                            initialValues={filters['More Filters']}
-                            isExpanded={isAmenitiesExpanded}
-                            setIsExpanded={setIsAmenitiesExpanded}
-                        />
-                    </DialogContent>
-                </Dialog>
-                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                       <FilterButton filterKey="Sort" filters={filters} sortOption={sortOption} />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="basis-full sm:basis-[calc(50%-0.25rem)] md:basis-[calc(33.33%-0.34rem)] lg:basis-[calc(16.66%-0.42rem)]">
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <FilterButton filterKey="More Filters" filters={filters}/>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl p-0 flex flex-col">
+                            <MoreFiltersModal
+                                onApply={(values) => {
+                                    handleFilterChange('More Filters', values);
+                                }}
+                                onClear={() => clearFilter('More Filters')}
+                                initialValues={filters['More Filters']}
+                                isExpanded={isAmenitiesExpanded}
+                                setIsExpanded={setIsAmenitiesExpanded}
+                            />
+                        </DialogContent>
+                    </Dialog>
+                </div>
+                 <div className="basis-full sm:basis-[calc(50%-0.25rem)] md:basis-[calc(33.33%-0.34rem)] lg:basis-[calc(16.66%-0.42rem)]">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                           <FilterButton filterKey="Sort" filters={filters} sortOption={sortOption} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             </div>
         </div>
 
@@ -815,3 +826,4 @@ export function Residences() {
     </section>
   );
 }
+
