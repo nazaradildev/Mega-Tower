@@ -15,10 +15,14 @@ import {
   Coffee,
   ShoppingCart,
   Dumbbell,
-  FerrisWheel
+  FerrisWheel,
+  Expand,
+  X,
 } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
-import * as ReactDOM from 'react-dom/client';
+import * as ReactDOMServer from 'react-dom/server';
+import { Button } from './ui/button';
+import { Dialog, DialogContent } from './ui/dialog';
 
 const homeCoords = { lat: 25.18117216279701, lng: 55.2751394965599 };
 
@@ -121,23 +125,25 @@ const categoriesData = {
 type InteractiveMapProps = {
   mapStyle?: 'street' | 'satellite';
   initialView?: { lat: number; lng: number; zoom: number };
+  showExpandButton?: boolean;
 }
 
-export function InteractiveMap({ mapStyle = 'street', initialView }: InteractiveMapProps) {
-  const mapRef = useRef<HTMLDivElement>(null);
+export function InteractiveMap({ mapStyle = 'street', initialView, showExpandButton = false }: InteractiveMapProps) {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker[]>>({});
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const { language, direction } = useLanguage();
   const categories = categoriesData[language];
   const homeLocationName = language === 'en' ? 'Your Apartment Location' : 'موقع شقتك';
+  const [isMapOpen, setIsMapOpen] = useState(false);
 
   useEffect(() => {
-    if (!mapRef.current || leafletMapRef.current) return;
+    if (typeof window === 'undefined' || !mapContainerRef.current || leafletMapRef.current) return;
 
     const view = initialView || { lat: homeCoords.lat, lng: homeCoords.lng, zoom: 14 };
 
-    leafletMapRef.current = L.map(mapRef.current, {
+    leafletMapRef.current = L.map(mapContainerRef.current, {
       center: [view.lat, view.lng],
       zoom: view.zoom,
       attributionControl: false,
@@ -177,6 +183,26 @@ export function InteractiveMap({ mapStyle = 'street', initialView }: Interactive
     })
       .addTo(leafletMapRef.current)
       .bindTooltip(homeLocationName, { permanent: false, direction: 'top', offset: [0, -iconAnchor[1]] });
+      
+    if (showExpandButton) {
+      const CustomControl = L.Control.extend({
+        onAdd: function() {
+          const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+          container.innerHTML = ReactDOMServer.renderToString(
+            <Button variant="secondary" size="icon" className="rounded-full h-10 w-10">
+              <Expand className="h-5 w-5" />
+            </Button>
+          );
+          container.onclick = (e) => {
+            e.stopPropagation();
+            setIsMapOpen(true);
+          };
+          return container;
+        },
+        onRemove: function() {}
+      });
+      new CustomControl({ position: 'bottomright' }).addTo(leafletMapRef.current!);
+    }
 
     return () => {
       if (leafletMapRef.current) {
@@ -184,16 +210,13 @@ export function InteractiveMap({ mapStyle = 'street', initialView }: Interactive
         leafletMapRef.current = null;
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapStyle, initialView]);
+  }, [mapStyle, initialView, showExpandButton, homeLocationName]);
 
   useEffect(() => {
      if (!leafletMapRef.current) return;
-     // Clear all markers
      Object.values(markersRef.current).flat().forEach(marker => marker.removeFrom(leafletMapRef.current!));
      markersRef.current = {};
 
-    // Create markers for the current language
     for (const category of categories) {
       const categoryId = category.id;
       markersRef.current[categoryId] = [];
@@ -201,39 +224,26 @@ export function InteractiveMap({ mapStyle = 'street', initialView }: Interactive
       if (pois[categoryId]) {
         (pois[categoryId]).forEach(poi => {
           const poiIcon = L.divIcon({
-            html: `<div class="w-9 h-9 bg-background rounded-full shadow-lg border-2 border-primary/80 flex items-center justify-center">
-                   </div>`,
-            className: `poi-icon-wrapper-${categoryId}`, // Unique class for each category
+            html: ReactDOMServer.renderToString(
+                <div className="w-9 h-9 bg-background rounded-full shadow-lg border-2 border-primary/80 flex items-center justify-center">
+                    <category.Icon className="w-5 h-5 text-primary" />
+                </div>
+            ),
+            className: '',
             iconSize: [36, 36],
             iconAnchor: [18, 18],
           });
           
           const marker = L.marker([poi.lat, poi.lng], { icon: poiIcon })
-            .bindTooltip(poi.name[language]); // Use name based on language
+            .bindTooltip(poi.name[language]);
           markersRef.current[categoryId].push(marker);
         });
       }
     }
     
-    // Show markers for the active category
     if (activeCategory && markersRef.current[activeCategory]) {
       markersRef.current[activeCategory].forEach(marker => marker.addTo(leafletMapRef.current!));
     }
-    
-    // Inject icon components
-    setTimeout(() => {
-      categories.forEach(category => {
-        const wrappers = document.querySelectorAll(`.poi-icon-wrapper-${category.id}`);
-        const iconContainer = document.createElement('div');
-        const root = ReactDOM.createRoot(iconContainer);
-        root.render(<category.Icon className="w-5 h-5 text-primary" />);
-        wrappers.forEach(wrapper => {
-          if(wrapper.firstChild) {
-            wrapper.firstChild.innerHTML = iconContainer.innerHTML;
-          }
-        });
-      })
-    }, 100);
 
   }, [language, categories, activeCategory]);
 
@@ -243,6 +253,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView }: Interactive
   };
 
   return (
+    <>
     <div className="w-full h-full bg-card rounded-2xl shadow-lg border p-4 md:p-6 flex flex-col" dir={direction}>
       <div className="mb-4 overflow-x-auto overflow-y-visible pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
@@ -265,9 +276,23 @@ export function InteractiveMap({ mapStyle = 'street', initialView }: Interactive
         </div>
       </div>
       <div
-        ref={mapRef}
+        ref={mapContainerRef}
         className="w-full flex-grow bg-muted rounded-xl overflow-hidden shadow-inner border"
       ></div>
     </div>
+    <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
+      <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex flex-col outline-none ring-0">
+          <div className="absolute bottom-4 right-4 z-[1001]">
+              <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={() => setIsMapOpen(false)}>
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+              </Button>
+          </div>
+          <div className="flex-grow">
+               <InteractiveMap initialView={{ lat: 25.2048, lng: 55.2708, zoom: 11 }} mapStyle="satellite" />
+          </div>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
