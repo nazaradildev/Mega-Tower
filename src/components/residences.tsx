@@ -736,7 +736,7 @@ export function Residences() {
                     );
                     const content = renderFilterPopoverContent(key);
                     
-                    const buttonWrapperClass = "basis-full sm:basis-[calc(50%-0.25rem)] md:basis-[calc(33.33%-0.34rem)] lg:basis-[calc(16.66%-0.42rem)]";
+                    const buttonWrapperClass = "basis-full sm:basis-[calc(50%-4px)] md:basis-[calc(33.33%-5.33px)] lg:basis-auto lg:flex-1";
 
                     if (isMobile) {
                         return (
@@ -762,7 +762,7 @@ export function Residences() {
                         </div>
                     );
                 })}
-                <div className="basis-full sm:basis-[calc(50%-0.25rem)] md:basis-[calc(33.33%-0.34rem)] lg:basis-[calc(16.66%-0.42rem)]">
+                <div className="basis-full sm:basis-[calc(50%-4px)] md:basis-[calc(33.33%-5.33px)] lg:basis-auto lg:flex-1">
                     <Dialog>
                         <DialogTrigger asChild>
                             <FilterButton filterKey="More Filters" filters={filters}/>
@@ -780,7 +780,7 @@ export function Residences() {
                         </DialogContent>
                     </Dialog>
                 </div>
-                 <div className="basis-full sm:basis-[calc(50%-0.25rem)] md:basis-[calc(33.33%-0.34rem)] lg:basis-[calc(16.66%-0.42rem)]">
+                 <div className="basis-full sm:basis-[calc(50%-4px)] md:basis-[calc(33.33%-5.33px)] lg:basis-auto lg:flex-1">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                            <FilterButton filterKey="Sort" filters={filters} sortOption={sortOption} />
@@ -826,4 +826,5 @@ export function Residences() {
     </section>
   );
 }
+
 
