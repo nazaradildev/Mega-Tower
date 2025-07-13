@@ -40,9 +40,7 @@ export const units: Unit[] = [
         '/apparment1.7.jpg',
         '/apparment1.8.jpg',
         '/apparment1.9.jpg',
-        'https://www.propertyfinder.ae/property/e493249482f5b48555b6425c37170bd1/1312/894/MODE/4e1059/14446875-92927o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/012571b5c67710829530f313ee90c40e/1312/894/MODE/679eb1/14446875-dd0e7o.jpg?ctr=ae',
-        'https://www.propertyfinder.ae/property/2d8384c5a9b78a4404f7f1758f82f3df/1312/894/MODE/8833d6/14446875-c093ao.jpg?ctr=ae'
+        '/apparment1.10.webp',
     ],
     floorPlanImage: '/1-bed-type-1.png',
     floorPlanImage3d: 'https://placehold.co/800x1100.png',

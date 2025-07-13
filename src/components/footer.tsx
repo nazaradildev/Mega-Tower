@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -23,7 +24,7 @@ export function Footer() {
               <div className="flex flex-col items-center md:items-start">
                 <Link href="/" className="inline-block mb-4">
                   <div className="bg-foreground text-background p-2 rounded-md flex items-center justify-center">
-                    <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} />
+                    <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} style={{ height: 'auto' }} />
                   </div>
                 </Link>
                 <p className="text-sm text-muted-foreground">

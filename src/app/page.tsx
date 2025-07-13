@@ -57,6 +57,7 @@ export default function Home() {
                   alt="Hero image of MEGA Towers in Business Bay, Dubai"
                   data-ai-hint="dubai cityscape"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover"
                   priority
                 />
