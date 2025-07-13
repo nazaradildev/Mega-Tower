@@ -73,7 +73,7 @@ export function Location() {
                             <div className="h-[500px] md:h-[600px] w-full bg-muted rounded-lg shadow-lg overflow-hidden">
                                 <InteractiveMap mapStyle="satellite" />
                             </div>
-                            <Button variant="secondary" size="icon" className="absolute top-6 right-6 z-10 rounded-full h-10 w-10" onClick={() => setIsMapOpen(true)}>
+                            <Button variant="secondary" size="icon" className="absolute bottom-6 right-6 z-10 rounded-full h-10 w-10" onClick={() => setIsMapOpen(true)}>
                                 <Expand className="h-5 w-5" />
                             </Button>
                         </div>
@@ -81,7 +81,7 @@ export function Location() {
                 </div>
                  <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
                     <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex flex-col outline-none ring-0">
-                        <Button variant="secondary" size="icon" className="absolute top-4 right-4 z-[1001] rounded-full h-10 w-10" onClick={() => setIsMapOpen(false)}>
+                        <Button variant="secondary" size="icon" className="absolute bottom-4 right-4 z-[1001] rounded-full h-10 w-10" onClick={() => setIsMapOpen(false)}>
                             <X className="h-5 w-5" />
                             <span className="sr-only">Close</span>
                         </Button>
