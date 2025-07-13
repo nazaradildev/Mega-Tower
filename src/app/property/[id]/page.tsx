@@ -512,7 +512,7 @@ export default function PropertyDetailsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[500px] w-full p-0">
-                  <InteractiveMap />
+                  <InteractiveMap showExpandButton={true} />
                 </CardContent>
               </Card>
               
