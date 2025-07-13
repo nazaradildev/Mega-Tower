@@ -511,7 +511,7 @@ export default function PropertyDetailsPage() {
                     Location
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="h-[500px] w-full p-0">
                   <InteractiveMap />
                 </CardContent>
               </Card>
