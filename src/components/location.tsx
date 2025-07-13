@@ -2,7 +2,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, TowerControl, Train, Plane, MapPin, Expand } from 'lucide-react';
+import { ShoppingCart, TowerControl, Train, Plane, MapPin, Expand, Loader2 } from 'lucide-react';
 import { ScrollAnimation } from "./scroll-animation";
 import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
@@ -16,6 +16,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
+const InteractiveMap = dynamic(() => import('./interactive-map').then(mod => mod.InteractiveMap), {
+    ssr: false,
+    loading: () => (
+        <div className="h-[500px] md:h-[600px] w-full bg-muted rounded-xl flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    )
+});
+
 
 const destinations = [
     { icon: ShoppingCart, name: "Dubai Mall", time: "5 mins" },
@@ -25,10 +34,6 @@ const destinations = [
 ]
 
 export function Location() {
-    const Map = useMemo(() => dynamic(() => import('@/components/map').then(mod => mod.Map), {
-        loading: () => <div className="h-full w-full bg-muted flex items-center justify-center"><p className="text-center p-4">Loading map...</p></div>,
-        ssr: false
-    }), []);
     const [isMapOpen, setIsMapOpen] = useState(false);
 
 
@@ -69,29 +74,10 @@ export function Location() {
                     <ScrollAnimation delay={200}>
                          <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
                             <div className="relative">
-                                <div className="h-96 lg:h-[500px] w-full bg-muted rounded-lg shadow-lg overflow-hidden">
-                                    <Map />
-                                </div>
-                                <div className="mt-4 flex justify-center">
-                                    <DialogTrigger asChild>
-                                        <Button variant="outline" className="bg-background/80 backdrop-blur-sm hover:bg-background rounded-full">
-                                            <Expand className="mr-2 h-4 w-4" />
-                                            Full Screen
-                                        </Button>
-                                    </DialogTrigger>
+                                <div className="h-auto lg:h-auto w-full bg-muted rounded-lg shadow-lg overflow-hidden">
+                                    <InteractiveMap />
                                 </div>
                             </div>
-                            <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 outline-none ring-0">
-                                <DialogTitle className="sr-only">Site Location Map</DialogTitle>
-                                <DialogClose asChild>
-                                    <Button variant="ghost" size="icon" className="absolute top-4 right-4 z-[9999] text-foreground bg-background/50 hover:bg-background/70 rounded-full h-10 w-10">
-                                        <X className="h-6 w-6" />
-                                    </Button>
-                                </DialogClose>
-                                <div className="h-full w-full">
-                                    <Map isInDialog={true} />
-                                </div>
-                            </DialogContent>
                         </Dialog>
                     </ScrollAnimation>
                 </div>

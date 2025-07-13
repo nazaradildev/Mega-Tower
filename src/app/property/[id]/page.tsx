@@ -30,6 +30,7 @@ import {
   Heart,
   Landmark,
   LayoutDashboard,
+  Loader2,
   Mail,
   MapPin,
   ParkingSquare,
@@ -76,7 +77,17 @@ import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/breadcrumb';
 import Image from 'next/image';
 import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
-import { InteractiveMap } from '@/components/interactive-map';
+import dynamic from 'next/dynamic';
+
+const InteractiveMap = dynamic(() => import('@/components/interactive-map').then(mod => mod.InteractiveMap), {
+    ssr: false,
+    loading: () => (
+        <div className="h-[500px] w-full bg-muted rounded-lg flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    )
+});
+
 
 const priceData = [
   { month: 'Jan', price: 140000 },
