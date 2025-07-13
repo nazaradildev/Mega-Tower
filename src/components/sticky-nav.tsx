@@ -14,10 +14,10 @@ type NavLink = {
 
 const navLinks: NavLink[] = [
   { id: 'residences', en: 'Residences', ar: 'الوحدات السكنية' },
-  { id: 'insights', en: 'Insights', ar: 'الرؤى', mobileOnly: true },
   { id: 'amenities', en: 'Amenities', ar: 'المرافق' },
   { id: 'experience', en: 'Experience', ar: 'التجربة' },
   { id: 'location', en: 'Location', ar: 'الموقع' },
+  { id: 'insights', en: 'Insights', ar: 'الرؤى', mobileOnly: true },
   { id: 'contact', en: 'Contact', ar: 'التواصل' },
 ];
 
