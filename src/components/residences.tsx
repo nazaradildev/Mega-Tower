@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
 
-type FilterKey = 'Rent' | 'Apartment' | 'Beds & Baths' | 'Price' | 'More Filters';
+type FilterKey = 'Rent' | 'Apartment' | 'Beds & Baths' | 'Price' | 'More Filters' | 'Sort';
 type FilterValues = {
     [key: string]: any;
 };
@@ -27,11 +27,14 @@ type FilterValues = {
 type FilterButtonProps = React.ComponentProps<typeof Button> & {
   filterKey: FilterKey;
   filters: FilterValues;
+  sortOption?: string;
 };
 
-function FilterButton({ filterKey, filters, ...props }: FilterButtonProps) {
+function FilterButton({ filterKey, filters, sortOption, ...props }: FilterButtonProps) {
     
     const getButtonText = () => {
+        if (filterKey === 'Sort') return `Sort by: ${sortOption}`;
+        
         const data = filters[filterKey];
         if (!data || Object.keys(data).length === 0) {
             if (filterKey === 'Apartment') return 'Property Type';
@@ -64,14 +67,15 @@ function FilterButton({ filterKey, filters, ...props }: FilterButtonProps) {
         }
     };
 
-    const isActive = filters[filterKey] && Object.values(filters[filterKey]).some(v => v && (Array.isArray(v) ? v.length > 0 : true));
+    const isActive = (filterKey !== 'Sort' && filters[filterKey] && Object.values(filters[filterKey]).some(v => v && (Array.isArray(v) ? v.length > 0 : true))) || (filterKey === 'Sort' && sortOption !== 'Newest');
     
     const iconMap: Record<FilterKey, React.ElementType> = {
       'Rent': KeyRound,
       'Apartment': Building2,
       'Beds & Baths': BedDouble,
       'Price': Wallet,
-      'More Filters': SlidersHorizontal
+      'More Filters': SlidersHorizontal,
+      'Sort': ChevronDown
     }
     const Icon = iconMap[filterKey];
 
@@ -79,15 +83,14 @@ function FilterButton({ filterKey, filters, ...props }: FilterButtonProps) {
         <Button
             variant="outline"
             className={cn(
-                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full justify-start",
+                "h-12 px-3 md:px-4 text-sm font-medium flex items-center gap-2 transition-colors w-full justify-between",
                 isActive ? "border-primary bg-primary/10 text-primary" : "text-foreground/70 border-border",
                 "hover:bg-accent hover:text-accent-foreground rounded-lg"
             )}
             {...props}
         >
-            {Icon && <Icon className="h-5 w-5" />}
-            <span className="truncate hidden sm:inline">{getButtonText()}</span>
-            <span className="truncate sm:hidden">{filterKey}</span>
+            <span className="truncate">{getButtonText()}</span>
+            {Icon && <Icon className={cn("h-5 w-5", filterKey !== 'Sort' && "hidden sm:inline")} />}
         </Button>
     );
 };
@@ -725,69 +728,61 @@ export function Residences() {
                     {'Search'}
                 </Button>
             </form>
-            <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sm font-medium mr-2 hidden md:inline">Filters:</span>
-                <div className="grid w-full grid-cols-2 sm:flex sm:w-auto gap-2">
-                    {filterButtons.map(key => {
-                        const trigger = (
-                            <FilterButton filterKey={key} filters={filters} />
-                        );
-                        const content = renderFilterPopoverContent(key);
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:flex lg:flex-wrap items-center gap-2">
+                {filterButtons.map(key => {
+                    const trigger = (
+                        <FilterButton filterKey={key} filters={filters} />
+                    );
+                    const content = renderFilterPopoverContent(key);
 
-                        if (isMobile) {
-                            return (
-                                <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                                    <DialogTrigger asChild>{trigger}</DialogTrigger>
-                                    <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
-                                        {content}
-                                    </DialogContent>
-                                </Dialog>
-                            );
-                        }
-
+                    if (isMobile) {
                         return (
-                            <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
-                                <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
+                            <Dialog key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                                <DialogTrigger asChild>{trigger}</DialogTrigger>
+                                <DialogContent className="p-0 max-w-md w-[90%] flex flex-col">
                                     {content}
-                                </PopoverContent>
-                            </Popover>
+                                </DialogContent>
+                            </Dialog>
                         );
-                    })}
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <FilterButton filterKey="More Filters" filters={filters}/>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl p-0 flex flex-col">
-                            <MoreFiltersModal
-                                onApply={(values) => {
-                                    handleFilterChange('More Filters', values);
-                                }}
-                                onClear={() => clearFilter('More Filters')}
-                                initialValues={filters['More Filters']}
-                                isExpanded={isAmenitiesExpanded}
-                                setIsExpanded={setIsAmenitiesExpanded}
-                            />
-                        </DialogContent>
-                    </Dialog>
-                    <div className="flex-grow sm:flex-grow-0">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="rounded-lg justify-start data-[state=open]:bg-accent w-full sm:w-auto h-12 px-3 md:px-4 text-sm font-medium text-foreground/70 border-border">
-                                    Sort by: {sortOption}
-                                    <ChevronDown className="ml-auto h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
-                                <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
-                                <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
-                                <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
-                                <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                </div>
+                    }
+
+                    return (
+                        <Popover key={key} open={openPopovers[key] || false} onOpenChange={(isOpen) => handlePopoverOpenChange(key, isOpen)}>
+                            <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                {content}
+                            </PopoverContent>
+                        </Popover>
+                    );
+                })}
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <FilterButton filterKey="More Filters" filters={filters}/>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl p-0 flex flex-col">
+                        <MoreFiltersModal
+                            onApply={(values) => {
+                                handleFilterChange('More Filters', values);
+                            }}
+                            onClear={() => clearFilter('More Filters')}
+                            initialValues={filters['More Filters']}
+                            isExpanded={isAmenitiesExpanded}
+                            setIsExpanded={setIsAmenitiesExpanded}
+                        />
+                    </DialogContent>
+                </Dialog>
+                 <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                       <FilterButton filterKey="Sort" filters={filters} sortOption={sortOption} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </div>
 
