@@ -255,7 +255,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
   return (
     <>
     <div className="w-full h-full bg-card rounded-2xl shadow-lg border p-4 md:p-6 flex flex-col" dir={direction}>
-      <div className="mb-4 overflow-x-auto overflow-y-visible pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
+      <div className="pt-2 md:pt-0 mb-4 overflow-x-auto overflow-y-visible pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
             <button
