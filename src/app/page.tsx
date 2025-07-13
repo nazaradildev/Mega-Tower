@@ -49,38 +49,36 @@ export default function Home() {
       <StickyNav />
       
       <div className="relative">
-        <section className="relative w-full h-screen">
-          <div className="absolute inset-0 z-0">
-              <Image
-              src="/mega tower1.png"
-              alt="Hero image of MEGA Towers in Business Bay, Dubai"
-              data-ai-hint="dubai cityscape"
-              fill
-              sizes="100vw"
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/50" />
-          </div>
-
-          <div className="relative z-10 h-full w-full flex flex-col items-center justify-center p-4">
-            <div className="text-center text-white" dir={direction}>
-              <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-7xl !leading-tight">
-                {t.title}
-              </h1>
-              <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-neutral-200">
-                {t.subtitle}
-              </p>
-              <div className="mt-8">
-                <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
-                  <a href="#residences">{t.button}</a>
-                </Button>
-              </div>
-            </div>
-          </div>
+        <section className="h-screen w-full fixed top-0 left-0 z-0">
+          <Image
+            src="/mega tower1.png"
+            alt="Hero image of MEGA Towers in Business Bay, Dubai"
+            data-ai-hint="dubai cityscape"
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/50" />
         </section>
 
-        <main className="relative z-10 flex-1 bg-background">
+        <div className="relative z-10 h-screen w-full flex flex-col items-center justify-center p-4">
+          <div className="text-center text-white" dir={direction}>
+            <h1 className="font-headline font-bold text-4xl md:text-6xl lg:text-7xl !leading-tight">
+              {t.title}
+            </h1>
+            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-neutral-200">
+              {t.subtitle}
+            </p>
+            <div className="mt-8">
+              <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
+                <a href="#residences">{t.button}</a>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <main className="relative z-20 flex-1 bg-background">
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               <div className="lg:col-span-8">
