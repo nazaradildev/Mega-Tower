@@ -128,7 +128,7 @@ type InteractiveMapProps = {
   showExpandButton?: boolean;
 }
 
-export function InteractiveMap({ mapStyle = 'street', initialView, showExpandButton = false }: InteractiveMapProps) {
+function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<InteractiveMapProps, 'showExpandButton'> & { onMapReady: (map: L.Map) => void }) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker[]>>({});
@@ -136,8 +136,6 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
   const { language, direction } = useLanguage();
   const categories = categoriesData[language];
   const homeLocationName = language === 'en' ? 'Your Apartment Location' : 'موقع شقتك';
-  const [isMapOpen, setIsMapOpen] = useState(false);
-  const [currentMapState, setCurrentMapState] = useState(initialView || { lat: homeCoords.lat, lng: homeCoords.lng, zoom: 14 });
 
   useEffect(() => {
     if (typeof window === 'undefined' || !mapContainerRef.current || leafletMapRef.current) return;
@@ -149,6 +147,8 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
       zoom: view.zoom,
       attributionControl: false,
     });
+
+    onMapReady(leafletMapRef.current);
 
     const tileLayerUrl = mapStyle === 'satellite' 
         ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
@@ -184,29 +184,6 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
     })
       .addTo(leafletMapRef.current)
       .bindTooltip(homeLocationName, { permanent: false, direction: 'top', offset: [0, -iconAnchor[1]] });
-      
-    if (showExpandButton) {
-      const CustomControl = L.Control.extend({
-        onAdd: function(map: L.Map) {
-          const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-          container.innerHTML = ReactDOMServer.renderToString(
-            <Button variant="secondary" size="icon" className="rounded-full h-10 w-10">
-              <Expand className="h-5 w-5" />
-            </Button>
-          );
-          container.onclick = (e) => {
-            e.stopPropagation();
-            const center = map.getCenter();
-            const zoom = map.getZoom();
-            setCurrentMapState({ lat: center.lat, lng: center.lng, zoom });
-            setIsMapOpen(true);
-          };
-          return container;
-        },
-        onRemove: function() {}
-      });
-      new CustomControl({ position: 'bottomright' }).addTo(leafletMapRef.current!);
-    }
 
     return () => {
       if (leafletMapRef.current) {
@@ -214,7 +191,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
         leafletMapRef.current = null;
       }
     };
-  }, [mapStyle, initialView, showExpandButton, homeLocationName]);
+  }, [mapStyle, initialView, homeLocationName, onMapReady]);
 
   useEffect(() => {
      if (!leafletMapRef.current) return;
@@ -255,10 +232,9 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
   const toggleCategory = (categoryId: string) => {
     setActiveCategory(prev => prev === categoryId ? null : categoryId);
   };
-
+  
   return (
-    <>
-    <div className="w-full h-full bg-card rounded-2xl shadow-lg border p-4 md:p-6 flex flex-col" dir={direction}>
+    <div className="w-full h-full bg-card rounded-2xl flex flex-col" dir={direction}>
       <div className="pt-2 md:pt-0 mb-4 overflow-x-auto overflow-y-visible pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
@@ -284,19 +260,52 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
         className="w-full flex-grow bg-muted rounded-xl overflow-hidden shadow-inner border"
       ></div>
     </div>
-    <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
-      <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex flex-col outline-none ring-0">
-          <div className="absolute bottom-4 right-4 z-[1001]">
-              <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={() => setIsMapOpen(false)}>
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close</span>
-              </Button>
-          </div>
-          <div className="flex-grow">
-               <InteractiveMap initialView={currentMapState} mapStyle={mapStyle} />
-          </div>
-      </DialogContent>
-    </Dialog>
+  );
+}
+
+
+export function InteractiveMap({ mapStyle = 'street', initialView, showExpandButton = false }: InteractiveMapProps) {
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const mapRef = useRef<L.Map | null>(null);
+  const [currentMapState, setCurrentMapState] = useState(initialView || { lat: homeCoords.lat, lng: homeCoords.lng, zoom: 14 });
+
+  const handleExpandClick = () => {
+    if (mapRef.current) {
+      const center = mapRef.current.getCenter();
+      const zoom = mapRef.current.getZoom();
+      setCurrentMapState({ lat: center.lat, lng: center.lng, zoom: zoom });
+    }
+    setIsMapOpen(true);
+  };
+  
+  return (
+    <>
+      <div className={cn("w-full h-full", isMapOpen && "invisible")}>
+         <div className="relative w-full h-full shadow-lg border rounded-2xl p-4 md:p-6">
+            <MapComponent mapStyle={mapStyle} initialView={initialView} onMapReady={(map) => mapRef.current = map} />
+            {showExpandButton && (
+                <div className="absolute bottom-4 right-4 z-[1000]">
+                    <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={handleExpandClick}>
+                        <Expand className="h-5 w-5" />
+                    </Button>
+                </div>
+            )}
+        </div>
+      </div>
+
+      <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
+        <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex flex-col outline-none ring-0">
+            <div className="absolute top-4 right-4 z-[1001]">
+                <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={() => setIsMapOpen(false)}>
+                    <X className="h-5 w-5" />
+                    <span className="sr-only">Close</span>
+                </Button>
+            </div>
+            <div className="flex-grow p-4 md:p-6">
+                 <MapComponent mapStyle={mapStyle} initialView={currentMapState} onMapReady={() => {}} />
+            </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
