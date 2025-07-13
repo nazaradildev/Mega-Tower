@@ -120,9 +120,10 @@ const categoriesData = {
 
 type InteractiveMapProps = {
   mapStyle?: 'street' | 'satellite';
+  initialView?: { lat: number; lng: number; zoom: number };
 }
 
-export function InteractiveMap({ mapStyle = 'street' }: InteractiveMapProps) {
+export function InteractiveMap({ mapStyle = 'street', initialView }: InteractiveMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker[]>>({});
@@ -134,9 +135,11 @@ export function InteractiveMap({ mapStyle = 'street' }: InteractiveMapProps) {
   useEffect(() => {
     if (!mapRef.current || leafletMapRef.current) return;
 
+    const view = initialView || { lat: homeCoords.lat, lng: homeCoords.lng, zoom: 14 };
+
     leafletMapRef.current = L.map(mapRef.current, {
-      center: [homeCoords.lat, homeCoords.lng],
-      zoom: 14,
+      center: [view.lat, view.lng],
+      zoom: view.zoom,
       attributionControl: false,
     });
 
@@ -182,7 +185,7 @@ export function InteractiveMap({ mapStyle = 'street' }: InteractiveMapProps) {
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapStyle]);
+  }, [mapStyle, initialView]);
 
   useEffect(() => {
      if (!leafletMapRef.current) return;
@@ -240,7 +243,7 @@ export function InteractiveMap({ mapStyle = 'street' }: InteractiveMapProps) {
   };
 
   return (
-    <div className="w-full bg-card rounded-2xl shadow-lg border p-4 md:p-6" dir={direction}>
+    <div className="w-full h-full bg-card rounded-2xl shadow-lg border p-4 md:p-6 flex flex-col" dir={direction}>
       <div className="mb-4 overflow-x-auto overflow-y-visible pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
@@ -263,7 +266,7 @@ export function InteractiveMap({ mapStyle = 'street' }: InteractiveMapProps) {
       </div>
       <div
         ref={mapRef}
-        className="w-full h-[500px] md:h-[600px] bg-muted rounded-xl overflow-hidden shadow-inner border"
+        className="w-full flex-grow bg-muted rounded-xl overflow-hidden shadow-inner border"
       ></div>
     </div>
   );
