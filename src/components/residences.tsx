@@ -770,6 +770,23 @@ export function Residences() {
                             />
                         </DialogContent>
                     </Dialog>
+                    <div className="flex-grow sm:flex-grow-0">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" className="rounded-lg justify-start data-[state=open]:bg-accent w-full sm:w-auto h-12 px-3 md:px-4 text-sm font-medium text-foreground/70 border-border">
+                                    Sort by: {sortOption}
+                                    <ChevronDown className="ml-auto h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </div>
         </div>
@@ -781,23 +798,6 @@ export function Residences() {
             <div>
               <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in MEGA Residency Tower</h1>
               <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-stretch gap-2">
-               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="rounded-lg justify-center data-[state=open]:bg-accent w-full sm:w-auto">
-                        Sort by: {sortOption}
-                        <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
           </div>
         </div>
