@@ -44,7 +44,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-zinc-900/80">
       <div className="container flex h-16 max-w-7xl items-center justify-between">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <div className="bg-foreground text-background p-2 rounded-md flex items-center justify-center">
+          <div className="bg-foreground text-background px-3 py-1.5 rounded-md flex items-center justify-center">
             <Image src="/MEGA.png" alt="MEGA Logo" width={90} height={30} priority style={{ height: 'auto' }} />
           </div>
         </Link>
@@ -123,7 +123,7 @@ export function Header() {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-lg ml-2">
+                <Button variant="ghost" className="rounded-lg ml-2">
                    <svg
                     width="28"
                     height="28"
