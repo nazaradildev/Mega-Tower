@@ -226,7 +226,7 @@ export function InteractiveMap() {
 
   return (
     <div className="w-full bg-card rounded-2xl shadow-lg border p-4 md:p-6" dir={direction}>
-      <div className="mb-4 overflow-x-auto pb-3 -mx-1" style={{ scrollbarWidth: 'thin' }}>
+      <div className="mb-4 overflow-x-auto pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
             <button
@@ -253,4 +253,3 @@ export function InteractiveMap() {
     </div>
   );
 }
-
