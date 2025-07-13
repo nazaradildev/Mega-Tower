@@ -280,22 +280,20 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
   
   return (
     <>
-      <div className={cn("w-full h-full", isMapOpen && "invisible")}>
-         <div className="relative w-full h-full shadow-lg border rounded-2xl p-4 md:p-6">
-            <MapComponent mapStyle={mapStyle} initialView={initialView} onMapReady={(map) => mapRef.current = map} />
-            {showExpandButton && (
-                <div className="absolute bottom-4 right-4 z-[1000]">
-                    <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={handleExpandClick}>
-                        <Expand className="h-5 w-5" />
-                    </Button>
-                </div>
-            )}
-        </div>
-      </div>
+      <div className={cn("relative w-full h-full shadow-lg border rounded-2xl p-4 md:p-6", isMapOpen && "invisible")}>
+         <MapComponent mapStyle={mapStyle} initialView={initialView} onMapReady={(map) => mapRef.current = map} />
+         {showExpandButton && (
+             <div className="absolute bottom-4 right-4 z-[1000]">
+                 <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={handleExpandClick}>
+                     <Expand className="h-5 w-5" />
+                 </Button>
+             </div>
+         )}
+     </div>
 
       <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
         <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex flex-col outline-none ring-0">
-            <div className="absolute top-4 right-4 z-[1001]">
+            <div className="absolute bottom-4 right-4 z-[1001]">
                 <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={() => setIsMapOpen(false)}>
                     <X className="h-5 w-5" />
                     <span className="sr-only">Close</span>
