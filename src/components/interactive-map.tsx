@@ -226,17 +226,17 @@ export function InteractiveMap() {
 
   return (
     <div className="w-full bg-card rounded-2xl shadow-lg border p-4 md:p-6" dir={direction}>
-      <div className="mb-4 overflow-x-auto pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
-        <div className={cn("flex space-x-3 whitespace-nowrap px-1", direction === 'rtl' && 'space-x-reverse')}>
+      <div className="mb-4 overflow-x-auto overflow-y-visible pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
+        <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
             <button
               key={category.id}
               onClick={() => toggleCategory(category.id)}
               className={cn(
                 'category-chip cursor-pointer flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-out shadow-sm border',
-                'hover:translate-y-[-2px] hover:shadow-md',
+                'hover:-translate-y-1 hover:shadow-md',
                 activeCategory === category.id
-                  ? 'bg-primary text-primary-foreground border-transparent shadow-lg'
+                  ? 'bg-primary text-primary-foreground border-transparent shadow-lg -translate-y-1'
                   : 'bg-background text-foreground border-border'
               )}
             >
