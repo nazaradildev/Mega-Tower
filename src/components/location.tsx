@@ -5,13 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, TowerControl, Train, Plane, MapPin, Expand, Loader2 } from 'lucide-react';
 import { ScrollAnimation } from "./scroll-animation";
 import dynamic from 'next/dynamic';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
-  DialogClose,
-  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
@@ -75,7 +72,7 @@ export function Location() {
                          <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
                             <div className="relative">
                                 <div className="h-auto lg:h-auto w-full bg-muted rounded-lg shadow-lg overflow-hidden">
-                                    <InteractiveMap />
+                                    <InteractiveMap mapStyle="satellite" />
                                 </div>
                             </div>
                         </Dialog>

@@ -118,7 +118,11 @@ const categoriesData = {
   ]
 };
 
-export function InteractiveMap() {
+type InteractiveMapProps = {
+  mapStyle?: 'street' | 'satellite';
+}
+
+export function InteractiveMap({ mapStyle = 'street' }: InteractiveMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker[]>>({});
@@ -136,9 +140,17 @@ export function InteractiveMap() {
       attributionControl: false,
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMapRef.current);
+    const tileLayerUrl = mapStyle === 'satellite' 
+        ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    L.tileLayer(tileLayerUrl).addTo(leafletMapRef.current);
     
-    const mainPropertyIconHtml = `
+    const mainPropertyIconHtml = mapStyle === 'satellite' ? `
+        <div class="relative flex items-center justify-center">
+            <img src="/khalifatower.png" alt="Main Location" class="h-32 w-32" />
+        </div>
+    ` : `
       <div class="relative flex items-center justify-center">
         <svg class="h-16 w-16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M16 32C16 32 32 20 32 12C32 5.37258 26.6274 0 20 0C13.3726 0 8 5.37258 8 12C8 20 16 32 16 32Z" fill="hsl(var(--primary))"/>
@@ -146,11 +158,14 @@ export function InteractiveMap() {
         </svg>
       </div>`;
 
+    const iconSize: [number, number] = mapStyle === 'satellite' ? [128, 128] : [64, 64];
+    const iconAnchor: [number, number] = mapStyle === 'satellite' ? [64, 128] : [32, 64];
+
     const mainPropertyIcon = L.divIcon({
       html: mainPropertyIconHtml,
       className: '',
-      iconSize: [64, 64],
-      iconAnchor: [32, 64],
+      iconSize: iconSize,
+      iconAnchor: iconAnchor,
     });
 
     L.marker([homeCoords.lat, homeCoords.lng], {
@@ -158,7 +173,7 @@ export function InteractiveMap() {
       zIndexOffset: 1000,
     })
       .addTo(leafletMapRef.current)
-      .bindTooltip(homeLocationName, { permanent: false, direction: 'top', offset: [0, -64] });
+      .bindTooltip(homeLocationName, { permanent: false, direction: 'top', offset: [0, -iconAnchor[1]] });
 
     return () => {
       if (leafletMapRef.current) {
@@ -167,7 +182,7 @@ export function InteractiveMap() {
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mapStyle]);
 
   useEffect(() => {
      if (!leafletMapRef.current) return;
