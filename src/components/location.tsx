@@ -69,10 +69,8 @@ export function Location() {
                         </div>
                     </div>
                     <ScrollAnimation delay={200}>
-                         <div className="relative">
-                            <div className="h-[500px] md:h-[600px] w-full bg-muted rounded-lg shadow-lg overflow-hidden">
-                                <InteractiveMap mapStyle="satellite" />
-                            </div>
+                         <div className="relative h-[500px] md:h-[600px] w-full bg-muted rounded-lg shadow-lg overflow-hidden">
+                            <InteractiveMap mapStyle="satellite" />
                             <Button variant="secondary" size="icon" className="absolute bottom-6 right-6 z-10 rounded-full h-10 w-10" onClick={() => setIsMapOpen(true)}>
                                 <Expand className="h-5 w-5" />
                             </Button>
