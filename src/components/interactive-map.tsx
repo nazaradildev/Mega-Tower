@@ -137,6 +137,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
   const categories = categoriesData[language];
   const homeLocationName = language === 'en' ? 'Your Apartment Location' : 'موقع شقتك';
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [currentMapState, setCurrentMapState] = useState(initialView || { lat: homeCoords.lat, lng: homeCoords.lng, zoom: 14 });
 
   useEffect(() => {
     if (typeof window === 'undefined' || !mapContainerRef.current || leafletMapRef.current) return;
@@ -186,7 +187,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
       
     if (showExpandButton) {
       const CustomControl = L.Control.extend({
-        onAdd: function() {
+        onAdd: function(map: L.Map) {
           const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
           container.innerHTML = ReactDOMServer.renderToString(
             <Button variant="secondary" size="icon" className="rounded-full h-10 w-10">
@@ -195,6 +196,9 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
           );
           container.onclick = (e) => {
             e.stopPropagation();
+            const center = map.getCenter();
+            const zoom = map.getZoom();
+            setCurrentMapState({ lat: center.lat, lng: center.lng, zoom });
             setIsMapOpen(true);
           };
           return container;
@@ -289,7 +293,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
               </Button>
           </div>
           <div className="flex-grow">
-               <InteractiveMap initialView={{ lat: 25.2048, lng: 55.2708, zoom: 11 }} mapStyle="satellite" />
+               <InteractiveMap initialView={currentMapState} mapStyle={mapStyle} />
           </div>
       </DialogContent>
     </Dialog>
