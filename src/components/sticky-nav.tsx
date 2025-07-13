@@ -29,7 +29,8 @@ export function StickyNav() {
   const heroSectionRef = useRef<HTMLElement | null>(null);
   
   useEffect(() => {
-    heroSectionRef.current = document.querySelector('main > section:first-of-type');
+    // We target the new #hero section
+    heroSectionRef.current = document.getElementById('hero');
 
     const handleScroll = () => {
       if (!heroSectionRef.current) return;
