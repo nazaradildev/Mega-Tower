@@ -194,7 +194,7 @@ export default function BuildingDetailsPage() {
     };
 
 
-    const aboutText = "Discover a new standard of elevated living at MEGA Residency Tower, an architectural masterpiece nestled in the vibrant heart of Business Bay. Soaring 57 stories high, this iconic residence offers an exclusive collection of 1, 2, 3, and 4-bedroom apartments and penthouses, each meticulously crafted to perfection. Wake up to breathtaking, panoramic views of the Dubai Canal and the majestic Burj Khalifa. Every residence is a sanctuary of style, featuring high-end finishes, expansive living spaces, and floor-to-ceiling windows that bathe your home in natural light. Here, luxury is not just an option—it's the standard.";
+    const aboutText = "Discover a new standard of elevated living at MEGA Residency Tower, an architectural masterpiece nestled in the vibrant heart of Business Bay. Soaring 42 stories high, this iconic residence offers an exclusive collection of 1, 2, 3, and 4-bedroom apartments and penthouses, each meticulously crafted to perfection. Wake up to breathtaking, panoramic views of the Dubai Canal and the majestic Burj Khalifa. Every residence is a sanctuary of style, featuring high-end finishes, expansive living spaces, and floor-to-ceiling windows that bathe your home in natural light. Here, luxury is not just an option—it's the standard.";
 
     return (
         <div className="bg-background">
