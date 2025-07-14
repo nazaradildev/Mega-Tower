@@ -235,7 +235,11 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
   
   return (
     <div className="w-full h-full bg-card rounded-2xl flex flex-col" dir={direction}>
-      <div className="pt-2 md:pt-0 mb-4 overflow-x-auto overflow-y-visible pb-4 -mx-1" style={{ scrollbarWidth: 'thin' }}>
+      <div
+        ref={mapContainerRef}
+        className="w-full flex-grow bg-muted rounded-xl overflow-hidden shadow-inner border"
+      ></div>
+      <div className="pt-4 mt-2 overflow-x-auto overflow-y-visible pb-2 -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
             <button
@@ -255,10 +259,6 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
           ))}
         </div>
       </div>
-      <div
-        ref={mapContainerRef}
-        className="w-full flex-grow bg-muted rounded-xl overflow-hidden shadow-inner border"
-      ></div>
     </div>
   );
 }
@@ -283,7 +283,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
       <div className={cn("relative w-full h-full shadow-lg border rounded-2xl p-4 md:p-6", isMapOpen && "invisible")}>
          <MapComponent mapStyle={mapStyle} initialView={initialView} onMapReady={(map) => mapRef.current = map} />
          {showExpandButton && (
-             <div className="absolute bottom-4 right-4 z-[1000]">
+             <div className="absolute top-4 right-4 z-[1000]">
                  <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={handleExpandClick}>
                      <Expand className="h-5 w-5" />
                  </Button>
@@ -293,7 +293,7 @@ export function InteractiveMap({ mapStyle = 'street', initialView, showExpandBut
 
       <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
         <DialogContent className="p-0 w-screen h-screen max-w-none bg-background border-0 flex flex-col outline-none ring-0">
-            <div className="absolute bottom-4 right-4 z-[1001]">
+            <div className="absolute top-4 right-4 z-[1001]">
                 <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={() => setIsMapOpen(false)}>
                     <X className="h-5 w-5" />
                     <span className="sr-only">Close</span>
