@@ -78,6 +78,7 @@ import { Breadcrumb } from '@/components/breadcrumb';
 import Image from 'next/image';
 import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
 import dynamic from 'next/dynamic';
+import { useToast } from "@/hooks/use-toast";
 
 const InteractiveMap = dynamic(() => import('@/components/interactive-map').then(mod => mod.InteractiveMap), {
     ssr: false,
@@ -107,8 +108,7 @@ export default function PropertyDetailsPage() {
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [viewMode, setViewMode] = React.useState<'gallery' | 'video' | 'virtualTour' | 'floorPlan'>('gallery');
-  
-  const [zoomedImageUrl, setZoomedImageUrl] = React.useState<string | null>(null);
+  const { toast } = useToast();
 
   const amenityIcons: Record<string, React.ElementType> = {
     Balcony: GalleryVerticalEnd,
@@ -132,6 +132,31 @@ export default function PropertyDetailsPage() {
     Security: Users,
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: unit?.title,
+          text: `Check out this amazing property: ${unit?.title}`,
+          url: window.location.href,
+        });
+        toast({ title: "Property shared successfully!" });
+      } catch (error) {
+        console.error("Error sharing:", error);
+        toast({ title: "Could not share property", variant: "destructive" });
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({ title: "Link copied to clipboard!" });
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+        toast({ title: "Failed to copy link", variant: "destructive" });
+      }
+    }
+  };
+
+
   React.useEffect(() => {
     if (!api) {
       return;
@@ -149,12 +174,6 @@ export default function PropertyDetailsPage() {
       api.off('select', onSelect);
     };
   }, [api, thumbApi]);
-  
-  React.useEffect(() => {
-    if (zoomedImageUrl) {
-      // Logic for zoomed image if any
-    }
-  }, [zoomedImageUrl]);
 
   const onThumbClick = (index: number) => {
     setViewMode('gallery');
@@ -199,7 +218,7 @@ export default function PropertyDetailsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <Button variant="outline" size="icon">
+                        <Button variant="outline" size="icon" onClick={handleShare}>
                           <Share2 className="h-5 w-5" />
                         </Button>
                         <Button variant="outline" size="icon">
