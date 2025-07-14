@@ -50,13 +50,22 @@ export default function Home() {
       
       <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center -mt-16">
           <div className="absolute inset-0 z-0">
-              <Image
+               <Image
                   src="/mega tower1.png"
-                  alt="Hero image of MEGA Towers in Business Bay, Dubai"
+                  alt="Hero image of MEGA Towers in Business Bay, Dubai for mobile"
                   data-ai-hint="dubai cityscape"
                   fill
                   sizes="100vw"
-                  className="object-cover"
+                  className="object-cover md:hidden"
+                  priority
+              />
+              <Image
+                  src="/mega tower2.png"
+                  alt="Hero image of MEGA Towers in Business Bay, Dubai for desktop"
+                  data-ai-hint="dubai cityscape night"
+                  fill
+                  sizes="100vw"
+                  className="object-cover hidden md:block"
                   priority
               />
               <div className="absolute inset-0 bg-black/50" />
