@@ -45,7 +45,7 @@ export function Header() {
       <div className="container flex h-16 max-w-7xl items-center justify-between">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <div className="bg-white px-3 py-1.5 flex items-center justify-center">
-             <span className="font-headline text-2xl font-bold text-primary">MEGA</span>
+             <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} style={{ height: 'auto' }} />
           </div>
         </Link>
         
@@ -146,7 +146,7 @@ export function Header() {
                   <div className="p-6 border-b">
                       <Link href="/" onClick={() => setIsOpen(false)}>
                           <div className="bg-white p-2 flex items-center justify-center w-fit">
-                             <span className="font-headline text-2xl font-bold text-primary">MEGA</span>
+                             <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} style={{ height: 'auto' }} />
                           </div>
                       </Link>
                   </div>
