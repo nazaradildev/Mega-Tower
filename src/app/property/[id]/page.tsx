@@ -132,28 +132,11 @@ export default function PropertyDetailsPage() {
     Security: Users,
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: unit?.title,
-          text: `Check out this amazing property: ${unit?.title}`,
-          url: window.location.href,
-        });
-        toast({ title: "Property shared successfully!" });
-      } catch (error) {
-        console.error("Error sharing:", error);
-        toast({ title: "Could not share property", variant: "destructive" });
-      }
-    } else {
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        toast({ title: "Link copied to clipboard!" });
-      } catch (err) {
-        console.error('Failed to copy: ', err);
-        toast({ title: "Failed to copy link", variant: "destructive" });
-      }
-    }
+  const handleShare = () => {
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+      `Check out this amazing property: ${unit?.title} - ${window.location.href}`
+    )}`;
+    window.open(whatsappUrl, '_blank');
   };
 
 
