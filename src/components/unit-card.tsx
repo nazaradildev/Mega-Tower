@@ -358,7 +358,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                         data-ai-hint="apartment floor plan"
                         width={1000}
                         height={1400}
-                        className="w-auto h-auto max-w-none"
+                        className="w-full h-auto"
                       />
                     </div>
                   </div>
