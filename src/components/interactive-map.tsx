@@ -23,6 +23,8 @@ import { useLanguage } from '@/context/language-context';
 import * as ReactDOMServer from 'react-dom/server';
 import { Button } from './ui/button';
 import { Dialog, DialogContent } from './ui/dialog';
+import Image from 'next/image';
+import { Card } from './ui/card';
 
 const homeCoords = { lat: 25.18117216279701, lng: 55.2751394965599 };
 
@@ -36,6 +38,12 @@ type Poi = {
   lng: number;
   name: PoiName;
 }
+
+type PoiCardInfo = {
+  name: string;
+  image: string;
+} | null;
+
 
 const pois: Record<string, Poi[]> = {
     supermarket: [
@@ -135,7 +143,8 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const { language, direction } = useLanguage();
   const categories = categoriesData[language];
-  const homeLocationName = language === 'en' ? 'Your Apartment Location' : 'موقع شقتك';
+  const [selectedPoi, setSelectedPoi] = useState<PoiCardInfo>(null);
+
 
   useEffect(() => {
     if (typeof window === 'undefined' || !mapContainerRef.current || leafletMapRef.current) return;
@@ -156,34 +165,25 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
 
     L.tileLayer(tileLayerUrl).addTo(leafletMapRef.current);
     
-    const mainPropertyIconHtml = mapStyle === 'satellite' ? `
-        <div class="relative flex items-center justify-center">
-            <img src="/khalifatower.png" alt="Main Location" class="h-32 w-32" />
-        </div>
-    ` : `
-      <div class="relative flex items-center justify-center">
-        <svg class="h-16 w-16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M16 32C16 32 32 20 32 12C32 5.37258 26.6274 0 20 0C13.3726 0 8 5.37258 8 12C8 20 16 32 16 32Z" fill="hsl(var(--primary))"/>
-          <circle cx="16" cy="12" r="5" fill="hsl(var(--primary-foreground))"/>
-        </svg>
-      </div>`;
-
-    const iconSize: [number, number] = mapStyle === 'satellite' ? [128, 128] : [64, 64];
-    const iconAnchor: [number, number] = mapStyle === 'satellite' ? [64, 128] : [32, 64];
-
-    const mainPropertyIcon = L.divIcon({
-      html: mainPropertyIconHtml,
-      className: '',
-      iconSize: iconSize,
-      iconAnchor: iconAnchor,
+    const mainPropertyIcon = L.icon({
+        iconUrl: '/megatowericon.png',
+        iconSize: [80, 80],
+        iconAnchor: [40, 80],
+        popupAnchor: [0, -80]
     });
 
-    L.marker([homeCoords.lat, homeCoords.lng], {
-      icon: mainPropertyIcon,
-      zIndexOffset: 1000,
-    })
-      .addTo(leafletMapRef.current)
-      .bindTooltip(homeLocationName, { permanent: false, direction: 'top', offset: [0, -iconAnchor[1]] });
+    const mainMarker = L.marker([homeCoords.lat, homeCoords.lng], {
+        icon: mainPropertyIcon,
+        zIndexOffset: 1000,
+    }).addTo(leafletMapRef.current);
+    
+    mainMarker.on('click', () => {
+        setSelectedPoi({ name: 'MEGA Tower', image: '/mega tower1.png' });
+    });
+    
+    leafletMapRef.current.on('click', () => {
+        setSelectedPoi(null);
+    });
 
     return () => {
       if (leafletMapRef.current) {
@@ -191,7 +191,7 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
         leafletMapRef.current = null;
       }
     };
-  }, [mapStyle, initialView, homeLocationName, onMapReady]);
+  }, [mapStyle, initialView, onMapReady]);
 
   useEffect(() => {
      if (!leafletMapRef.current) return;
@@ -230,16 +230,49 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
 
 
   const toggleCategory = (categoryId: string) => {
-    setActiveCategory(prev => prev === categoryId ? null : categoryId);
+    setActiveCategory(prev => {
+        const newCategory = prev === categoryId ? null : categoryId;
+        if (newCategory) {
+            setSelectedPoi(null);
+        }
+        return newCategory;
+    });
   };
   
   return (
-    <div className="w-full h-full bg-card rounded-2xl flex flex-col" dir={direction}>
+    <div className="relative w-full h-full bg-card rounded-2xl flex flex-col overflow-hidden" dir={direction}>
       <div
         ref={mapContainerRef}
-        className="w-full flex-grow bg-muted rounded-xl overflow-hidden shadow-inner border"
+        className="w-full flex-grow bg-muted rounded-xl shadow-inner border"
       ></div>
-      <div className="pt-4 mt-2 overflow-x-auto overflow-y-visible pb-2 -mx-1" style={{ scrollbarWidth: 'thin' }}>
+      {selectedPoi && (
+          <Card className="absolute bottom-4 left-4 z-[1000] w-64 shadow-2xl animate-in fade-in-50 slide-in-from-bottom-5">
+              <div className="relative">
+                  <Image
+                      src={selectedPoi.image}
+                      alt={selectedPoi.name}
+                      width={256}
+                      height={144}
+                      className="w-full h-36 object-cover rounded-t-lg"
+                  />
+                  <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-1 right-1 h-7 w-7 rounded-full bg-black/40 hover:bg-black/60 text-white"
+                      onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPoi(null);
+                      }}
+                  >
+                      <X className="h-4 w-4" />
+                  </Button>
+              </div>
+              <div className="p-3">
+                  <p className="font-bold text-foreground">{selectedPoi.name}</p>
+              </div>
+          </Card>
+      )}
+      <div className="pt-4 overflow-x-auto overflow-y-visible pb-2 -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
             <button
