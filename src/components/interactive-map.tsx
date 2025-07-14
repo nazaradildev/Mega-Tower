@@ -246,7 +246,7 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
         className="w-full flex-grow bg-muted rounded-xl shadow-inner border"
       ></div>
       {selectedPoi && (
-          <Card className="absolute bottom-4 left-4 z-[1000] w-64 shadow-2xl animate-in fade-in-50 slide-in-from-bottom-5">
+          <Card className="absolute top-4 left-4 z-[1000] w-64 shadow-2xl animate-in fade-in-50 slide-in-from-top-5">
               <div className="relative">
                   <Image
                       src={selectedPoi.image}
@@ -272,8 +272,8 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
               </div>
           </Card>
       )}
-      <div className="pt-4 overflow-x-auto overflow-y-visible pb-2 -mx-1" style={{ scrollbarWidth: 'thin' }}>
-        <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-2", direction === 'rtl' && 'space-x-reverse')}>
+      <div className="overflow-x-auto overflow-y-visible -mx-1" style={{ scrollbarWidth: 'thin' }}>
+        <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-4", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
             <button
               key={category.id}
