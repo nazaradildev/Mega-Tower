@@ -348,8 +348,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                         </div>
                       </div>
                     </DialogHeader>
-                    <div className="flex-grow overflow-auto bg-muted/50">
-                      <div className="flex justify-center items-start p-4">
+                    <div className="relative flex-grow bg-muted/50">
                         <Image
                           src={
                             planView === '2D'
@@ -358,11 +357,9 @@ export function UnitCard({ unit }: UnitCardProps) {
                           }
                           alt={`Floor plan for ${unit.title} (${planView})`}
                           data-ai-hint="apartment floor plan"
-                          width={1000}
-                          height={1400}
-                          className="w-auto h-auto max-w-full"
+                          fill
+                          className="object-contain"
                         />
-                      </div>
                     </div>
                 </DialogContent>
               )}
