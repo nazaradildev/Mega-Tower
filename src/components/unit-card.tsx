@@ -373,17 +373,16 @@ export function UnitCard({ unit }: UnitCardProps) {
       <div className="relative z-10 p-4 border-t bg-gray-50/50 dark:bg-black/20 flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4 flex-wrap">
         <div className="flex items-center gap-3 flex-shrink-0">
           <Avatar className="h-10 w-10">
-            <AvatarImage
-              src="https://placehold.co/40x40.png"
-              data-ai-hint="agent portrait"
-              alt="Agent"
+             <AvatarImage
+              src="/apex.png"
+              alt="APEX Logo"
             />
             <AvatarFallback>AE</AvatarFallback>
           </Avatar>
           <div>
             <p className="text-xs text-muted-foreground">Marketing by</p>
             <p className="font-semibold text-foreground text-sm">
-              Apex Estates
+              APEX
             </p>
           </div>
         </div>

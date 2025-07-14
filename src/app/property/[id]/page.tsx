@@ -255,7 +255,7 @@ export default function PropertyDetailsPage() {
                             <img
                             src={unit.floorPlanImage}
                             alt={`Floor plan for ${unit.title}`}
-                            className="w-auto h-full object-contain max-w-full max-h-full"
+                            className="w-auto h-full object-contain max-w-full max-h-full rounded-lg"
                             />
                         </div>
                         ) : (
@@ -357,7 +357,7 @@ export default function PropertyDetailsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                  <div className="text-muted-foreground leading-relaxed space-y-4 prose prose-neutral dark:prose-invert max-w-none">
                       <p>
                         Discover the pinnacle of urban living in this stunning{' '}
                         {unit.beds}-bedroom apartment located in the prestigious
@@ -368,6 +368,14 @@ export default function PropertyDetailsPage() {
                         featuring high-end finishes and floor-to-ceiling
                         windows that flood the space with natural light.
                       </p>
+                       <h4>Interior Excellence</h4>
+                        <p>
+                          Step into a world of refined elegance. The expansive living and dining area, approximately 45 sqm, is adorned with premium Italian marble flooring that extends to a private balcony. The open-plan kitchen is a chef's dream, equipped with state-of-the-art integrated appliances from leading European brands, sleek custom cabinetry, and durable quartz countertops.
+                        </p>
+                        <h4>Comfort and Privacy</h4>
+                        <p>
+                          Each of the {unit.beds} bedrooms serves as a private sanctuary. The master suite ({unit.beds > 1 ? 'approx. 25 sqm' : 'approx. 20 sqm'}) features a generous walk-in closet and a spa-like en-suite bathroom with a rainfall shower and a separate soaking tub. All bathrooms are finished with designer fixtures and floor-to-ceiling porcelain tiles. Smart home technology allows for effortless control of lighting, climate, and security.
+                        </p>
                   </div>
                 </CardContent>
               </Card>
@@ -577,15 +585,14 @@ export default function PropertyDetailsPage() {
                   <Separator className="my-6" />
                   <div className="flex items-center gap-4 mb-6">
                     <Avatar className="h-16 w-16">
-                      <AvatarImage
-                        src="https://placehold.co/100x100.png"
-                        data-ai-hint="agent portrait"
-                        alt="Agent"
+                       <AvatarImage
+                        src="/apex.png"
+                        alt="APEX Logo"
                       />
                       <AvatarFallback>AE</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold">Apex Estates</p>
+                      <p className="font-semibold">APEX</p>
                       <p className="text-sm text-muted-foreground">
                         Marketing by
                       </p>
