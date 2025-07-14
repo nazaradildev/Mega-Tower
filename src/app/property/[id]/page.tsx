@@ -107,7 +107,8 @@ export default function PropertyDetailsPage() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [thumbApi, setThumbApi] = React.useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [viewMode, setViewMode] = React.useState<'gallery' | 'video' | 'virtualTour' | 'floorPlan'>('gallery');
+  const [viewMode, setViewMode] = React.useState<'gallery' | 'video' | 'virtualTour'>('gallery');
+  const [planView, setPlanView] = React.useState('2D');
   const { toast } = useToast();
 
   const amenityIcons: Record<string, React.ElementType> = {
@@ -247,23 +248,6 @@ export default function PropertyDetailsPage() {
                       </div>
                       )
                     )}
-                    {viewMode === 'floorPlan' && (
-                        unit.floorPlanImage ? (
-                        <div 
-                          className="w-full h-full bg-muted flex items-center justify-center p-4 rounded-lg"
-                        >
-                            <img
-                            src={unit.floorPlanImage}
-                            alt={`Floor plan for ${unit.title}`}
-                            className="w-auto h-full object-contain max-w-full max-h-full rounded-lg"
-                            />
-                        </div>
-                        ) : (
-                        <div className="w-full h-full bg-muted flex items-center justify-center rounded-lg">
-                            <p className="text-muted-foreground">Floor plan not available.</p>
-                        </div>
-                        )
-                    )}
                     {viewMode === 'video' && (
                       <div className="aspect-w-16 aspect-h-9 w-full h-full rounded-lg overflow-hidden bg-black">
                         <video
@@ -300,15 +284,73 @@ export default function PropertyDetailsPage() {
                   <View className="mr-2 h-4 w-4" />
                   Virtual Tour
                 </Button>
-                <Button
-                  variant={viewMode === 'floorPlan' ? 'default' : 'outline'}
-                  onClick={() => setViewMode('floorPlan')}
-                  disabled={!unit.floorPlanImage}
-                  className="rounded-lg"
-                >
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  Floor Plan
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant='outline'
+                      disabled={!unit.floorPlanImage}
+                      className="rounded-lg"
+                    >
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Floor Plan
+                    </Button>
+                  </DialogTrigger>
+                  {unit.floorPlanImage && (
+                    <DialogContent className="p-0 max-w-4xl w-[95vw] md:w-full flex flex-col h-[90vh]">
+                        <DialogHeader className="p-4 border-b flex-shrink-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <DialogTitle className="text-lg font-semibold truncate text-left">
+                              Floor Plan: {unit.title}
+                            </DialogTitle>
+                            <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
+                              <div className="p-1 bg-muted rounded-lg flex gap-1">
+                                <Button
+                                  size="sm"
+                                  variant={planView === '2D' ? 'default' : 'ghost'}
+                                  onClick={() => setPlanView('2D')}
+                                  className="h-8 rounded-md"
+                                >
+                                  2D
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant={planView === '3D' ? 'default' : 'ghost'}
+                                  onClick={() => setPlanView('3D')}
+                                  className="h-8 rounded-md"
+                                  disabled={!unit.floorPlanImage3d}
+                                >
+                                  3D
+                                </Button>
+                              </div>
+                              <DialogClose asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full h-9 w-9"
+                                >
+                                  <X className="h-4 w-4" />
+                                  <span className="sr-only">Close</span>
+                                </Button>
+                              </DialogClose>
+                            </div>
+                          </div>
+                        </DialogHeader>
+                        <div className="relative flex-grow bg-muted/50">
+                            <Image
+                              src={
+                                planView === '2D'
+                                  ? unit.floorPlanImage
+                                  : unit.floorPlanImage3d || ''
+                              }
+                              alt={`Floor plan for ${unit.title} (${planView})`}
+                              data-ai-hint="apartment floor plan"
+                              fill
+                              className="object-contain"
+                            />
+                        </div>
+                    </DialogContent>
+                  )}
+                </Dialog>
               </div>
 
               <div>
