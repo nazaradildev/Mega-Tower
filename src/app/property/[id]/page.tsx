@@ -211,7 +211,7 @@ export default function PropertyDetailsPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="aspect-[4/3]" style={{ clipPath: 'polygon(0 0, 90% 0, 100% 15%, 100% 100%, 0 100%)' }}>
+                  <div className="aspect-[4/3] rounded-lg overflow-hidden">
                     {viewMode === 'gallery' && (
                       <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
                         <CarouselContent className="m-0 h-full">
