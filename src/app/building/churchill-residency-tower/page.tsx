@@ -32,9 +32,20 @@ import {
   School,
   Stethoscope,
   Landmark,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Breadcrumb } from '@/components/breadcrumb';
+import dynamic from 'next/dynamic';
+
+const InteractiveMap = dynamic(() => import('@/components/interactive-map').then(mod => mod.InteractiveMap), {
+    ssr: false,
+    loading: () => (
+        <div className="h-[500px] w-full bg-muted rounded-lg flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    )
+});
 
 const galleryImages = [
   { src: "https://placehold.co/800x600.png", alt: "Building Exterior", hint: "building exterior" },
@@ -282,6 +293,15 @@ export default function BuildingDetailsPage() {
                                       </Card>
                                   ))}
                                 </div>
+                            </section>
+
+                            <section>
+                                <h2 className="text-2xl font-bold font-headline mb-4">Location</h2>
+                                <Card>
+                                    <CardContent className="h-[500px] w-full p-0">
+                                        <InteractiveMap showExpandButton={true} />
+                                    </CardContent>
+                                </Card>
                             </section>
 
                         </div>
