@@ -223,7 +223,7 @@ export default function PropertyDetailsPage() {
                               <img
                                 src={img}
                                 alt={`Property image ${index + 1}`}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover rounded-lg"
                               />
                             </CarouselItem>
                           ))}
@@ -239,10 +239,10 @@ export default function PropertyDetailsPage() {
                           width="100%"
                           height="100%"
                           allow="fullscreen"
-                          className="border-0 w-full h-full"
+                          className="border-0 w-full h-full rounded-lg"
                       />
                       ) : (
-                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <div className="w-full h-full bg-muted flex items-center justify-center rounded-lg">
                           <p className="text-muted-foreground">Virtual tour not available.</p>
                       </div>
                       )
@@ -250,7 +250,7 @@ export default function PropertyDetailsPage() {
                     {viewMode === 'floorPlan' && (
                         unit.floorPlanImage ? (
                         <div 
-                          className="w-full h-full bg-muted flex items-center justify-center p-4"
+                          className="w-full h-full bg-muted flex items-center justify-center p-4 rounded-lg"
                         >
                             <img
                             src={unit.floorPlanImage}
@@ -259,7 +259,7 @@ export default function PropertyDetailsPage() {
                             />
                         </div>
                         ) : (
-                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <div className="w-full h-full bg-muted flex items-center justify-center rounded-lg">
                             <p className="text-muted-foreground">Floor plan not available.</p>
                         </div>
                         )
@@ -268,7 +268,7 @@ export default function PropertyDetailsPage() {
                       <div className="aspect-w-16 aspect-h-9 w-full h-full rounded-lg overflow-hidden bg-black">
                         <video
                             controls
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-contain rounded-lg"
                             preload="metadata"
                             playsInline
                             autoPlay
