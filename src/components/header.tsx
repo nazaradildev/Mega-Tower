@@ -43,14 +43,15 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-zinc-900/80">
       <div className="container flex h-16 max-w-7xl items-center justify-between">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <div className="bg-white px-3 py-1.5 flex items-center justify-center">
-             <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} style={{ height: 'auto' }} />
-          </div>
-        </Link>
-        
-        <div className="flex items-center">
-          <nav className="hidden md:flex md:items-center md:gap-6 text-sm font-medium">
+        <div className="flex items-center gap-6 md:gap-10">
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="bg-white p-2 flex items-center justify-center">
+                 <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} style={{ height: 'auto' }} />
+              </div>
+            </Link>
+        </div>
+
+        <nav className="hidden md:flex flex-1 items-center justify-center gap-6 text-sm font-medium">
             {navLinks.map((link) => {
               const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
               return (
@@ -67,10 +68,10 @@ export function Header() {
                 </Link>
               );
             })}
-          </nav>
-
-          <div className="flex items-center gap-2 ml-6">
-             <div className="hidden md:flex items-center gap-2">
+        </nav>
+          
+        <div className="flex items-center justify-end">
+            <div className="hidden md:flex items-center gap-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="rounded-lg h-9 text-foreground/70 hover:text-primary">
@@ -118,15 +119,14 @@ export function Header() {
                     <Link href="#contact">Book a Viewing</Link>
                 </Button>
             </div>
-          </div>
           
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" className="rounded-lg ml-2 p-0 h-auto w-auto">
+                <Button variant="ghost" className="rounded-lg ml-2 p-0 h-auto w-auto flex items-center gap-2">
                    <svg
-                    width="28"
-                    height="28"
+                    width="24"
+                    height="24"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ export function Header() {
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                   </svg>
-                  <span className="sr-only">Toggle menu</span>
+                  <span className="text-sm font-medium">Menu</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] p-0 flex flex-col">
