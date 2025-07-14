@@ -43,7 +43,7 @@ export const units: Unit[] = [
         '/apparment1.10.webp',
     ],
     floorPlanImage: '/1-bed-type-1.png',
-    floorPlanImage3d: 'https://placehold.co/800x1100.png',
+    floorPlanImage3d: '/3dfloor2A1.png',
     virtualTourUrl: 'https://my.matterport.com/show/?m=69UUKm16w39',
     aiHint: 'luxury living room',
     area: 830,
