@@ -50,27 +50,24 @@ export function Header() {
               </div>
             </Link>
         </div>
-
-        <nav className="hidden md:flex flex-1 items-center justify-center gap-6 text-sm font-medium">
-            {navLinks.map((link) => {
-              const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
-              return (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={cn(
-                    "transition-colors hover:text-primary flex items-center gap-2",
-                    isActive ? 'text-primary' : 'text-foreground/60'
-                  )}
-                >
-                  <link.icon className="h-4 w-4" />
-                  {link.label}
-                </Link>
-              );
-            })}
-        </nav>
           
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end gap-2">
+            <nav className="hidden md:flex items-center gap-2 text-sm font-medium">
+                {navLinks.map((link) => {
+                  const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
+                  return (
+                    <Button key={link.label} variant="ghost" asChild className={cn("rounded-lg h-9 text-foreground/70 hover:text-primary", isActive && "text-primary")}>
+                        <Link
+                          href={link.href}
+                        >
+                          <link.icon className="h-5 w-5 mr-2" />
+                          {link.label}
+                        </Link>
+                    </Button>
+                  );
+                })}
+            </nav>
+
             <div className="hidden md:flex items-center gap-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -123,7 +120,7 @@ export function Header() {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" className="rounded-lg ml-2 p-0 h-auto w-auto flex items-center gap-2">
+                <Button variant="ghost" className="rounded-lg ml-4 p-0 h-auto w-auto flex items-center gap-2">
                    <svg
                     width="24"
                     height="24"
@@ -143,14 +140,7 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] p-0 flex flex-col">
-                  <div className="p-6 border-b">
-                      <Link href="/" onClick={() => setIsOpen(false)}>
-                          <div className="bg-white p-2 flex items-center justify-center w-fit">
-                             <Image src="/MEGA.png" alt="MEGA Logo" width={100} height={34} style={{ height: 'auto' }} />
-                          </div>
-                      </Link>
-                  </div>
-                  <nav className="flex-1 flex flex-col gap-4 p-6">
+                  <nav className="flex-1 flex flex-col gap-4 p-6 mt-8">
                       {navLinks.map((link) => {
                         const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
                         return (
