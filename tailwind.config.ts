@@ -88,19 +88,15 @@ export default {
             height: '0',
           },
         },
-        'zoom-in-ken-burns': {
-          '0%': {
-            transform: 'scale(1)',
-          },
-          '100%': {
-            transform: 'scale(1.05)',
-          },
+        'ken-burns': {
+            '0%, 100%': { transform: 'scale(1) rotate(0deg)' },
+            '50%': { transform: 'scale(1.1) rotate(0.5deg)' },
         },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'zoom-in-ken-burns': 'zoom-in-ken-burns 5s linear forwards',
+        'ken-burns': 'ken-burns 20s ease-in-out infinite',
       },
     },
   },

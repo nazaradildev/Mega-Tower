@@ -13,6 +13,8 @@ import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insig
 import { Footer } from '@/components/footer';
 import { useLanguage } from '@/context/language-context';
 import { StickyNav } from '@/components/sticky-nav';
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 const content = {
   en: {
@@ -42,13 +44,37 @@ const content = {
 export default function Home() {
   const { language, direction } = useLanguage();
   const t = content[language];
+  const [isHeroVisible, setIsHeroVisible] = React.useState(false);
+  const heroRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsHeroVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentHeroRef = heroRef.current;
+    if (currentHeroRef) {
+      observer.observe(currentHeroRef);
+    }
+
+    return () => {
+      if (currentHeroRef) {
+        observer.unobserve(currentHeroRef);
+      }
+    };
+  }, []);
+
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <StickyNav />
       
-      <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center -mt-16">
+      <section ref={heroRef} id="hero" className="relative h-screen w-full flex flex-col items-center justify-center -mt-16 overflow-hidden">
           <div className="absolute inset-0 z-0">
                <Image
                   src="/mega tower1.png"
@@ -56,7 +82,10 @@ export default function Home() {
                   data-ai-hint="dubai cityscape"
                   fill
                   sizes="100vw"
-                  className="object-cover md:hidden"
+                  className={cn(
+                    "object-cover md:hidden transition-transform duration-[20s] ease-linear",
+                    isHeroVisible ? 'animate-ken-burns' : ''
+                  )}
                   priority
               />
               <Image
@@ -65,7 +94,10 @@ export default function Home() {
                   data-ai-hint="dubai cityscape night"
                   fill
                   sizes="100vw"
-                  className="object-cover hidden md:block"
+                  className={cn(
+                    "object-cover hidden md:block transition-transform duration-[20s] ease-linear",
+                    isHeroVisible ? 'animate-ken-burns' : ''
+                  )}
                   priority
               />
               <div className="absolute inset-0 bg-black/50" />
