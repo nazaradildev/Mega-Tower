@@ -185,8 +185,8 @@ export default function PropertyDetailsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left/Main Column */}
             <div className="col-span-1 lg:col-span-2 space-y-8">
-              <Card className="overflow-hidden">
-                <CardHeader>
+              <Card className="overflow-hidden bg-transparent border-0 shadow-none">
+                <CardHeader className="px-0">
                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                       <div>
                         <CardTitle className="font-headline text-3xl mb-1">
@@ -211,7 +211,7 @@ export default function PropertyDetailsPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="aspect-[4/3]">
+                  <div className="aspect-[4/3]" style={{ clipPath: 'polygon(0 0, 90% 0, 100% 15%, 100% 100%, 0 100%)' }}>
                     {viewMode === 'gallery' && (
                       <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
                         <CarouselContent className="m-0 h-full">
