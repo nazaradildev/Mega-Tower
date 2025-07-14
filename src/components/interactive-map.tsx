@@ -177,7 +177,8 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
         zIndexOffset: 1000,
     }).addTo(leafletMapRef.current);
     
-    mainMarker.on('click', () => {
+    mainMarker.on('click', (e) => {
+        L.DomEvent.stopPropagation(e);
         setSelectedPoi({ name: 'MEGA Tower', image: '/mega tower1.png' });
     });
     
@@ -232,9 +233,17 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
   const toggleCategory = (categoryId: string) => {
     setActiveCategory(prev => {
         const newCategory = prev === categoryId ? null : categoryId;
+        
         if (newCategory) {
             setSelectedPoi(null);
+            const categoryPois = pois[newCategory];
+            if (categoryPois && categoryPois.length > 0 && leafletMapRef.current) {
+                const bounds = L.latLngBounds([homeCoords]);
+                categoryPois.forEach(poi => bounds.extend([poi.lat, poi.lng]));
+                leafletMapRef.current.fitBounds(bounds, { padding: [50, 50] });
+            }
         }
+        
         return newCategory;
     });
   };
