@@ -309,59 +309,61 @@ export function UnitCard({ unit }: UnitCardProps) {
                 </Button>
               </DialogTrigger>
               {unit.floorPlanImage && (
-                <DialogContent className="p-0 max-w-4xl w-[95vw] md:w-full">
-                  <div className="flex items-center justify-between p-4 border-b">
-                    <DialogTitle className="text-lg font-semibold truncate pr-4">
-                      Floor Plan: {unit.title}
-                    </DialogTitle>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <div className="p-1 bg-muted rounded-lg flex gap-1">
-                        <Button
-                          size="sm"
-                          variant={planView === '2D' ? 'default' : 'ghost'}
-                          onClick={() => setPlanView('2D')}
-                          className="h-8 rounded-md"
-                        >
-                          2D
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant={planView === '3D' ? 'default' : 'ghost'}
-                          onClick={() => setPlanView('3D')}
-                          className="h-8 rounded-md"
-                          disabled={!unit.floorPlanImage3d}
-                        >
-                          3D
-                        </Button>
+                <DialogContent className="p-0 max-w-4xl w-[95vw] md:w-full flex flex-col h-[90vh]">
+                    <DialogHeader className="p-4 border-b flex-shrink-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <DialogTitle className="text-lg font-semibold truncate text-left">
+                          Floor Plan: {unit.title}
+                        </DialogTitle>
+                        <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
+                          <div className="p-1 bg-muted rounded-lg flex gap-1">
+                            <Button
+                              size="sm"
+                              variant={planView === '2D' ? 'default' : 'ghost'}
+                              onClick={() => setPlanView('2D')}
+                              className="h-8 rounded-md"
+                            >
+                              2D
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant={planView === '3D' ? 'default' : 'ghost'}
+                              onClick={() => setPlanView('3D')}
+                              className="h-8 rounded-md"
+                              disabled={!unit.floorPlanImage3d}
+                            >
+                              3D
+                            </Button>
+                          </div>
+                          <DialogClose asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-full h-9 w-9"
+                            >
+                              <X className="h-4 w-4" />
+                              <span className="sr-only">Close</span>
+                            </Button>
+                          </DialogClose>
+                        </div>
                       </div>
-                      <DialogClose asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="rounded-full"
-                        >
-                          <X className="h-4 w-4" />
-                          <span className="sr-only">Close</span>
-                        </Button>
-                      </DialogClose>
+                    </DialogHeader>
+                    <div className="flex-grow overflow-auto bg-muted/50">
+                      <div className="flex justify-center items-start p-4">
+                        <Image
+                          src={
+                            planView === '2D'
+                              ? unit.floorPlanImage
+                              : unit.floorPlanImage3d || ''
+                          }
+                          alt={`Floor plan for ${unit.title} (${planView})`}
+                          data-ai-hint="apartment floor plan"
+                          width={1000}
+                          height={1400}
+                          className="w-auto h-auto max-w-full"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="bg-muted/50 max-h-[80vh] overflow-auto">
-                    <div className="flex justify-center items-center p-4">
-                      <Image
-                        src={
-                          planView === '2D'
-                            ? unit.floorPlanImage
-                            : unit.floorPlanImage3d || ''
-                        }
-                        alt={`Floor plan for ${unit.title} (${planView})`}
-                        data-ai-hint="apartment floor plan"
-                        width={1000}
-                        height={1400}
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  </div>
                 </DialogContent>
               )}
             </Dialog>
