@@ -241,37 +241,37 @@ function MapComponent({ mapStyle = 'street', initialView, onMapReady }: Omit<Int
   
   return (
     <div className="relative w-full h-full bg-card rounded-2xl flex flex-col overflow-hidden" dir={direction}>
+        {selectedPoi && (
+            <Card className="absolute top-0 left-0 z-[1000] w-64 shadow-2xl animate-in fade-in-50 slide-in-from-top-5 rounded-tl-none rounded-tr-none">
+                <div className="relative">
+                    <Image
+                        src={selectedPoi.image}
+                        alt={selectedPoi.name}
+                        width={256}
+                        height={144}
+                        className="w-full h-36 object-cover"
+                    />
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-1 right-1 h-7 w-7 rounded-full bg-black/40 hover:bg-black/60 text-white"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPoi(null);
+                        }}
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+                <div className="p-3">
+                    <p className="font-bold text-foreground">{selectedPoi.name}</p>
+                </div>
+            </Card>
+        )}
       <div
         ref={mapContainerRef}
         className="w-full flex-grow bg-muted rounded-xl shadow-inner border"
       ></div>
-      {selectedPoi && (
-          <Card className="absolute top-4 left-4 z-[1000] w-64 shadow-2xl animate-in fade-in-50 slide-in-from-top-5">
-              <div className="relative">
-                  <Image
-                      src={selectedPoi.image}
-                      alt={selectedPoi.name}
-                      width={256}
-                      height={144}
-                      className="w-full h-36 object-cover rounded-t-lg"
-                  />
-                  <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-1 right-1 h-7 w-7 rounded-full bg-black/40 hover:bg-black/60 text-white"
-                      onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedPoi(null);
-                      }}
-                  >
-                      <X className="h-4 w-4" />
-                  </Button>
-              </div>
-              <div className="p-3">
-                  <p className="font-bold text-foreground">{selectedPoi.name}</p>
-              </div>
-          </Card>
-      )}
       <div className="overflow-x-auto overflow-y-visible -mx-1" style={{ scrollbarWidth: 'thin' }}>
         <div className={cn("flex space-x-3 whitespace-nowrap px-1 py-4", direction === 'rtl' && 'space-x-reverse')}>
           {categories.map(category => (
