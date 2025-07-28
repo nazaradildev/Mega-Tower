@@ -1,35 +1,40 @@
 
+export type Translation = {
+  en: string;
+  ar: string;
+}
+
 export type Unit = {
   id: number;
-  type: string;
-  propertyType: string;
+  type: Translation;
+  propertyType: Translation;
   beds: number;
   baths: number;
-  title: string;
+  title: Translation;
   images: string[];
   floorPlanImage: string | null;
   floorPlanImage3d: string | null;
   virtualTourUrl: string | null;
   aiHint: string;
   area: number;
-  view: string;
-  status: string;
+  view: Translation;
+  status: Translation;
   rent: number;
   furnished: boolean;
   exclusive: boolean;
   verified: boolean;
-  amenities: string[];
+  amenities: { en: string; ar: string }[];
   serviceCharges: number;
 };
 
 export const units: Unit[] = [
   {
     id: 1,
-    type: '1 Bedroom',
-    propertyType: 'Apartment',
+    type: { en: '1 Bedroom', ar: 'غرفة نوم واحدة' },
+    propertyType: { en: 'Apartment', ar: 'شقة' },
     beds: 1,
     baths: 2,
-    title: 'One-Bedroom with Burj & Canal View',
+    title: { en: 'One-Bedroom with Burj & Canal View', ar: 'غرفة نوم واحدة بإطلالة على برج خليفة والقناة' },
     images: [
         '/apparment1.1.webp',
         '/apparment1.2.jpg',
@@ -47,123 +52,179 @@ export const units: Unit[] = [
     virtualTourUrl: 'https://my.matterport.com/show/?m=69UUKm16w39',
     aiHint: 'luxury living room',
     area: 830,
-    view: 'Burj Khalifa & Canal View',
-    status: 'Available Now',
+    view: { en: 'Burj Khalifa & Canal View', ar: 'إطلالة على برج خليفة والقناة' },
+    status: { en: 'Available Now', ar: 'متاح الآن' },
     rent: 95000,
     furnished: true,
     exclusive: true,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark', 'Security', 'Concierge', 'Built in Wardrobes'],
+    amenities: [
+        { en: 'Balcony', ar: 'شرفة' },
+        { en: 'Shared Pool', ar: 'مسبح مشترك' },
+        { en: 'Shared Gym', ar: 'صالة رياضية مشتركة' },
+        { en: 'Covered Parking', ar: 'موقف سيارات مغطى' },
+        { en: 'View of Landmark', ar: 'إطلالة على معلم بارز' },
+        { en: 'Security', ar: 'أمن' },
+        { en: 'Concierge', ar: 'كونسيرج' },
+        { en: 'Built in Wardrobes', ar: 'خزائن مدمجة' }
+    ],
     serviceCharges: 14.19
   },
   {
     id: 2,
-    type: '1 Bedroom',
-    propertyType: 'Apartment',
+    type: { en: '1 Bedroom', ar: 'غرفة نوم واحدة' },
+    propertyType: { en: 'Apartment', ar: 'شقة' },
     beds: 1,
     baths: 2,
-    title: 'One-Bedroom Apartment - Type A',
+    title: { en: 'One-Bedroom Apartment - Type A', ar: 'شقة بغرفة نوم واحدة - نوع A' },
     images: ['/apparment2.1.webp'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
     floorPlanImage3d: null,
     virtualTourUrl: null,
     aiHint: 'modern apartment interior',
     area: 990,
-    view: 'Canal View',
-    status: 'Available Now',
+    view: { en: 'Canal View', ar: 'إطلالة على القناة' },
+    status: { en: 'Available Now', ar: 'متاح الآن' },
     rent: 160000,
     furnished: false,
     exclusive: false,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'Security', 'Concierge', 'Built in Wardrobes'],
+    amenities: [
+        { en: 'Balcony', ar: 'شرفة' },
+        { en: 'Shared Pool', ar: 'مسبح مشترك' },
+        { en: 'Shared Gym', ar: 'صالة رياضية مشتركة' },
+        { en: 'Covered Parking', ar: 'موقف سيارات مغطى' },
+        { en: 'View of Water', ar: 'إطلالة على الماء' },
+        { en: 'Security', ar: 'أمن' },
+        { en: 'Concierge', ar: 'كونسيرج' },
+        { en: 'Built in Wardrobes', ar: 'خزائن مدمجة' }
+    ],
     serviceCharges: 15.50
   },
   {
     id: 3,
-    type: '3 Bedroom',
-    propertyType: 'Apartment',
+    type: { en: '3 Bedroom', ar: '3 غرف نوم' },
+    propertyType: { en: 'Apartment', ar: 'شقة' },
     beds: 3,
     baths: 4,
-    title: 'Three-Bedroom Sky Villa',
+    title: { en: 'Three-Bedroom Sky Villa', ar: 'فيلا سماوية بثلاث غرف نوم' },
     images: ['/apparment3.1.webp'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
     floorPlanImage3d: null,
     virtualTourUrl: null,
     aiHint: 'spacious apartment kitchen',
     area: 2300,
-    view: 'Full Canal View',
-    status: 'Available Now',
+    view: { en: 'Full Canal View', ar: 'إطلالة كاملة على القناة' },
+    status: { en: 'Available Now', ar: 'متاح الآن' },
     rent: 375000,
     furnished: true,
     exclusive: true,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Walk-in Closet', 'Pets Allowed', 'Security', 'Concierge'],
+    amenities: [
+        { en: 'Balcony', ar: 'شرفة' },
+        { en: 'Shared Pool', ar: 'مسبح مشترك' },
+        { en: 'Shared Gym', ar: 'صالة رياضية مشتركة' },
+        { en: 'Covered Parking', ar: 'موقف سيارات مغطى' },
+        { en: 'View of Water', ar: 'إطلالة على الماء' },
+        { en: 'View of Landmark', ar: 'إطلالة على معلم بارز' },
+        { en: 'Walk-in Closet', ar: 'خزانة ملابس' },
+        { en: 'Pets Allowed', ar: 'مسموح بالحيوانات الأليفة' },
+        { en: 'Security', ar: 'أمن' },
+        { en: 'Concierge', ar: 'كونسيرج' }
+    ],
     serviceCharges: 18.25
   },
   {
     id: 4,
-    type: '4 Bedroom',
-    propertyType: 'Penthouse',
+    type: { en: '4 Bedroom', ar: '4 غرف نوم' },
+    propertyType: { en: 'Penthouse', ar: 'بنتهاوس' },
     beds: 4,
     baths: 5,
-    title: 'Four-Bedroom Penthouse',
+    title: { en: 'Four-Bedroom Penthouse', ar: 'بنتهاوس بأربع غرف نوم' },
     images: ['/apparment4.1.webp'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
     floorPlanImage3d: null,
     virtualTourUrl: null,
     aiHint: 'penthouse apartment view',
     area: 4000,
-    view: '360° Panoramic View',
-    status: 'Available from 25 July',
+    view: { en: '360° Panoramic View', ar: 'إطلالة بانورامية 360 درجة' },
+    status: { en: 'Available from 25 July', ar: 'متاح من 25 يوليو' },
     rent: 600000,
     furnished: true,
     exclusive: true,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Water', 'View of Landmark', 'Private Jacuzzi', 'Study', 'Security', 'Concierge'],
+    amenities: [
+        { en: 'Balcony', ar: 'شرفة' },
+        { en: 'Shared Pool', ar: 'مسبح مشترك' },
+        { en: 'Shared Gym', ar: 'صالة رياضية مشتركة' },
+        { en: 'Covered Parking', ar: 'موقف سيارات مغطى' },
+        { en: 'View of Water', ar: 'إطلالة على الماء' },
+        { en: 'View of Landmark', ar: 'إطلالة على معلم بارز' },
+        { en: 'Private Jacuzzi', ar: 'جاكوزي خاص' },
+        { en: 'Study', ar: 'غرفة دراسة' },
+        { en: 'Security', ar: 'أمن' },
+        { en: 'Concierge', ar: 'كونسيرج' }
+    ],
     serviceCharges: 22.00
   },
   {
     id: 5,
-    type: '1 Bedroom',
-    propertyType: 'Apartment',
+    type: { en: '1 Bedroom', ar: 'غرفة نوم واحدة' },
+    propertyType: { en: 'Apartment', ar: 'شقة' },
     beds: 1,
     baths: 1,
-    title: 'One-Bedroom Apartment - Type B',
+    title: { en: 'One-Bedroom Apartment - Type B', ar: 'شقة بغرفة نوم واحدة - نوع B' },
     images: ['/apparment5.1.webp'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
     floorPlanImage3d: null,
     virtualTourUrl: null,
     aiHint: 'cozy bedroom apartment',
     area: 1100,
-    view: 'Business Bay View',
-    status: 'Available Now',
+    view: { en: 'Business Bay View', ar: 'إطلالة على الخليج التجاري' },
+    status: { en: 'Available Now', ar: 'متاح الآن' },
     rent: 175000,
     furnished: true,
     exclusive: false,
     verified: true,
-    amenities: ['Balcony', 'Shared Pool', 'Shared Gym', 'Covered Parking', 'Security', 'Concierge', 'Pets Allowed'],
+    amenities: [
+        { en: 'Balcony', ar: 'شرفة' },
+        { en: 'Shared Pool', ar: 'مسبح مشترك' },
+        { en: 'Shared Gym', ar: 'صالة رياضية مشتركة' },
+        { en: 'Covered Parking', ar: 'موقف سيارات مغطى' },
+        { en: 'Security', ar: 'أمن' },
+        { en: 'Concierge', ar: 'كونسيرج' },
+        { en: 'Pets Allowed', ar: 'مسموح بالحيوانات الأليفة' }
+    ],
     serviceCharges: 16.00
   },
   {
     id: 6,
-    type: '2 Bedroom',
-    propertyType: 'Apartment',
+    type: { en: '2 Bedroom', ar: 'غرفتي نوم' },
+    propertyType: { en: 'Apartment', ar: 'شقة' },
     beds: 2,
     baths: 2,
-    title: 'Two-Bedroom Apartment - Type D',
+    title: { en: 'Two-Bedroom Apartment - Type D', ar: 'شقة بغرفتي نوم - نوع D' },
     images: ['/apparment6.1.webp'],
     floorPlanImage: 'https://placehold.co/800x1100.png',
     floorPlanImage3d: null,
     virtualTourUrl: null,
     aiHint: 'minimalist apartment design',
     area: 1700,
-    view: 'Downtown View',
-    status: 'Available Now',
+    view: { en: 'Downtown View', ar: 'إطلالة على وسط المدينة' },
+    status: { en: 'Available Now', ar: 'متاح الآن' },
     rent: 265000,
     furnished: false,
     exclusive: false,
     verified: true,
-    amenities: ['Shared Pool', 'Shared Gym', 'Covered Parking', 'View of Landmark', 'Security', 'Concierge', 'Built in Wardrobes'],
+    amenities: [
+        { en: 'Shared Pool', ar: 'مسبح مشترك' },
+        { en: 'Shared Gym', ar: 'صالة رياضية مشتركة' },
+        { en: 'Covered Parking', ar: 'موقف سيارات مغطى' },
+        { en: 'View of Landmark', ar: 'إطلالة على معلم بارز' },
+        { en: 'Security', ar: 'أمن' },
+        { en: 'Concierge', ar: 'كونسيرج' },
+        { en: 'Built in Wardrobes', ar: 'خزائن مدمجة' }
+    ],
     serviceCharges: 17.50
   },
 ];

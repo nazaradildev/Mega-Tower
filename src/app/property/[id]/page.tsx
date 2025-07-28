@@ -106,7 +106,7 @@ const content = {
     close: 'Close',
     thumbnail: 'Thumbnail',
     description: 'Description',
-    descriptionP1: (unit: (typeof units)[0]) => `Discover the pinnacle of urban living in this stunning ${unit.beds}-bedroom apartment located in the prestigious MEGA Residency Tower, Business Bay. Offering breathtaking views of the ${unit.view}, this residence combines luxury, comfort, and convenience. The spacious layout is perfect for both relaxation and entertaining, featuring high-end finishes and floor-to-ceiling windows that flood the space with natural light.`,
+    descriptionP1: (unit: (typeof units)[0], lang: 'en' | 'ar') => `Discover the pinnacle of urban living in this stunning ${unit.beds}-bedroom apartment located in the prestigious MEGA Residency Tower, Business Bay. Offering breathtaking views of the ${unit.view[lang]}, this residence combines luxury, comfort, and convenience. The spacious layout is perfect for both relaxation and entertaining, featuring high-end finishes and floor-to-ceiling windows that flood the space with natural light.`,
     interiorExcellence: 'Interior Excellence',
     descriptionP2: (unit: (typeof units)[0]) => `Step into a world of refined elegance. The expansive living and dining area, approximately 45 sqm, is adorned with premium Italian marble flooring that extends to a private balcony. The open-plan kitchen is a chef's dream, equipped with state-of-the-art integrated appliances from leading European brands, sleek custom cabinetry, and durable quartz countertops.`,
     comfortAndPrivacy: 'Comfort and Privacy',
@@ -150,7 +150,7 @@ const content = {
     close: 'إغلاق',
     thumbnail: 'صورة مصغرة',
     description: 'الوصف',
-    descriptionP1: (unit: (typeof units)[0]) => `اكتشف قمة الحياة الحضرية في هذه الشقة المذهلة المكونة من ${unit.beds} غرفة نوم والتي تقع في برج ميغا السكني المرموق في الخليج التجاري. يوفر هذا السكن إطلالات خلابة على ${unit.view}، ويجمع بين الفخامة والراحة والملاءمة. التصميم الفسيح مثالي للاسترخاء والترفيه، ويتميز بتشطيبات راقية ونوافذ ممتدة من الأرض حتى السقف تغمر المساحة بالضوء الطبيعي.`,
+    descriptionP1: (unit: (typeof units)[0], lang: 'en' | 'ar') => `اكتشف قمة الحياة الحضرية في هذه الشقة المذهلة المكونة من ${unit.beds} غرفة نوم والتي تقع في برج ميغا السكني المرموق في الخليج التجاري. يوفر هذا السكن إطلالات خلابة على ${unit.view[lang]}، ويجمع بين الفخامة والراحة والملاءمة. التصميم الفسيح مثالي للاسترخاء والترفيه، ويتميز بتشطيبات راقية ونوافذ ممتدة من الأرض حتى السقف تغمر المساحة بالضوء الطبيعي.`,
     interiorExcellence: 'التميز الداخلي',
     descriptionP2: (unit: (typeof units)[0]) => `ادخل إلى عالم من الأناقة الراقية. منطقة المعيشة وتناول الطعام الفسيحة، التي تبلغ مساحتها حوالي 45 مترًا مربعًا، مزينة بأرضيات من الرخام الإيطالي الفاخر تمتد إلى شرفة خاصة. المطبخ المفتوح هو حلم كل طاهٍ، ومجهز بأحدث الأجهزة المدمجة من العلامات التجارية الأوروبية الرائدة، وخزائن مخصصة أنيقة، وأسطح من الكوارتز المتين.`,
     comfortAndPrivacy: 'الراحة والخصوصية',
@@ -229,7 +229,7 @@ export default function PropertyDetailsPage() {
 
   const handleShare = () => {
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-      `Check out this amazing property: ${unit?.title} - ${window.location.href}`
+      `Check out this amazing property: ${unit?.title[language]} - ${window.location.href}`
     )}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -266,7 +266,7 @@ export default function PropertyDetailsPage() {
     { label: t.apartmentsForRent, href: '/#residences' },
     { label: t.businessBay, href: '/community/business-bay' },
     { label: t.megaResidencyTower, href: '/building/mega-residency-tower' },
-    { label: unit.title }
+    { label: unit.title[language] }
   ];
 
   return (
@@ -285,7 +285,7 @@ export default function PropertyDetailsPage() {
                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                       <div>
                         <CardTitle className="font-headline text-3xl mb-1">
-                          {unit.title}
+                          {unit.title[language]}
                         </CardTitle>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <MapPin className="h-4 w-4" />
@@ -399,7 +399,7 @@ export default function PropertyDetailsPage() {
                         <DialogHeader className="p-4 border-b flex-shrink-0">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <DialogTitle className="text-lg font-semibold truncate text-left">
-                              {t.floorPlanTitle} {unit.title}
+                              {t.floorPlanTitle} {unit.title[language]}
                             </DialogTitle>
                             <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
                               <div className="p-1 bg-muted rounded-lg flex gap-1">
@@ -441,7 +441,7 @@ export default function PropertyDetailsPage() {
                                   ? unit.floorPlanImage
                                   : unit.floorPlanImage3d || ''
                               }
-                              alt={`Floor plan for ${unit.title} (${planView})`}
+                              alt={`Floor plan for ${unit.title[language]} (${planView})`}
                               data-ai-hint="apartment floor plan"
                               fill
                               className="object-contain"
@@ -499,7 +499,7 @@ export default function PropertyDetailsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-muted-foreground leading-relaxed space-y-4 prose prose-neutral dark:prose-invert max-w-none">
-                      <p>{t.descriptionP1(unit)}</p>
+                      <p>{t.descriptionP1(unit, language)}</p>
                       <h4>{t.interiorExcellence}</h4>
                       <p>{t.descriptionP2(unit)}</p>
                       <h4>{t.comfortAndPrivacy}</h4>
@@ -520,7 +520,7 @@ export default function PropertyDetailsPage() {
                         <Building className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                         <div>
                             <p className="text-sm text-muted-foreground">{t.propertyType}</p>
-                            <p className="font-semibold">{unit.propertyType}</p>
+                            <p className="font-semibold">{unit.propertyType[language]}</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-3">
@@ -564,15 +564,15 @@ export default function PropertyDetailsPage() {
                 <CardContent>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
                       {unit.amenities.slice(0,8).map((amenity) => {
-                        const Icon = amenityIcons[amenity] || CheckCircle;
+                        const Icon = amenityIcons[amenity.en] || CheckCircle;
                         return (
                           <div
-                            key={amenity}
+                            key={amenity.en}
                             className="flex items-center gap-2"
                           >
                             <Icon className="h-5 w-5 text-primary" />
                             <span className="text-muted-foreground">
-                              {amenity}
+                              {amenity[language]}
                             </span>
                           </div>
                         );
@@ -588,11 +588,11 @@ export default function PropertyDetailsPage() {
                            </DialogHeader>
                            <div className="py-4 grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
                               {unit.amenities.map((amenity) => {
-                                const Icon = amenityIcons[amenity] || CheckCircle;
+                                const Icon = amenityIcons[amenity.en] || CheckCircle;
                                 return (
-                                  <div key={amenity} className="flex items-center gap-3">
+                                  <div key={amenity.en} className="flex items-center gap-3">
                                       <Icon className="h-5 w-5 text-primary flex-shrink-0" />
-                                      <span className="text-muted-foreground">{amenity}</span>
+                                      <span className="text-muted-foreground">{amenity[language]}</span>
                                   </div>
                                 );
                               })}

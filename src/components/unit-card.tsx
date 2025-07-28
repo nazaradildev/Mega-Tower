@@ -141,7 +141,7 @@ export function UnitCard({ unit }: UnitCardProps) {
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Check out this property: ${unit.title} - ${window.location.origin}/property/${unit.id}`)}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Check out this property: ${unit.title[language]} - ${window.location.origin}/property/${unit.id}`)}`;
     window.open(whatsappUrl, '_blank');
   };
   
@@ -151,7 +151,7 @@ export function UnitCard({ unit }: UnitCardProps) {
     setIsLiked(!isLiked);
     toast({
       title: isLiked ? t.removedFromFav : t.addedToFav,
-      description: unit.title,
+      description: unit.title[language],
     });
   };
   
@@ -213,10 +213,10 @@ export function UnitCard({ unit }: UnitCardProps) {
             <CarouselContent className="m-0 h-full">
               {unit.images.map((imgSrc, index) => (
                 <CarouselItem key={index} className="p-0">
-                   <Link href={`/property/${unit.id}`} className="block w-full h-full" aria-label={t.viewDetails(unit.title)}>
+                   <Link href={`/property/${unit.id}`} className="block w-full h-full" aria-label={t.viewDetails(unit.title[language])}>
                     <img
                         src={imgSrc}
-                        alt={t.imageAlt(unit.title, index + 1)}
+                        alt={t.imageAlt(unit.title[language], index + 1)}
                         data-ai-hint={unit.aiHint}
                         className="w-full h-full object-cover"
                         loading={index === 0 ? 'eager' : 'lazy'}
@@ -262,11 +262,11 @@ export function UnitCard({ unit }: UnitCardProps) {
            <Link
                 href={`/property/${unit.id}`}
                 className="absolute inset-0 z-0"
-                aria-label={t.viewDetails(unit.title)}
+                aria-label={t.viewDetails(unit.title[language])}
             />
           <div className="flex-grow">
             <span className="text-sm text-muted-foreground">
-              {unit.propertyType}
+              {unit.propertyType[language]}
             </span>
             <p className="text-2xl font-bold text-foreground my-1">
               AED {unit.rent.toLocaleString()}{' '}
@@ -275,11 +275,11 @@ export function UnitCard({ unit }: UnitCardProps) {
               </span>
             </p>
             <span className="text-lg font-semibold text-foreground block truncate">
-              {unit.title}
+              {unit.title[language]}
             </span>
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
               <Calendar className="h-4 w-4" />
-              <span>{unit.status}</span>
+              <span>{unit.status[language]}</span>
             </div>
 
             <div className="space-y-3 text-sm mt-4">
@@ -310,7 +310,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <View className="w-4 h-4" />
-                  <span>{unit.view}</span>
+                  <span>{unit.view[language]}</span>
                 </div>
               </div>
             </div>
@@ -369,7 +369,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                     <DialogHeader className="p-4 border-b flex-shrink-0">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <DialogTitle className="text-lg font-semibold truncate text-left">
-                          {t.floorPlan}: {unit.title}
+                          {t.floorPlan}: {unit.title[language]}
                         </DialogTitle>
                         <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
                           <div className="p-1 bg-muted rounded-lg flex gap-1">
@@ -411,7 +411,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                               ? unit.floorPlanImage
                               : unit.floorPlanImage3d || ''
                           }
-                          alt={`Floor plan for ${unit.title} (${planView})`}
+                          alt={`Floor plan for ${unit.title[language]} (${planView})`}
                           data-ai-hint="apartment floor plan"
                           fill
                           className="object-contain"
