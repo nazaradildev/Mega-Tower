@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
@@ -24,66 +23,48 @@ const enFormSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   phone: z.string().min(10, { message: "Phone number must be at least 10 digits." }),
-  unitType: z.string().min(1, { message: "Please select a unit type." }),
-  message: z.string().optional(),
+  message: z.string().min(10, { message: "Message must be at least 10 characters." }),
 });
 
 const arFormSchema = z.object({
   fullName: z.string().min(2, { message: "يجب أن يتكون الاسم الكامل من حرفين على الأقل." }),
   email: z.string().email({ message: "يرجى إدخال عنوان بريد إلكتروني صالح." }),
   phone: z.string().min(9, { message: "يجب أن يتكون رقم الهاتف من 9 أرقام على الأقل." }),
-  unitType: z.string().min(1, { message: "يرجى تحديد نوع الوحدة." }),
-  message: z.string().optional(),
+  message: z.string().min(10, { message: "يجب أن تتكون الرسالة من 10 أحرف على الأقل." }),
 });
 
 const content = {
   en: {
-    title: "Your New Home Awaits",
-    subtitle: "Schedule a viewing or get in touch with our leasing team. We're here to help you find your perfect home at MEGA Towers.",
+    title: "Get in Touch",
+    subtitle: "Have a question? Fill out the form below and our team will get back to you shortly.",
     fullName: "Full Name",
     fullNamePlaceholder: "John Doe",
     email: "Email Address",
     emailPlaceholder: "you@example.com",
     phone: "Phone Number",
     phonePlaceholder: "+1 (555) 123-4567",
-    unitType: "Preferred Unit Type",
-    unitTypePlaceholder: "Select an apartment type",
-    unitOptions: [
-      { value: "1 Bedroom", label: "1 Bedroom" },
-      { value: "2 Bedroom", label: "2 Bedroom" },
-      { value: "3 Bedroom", label: "3 Bedroom Sky Villa" },
-      { value: "4 Bedroom", label: "4 Bedroom Penthouse" },
-    ],
-    message: "Your Message (Optional)",
-    messagePlaceholder: "Any questions or specific requirements?",
-    submitButton: "Schedule My Viewing",
-    toastTitle: "Booking Request Sent!",
-    toastDescription: "Thank you for your interest. We will contact you shortly to confirm your viewing.",
+    message: "Your Message",
+    messagePlaceholder: "How can we help you today?",
+    submitButton: "Send Message",
+    toastTitle: "Message Sent!",
+    toastDescription: "Thank you for contacting us. We will be in touch shortly.",
     directContact: "Or contact us directly:",
     leasingEmail: "leasing@mega.com",
   },
   ar: {
-    title: "منزلك الجديد في انتظارك",
-    subtitle: "حدد موعدًا للمعاينة أو تواصل مع فريق التأجير لدينا. نحن هنا لمساعدتك في العثور على منزلك المثالي في أبراج ميغا.",
+    title: "تواصل معنا",
+    subtitle: "هل لديك سؤال؟ املأ النموذج أدناه وسيقوم فريقنا بالرد عليك قريبًا.",
     fullName: "الاسم الكامل",
     fullNamePlaceholder: "جون دو",
     email: "البريد الإلكتروني",
     emailPlaceholder: "you@example.com",
     phone: "رقم الهاتف",
     phonePlaceholder: "+971 50 123 4567",
-    unitType: "نوع الوحدة المفضل",
-    unitTypePlaceholder: "اختر نوع الشقة",
-    unitOptions: [
-      { value: "1 Bedroom", label: "شقة بغرفة نوم واحدة" },
-      { value: "2 Bedroom", label: "شقة بغرفتي نوم" },
-      { value: "3 Bedroom", label: "فيلا سماوية بـ 3 غرف نوم" },
-      { value: "4 Bedroom", label: "بنتهاوس بـ 4 غرف نوم" },
-    ],
-    message: "رسالتك (اختياري)",
-    messagePlaceholder: "هل لديك أي أسئلة أو متطلبات محددة؟",
-    submitButton: "احجز موعد معاينتي",
-    toastTitle: "تم إرسال طلب الحجز!",
-    toastDescription: "شكرًا لاهتمامك. سنتصل بك قريبًا لتأكيد موعد المعاينة.",
+    message: "رسالتك",
+    messagePlaceholder: "كيف يمكننا مساعدتك اليوم؟",
+    submitButton: "إرسال الرسالة",
+    toastTitle: "تم إرسال الرسالة!",
+    toastDescription: "شكرًا لتواصلك معنا. سنتواصل معك قريبًا.",
     directContact: "أو تواصل معنا مباشرة:",
     leasingEmail: "leasing@mega.com",
   },
@@ -101,7 +82,6 @@ export function Contact() {
       fullName: "",
       email: "",
       phone: "",
-      unitType: "",
       message: "",
     },
   });
@@ -168,28 +148,6 @@ export function Contact() {
                     )}
                 />
             </div>
-            <FormField
-              control={form.control}
-              name="unitType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t.unitType}</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t.unitTypePlaceholder} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {t.unitOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
              <FormField
               control={form.control}
               name="message"

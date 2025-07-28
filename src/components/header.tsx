@@ -27,6 +27,8 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/language-context';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { BookingForm } from './booking-form';
 
 const content = {
   en: {
@@ -60,7 +62,8 @@ const content = {
 };
 
 export function Header() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { language, setLanguage, direction } = useLanguage();
   const pathname = usePathname();
@@ -138,13 +141,18 @@ export function Header() {
                         {t.login}
                     </Link>
                 </Button>
-                <Button asChild className="bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">
-                    <Link href="#contact">{t.bookViewing}</Link>
-                </Button>
+                 <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+                    <DialogTrigger asChild>
+                        <Button className="bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">{t.bookViewing}</Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl p-0">
+                      <BookingForm onSuccess={() => setIsBookingOpen(false)} />
+                    </DialogContent>
+                  </Dialog>
             </div>
           
           <div className="md:hidden">
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" className="rounded-lg ml-4 p-0 h-auto w-auto flex items-center gap-2">
                    <svg
@@ -177,7 +185,7 @@ export function Header() {
                                 "text-xl font-medium flex items-center gap-3",
                                 isActive ? 'text-primary' : ''
                               )}
-                              onClick={() => setIsOpen(false)}
+                              onClick={() => setIsSheetOpen(false)}
                           >
                               <link.icon className="h-5 w-5" />
                               {link.label}
@@ -187,7 +195,7 @@ export function Header() {
                       <Link
                           href="#"
                           className="text-xl font-medium flex items-center gap-3"
-                          onClick={() => setIsOpen(false)}
+                          onClick={() => setIsSheetOpen(false)}
                       >
                           <LogIn className="h-5 w-5" />
                           {t.login}
@@ -218,9 +226,14 @@ export function Header() {
                               </DropdownMenuContent>
                           </DropdownMenu>
                       </div>
-                      <Button asChild className="w-full bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg" size="lg">
-                          <Link href="#contact" onClick={() => setIsOpen(false)}>{t.bookViewing}</Link>
-                      </Button>
+                       <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+                          <DialogTrigger asChild>
+                            <Button className="w-full bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg" size="lg">{t.bookViewing}</Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl p-0">
+                            <BookingForm onSuccess={() => { setIsBookingOpen(false); setIsSheetOpen(false); }} />
+                          </DialogContent>
+                        </Dialog>
                   </div>
               </SheetContent>
             </Sheet>
