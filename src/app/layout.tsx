@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
@@ -10,6 +11,9 @@ import { LanguageProvider } from '@/context/language-context';
 export const metadata: Metadata = {
   title: 'MEGA | MEGA Towers',
   description: 'Luxury 1, 2, 3, and 4 Bedroom Apartments in the Heart of Business Bay.',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 const fontBody = Inter({
