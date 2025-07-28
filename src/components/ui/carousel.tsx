@@ -57,6 +57,8 @@ const Carousel = React.forwardRef<
       plugins,
       className,
       children,
+      prevButtonLabel,
+      nextButtonLabel,
       ...props
     },
     ref
@@ -135,7 +137,8 @@ const Carousel = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
-          ...props
+          prevButtonLabel,
+          nextButtonLabel
         }}
       >
         <div
