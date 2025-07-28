@@ -28,20 +28,46 @@ import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/context/language-context';
 import { cn } from '@/lib/utils';
 
-const navLinks = [
-  { href: '/#residences', label: 'Search', icon: Search, matchPath: '/' },
-  { href: '/saved', label: 'Saved', icon: Heart },
-  { href: '/account', label: 'Account', icon: User },
-];
+const content = {
+  en: {
+    navLinks: [
+      { href: '/#residences', label: 'Search', icon: Search, matchPath: '/' },
+      { href: '/saved', label: 'Saved', icon: Heart },
+      { href: '/account', label: 'Account', icon: User },
+    ],
+    settings: 'Settings',
+    appearance: 'Appearance',
+    darkMode: 'Dark Mode',
+    language: 'Language',
+    login: 'Login',
+    bookViewing: 'Book a Viewing',
+    menu: 'Menu',
+  },
+  ar: {
+    navLinks: [
+      { href: '/#residences', label: 'بحث', icon: Search, matchPath: '/' },
+      { href: '/saved', label: 'المحفوظة', icon: Heart },
+      { href: '/account', label: 'الحساب', icon: User },
+    ],
+    settings: 'الإعدادات',
+    appearance: 'المظهر',
+    darkMode: 'الوضع الداكن',
+    language: 'اللغة',
+    login: 'تسجيل الدخول',
+    bookViewing: 'احجز معاينة',
+    menu: 'القائمة',
+  }
+};
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, direction } = useLanguage();
   const pathname = usePathname();
+  const t = content[language];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-zinc-900/80">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-zinc-900/80" dir={direction}>
       <div className="container flex h-16 max-w-7xl items-center justify-between">
         <div className="flex items-center gap-6 md:gap-10">
             <Link href="/" className="flex items-center space-x-2">
@@ -53,14 +79,14 @@ export function Header() {
           
         <div className="flex items-center justify-end gap-2">
             <nav className="hidden md:flex items-center gap-2 text-sm font-medium">
-                {navLinks.map((link) => {
+                {t.navLinks.map((link) => {
                   const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
                   return (
                     <Button key={link.label} variant="ghost" asChild className={cn("rounded-lg h-9 text-foreground/70 hover:text-primary", isActive && "text-primary")}>
                         <Link
                           href={link.href}
                         >
-                          <link.icon className="h-5 w-5 mr-2" />
+                          <link.icon className="h-5 w-5 ml-2" />
                           {link.label}
                         </Link>
                     </Button>
@@ -72,15 +98,15 @@ export function Header() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="rounded-lg h-9 text-foreground/70 hover:text-primary">
-                            <Settings className="h-5 w-5 mr-2" />
-                            Settings
+                            <Settings className="h-5 w-5 ml-2" />
+                            {t.settings}
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
-                        <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+                        <DropdownMenuLabel>{t.appearance}</DropdownMenuLabel>
                         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                             <div className="flex items-center justify-between w-full">
-                                <span>Dark Mode</span>
+                                <span>{t.darkMode}</span>
                                 <Switch
                                     checked={theme === 'dark'}
                                     onCheckedChange={(checked) => {
@@ -93,7 +119,7 @@ export function Header() {
                         <DropdownMenuSeparator />
                          <DropdownMenuSub>
                             <DropdownMenuSubTrigger>
-                               <span>Language</span>
+                               <span>{t.language}</span>
                             </DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                                 <DropdownMenuSubContent>
@@ -108,12 +134,12 @@ export function Header() {
                 </DropdownMenu>
                  <Button asChild variant="outline" className="rounded-lg">
                     <Link href="#">
-                        <LogIn className="mr-2 h-4 w-4" />
-                        Login
+                        <LogIn className="ml-2 h-4 w-4" />
+                        {t.login}
                     </Link>
                 </Button>
                 <Button asChild className="bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg">
-                    <Link href="#contact">Book a Viewing</Link>
+                    <Link href="#contact">{t.bookViewing}</Link>
                 </Button>
             </div>
           
@@ -136,12 +162,12 @@ export function Header() {
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                   </svg>
-                  <span className="text-sm font-medium">Menu</span>
+                  <span className="text-sm font-medium">{t.menu}</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] p-0 flex flex-col">
+              <SheetContent side={direction === 'rtl' ? 'left' : 'right'} className="w-[300px] p-0 flex flex-col">
                   <nav className="flex-1 flex flex-col gap-4 p-6 mt-8">
-                      {navLinks.map((link) => {
+                      {t.navLinks.map((link) => {
                         const isActive = link.matchPath ? pathname === link.matchPath : pathname === link.href;
                         return (
                           <Link
@@ -164,12 +190,12 @@ export function Header() {
                           onClick={() => setIsOpen(false)}
                       >
                           <LogIn className="h-5 w-5" />
-                          Login
+                          {t.login}
                       </Link>
                   </nav>
                   <div className="p-6 mt-auto border-t space-y-4">
                       <div className="flex items-center justify-between">
-                          <Label htmlFor="dark-mode-switch-mobile" className="text-lg font-medium">Dark Mode</Label>
+                          <Label htmlFor="dark-mode-switch-mobile" className="text-lg font-medium">{t.darkMode}</Label>
                           <Switch
                               id="dark-mode-switch-mobile"
                               checked={theme === 'dark'}
@@ -177,7 +203,7 @@ export function Header() {
                           />
                       </div>
                        <div className="flex items-center justify-between">
-                          <Label className="text-lg font-medium">Language</Label>
+                          <Label className="text-lg font-medium">{t.language}</Label>
                           <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                   <Button variant="outline" className="rounded-lg">
@@ -193,7 +219,7 @@ export function Header() {
                           </DropdownMenu>
                       </div>
                       <Button asChild className="w-full bg-primary-gradient text-primary-foreground hover:opacity-90 transition-opacity rounded-lg" size="lg">
-                          <Link href="#contact" onClick={() => setIsOpen(false)}>Book a Viewing</Link>
+                          <Link href="#contact" onClick={() => setIsOpen(false)}>{t.bookViewing}</Link>
                       </Button>
                   </div>
               </SheetContent>

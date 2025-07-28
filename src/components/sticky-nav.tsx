@@ -24,12 +24,11 @@ const navLinks: NavLink[] = [
 export function StickyNav() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const { language } = useLanguage();
+  const { language, direction } = useLanguage();
   const observer = useRef<IntersectionObserver | null>(null);
   const heroSectionRef = useRef<HTMLElement | null>(null);
   
   useEffect(() => {
-    // We target the new #hero section
     heroSectionRef.current = document.getElementById('hero');
 
     const handleScroll = () => {
@@ -75,7 +74,7 @@ export function StickyNav() {
   const scrollToSection = (id: string) => {
     const section = document.getElementById(id);
     if (section) {
-      const yOffset = -80; // Account for header height
+      const yOffset = -80;
       const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
@@ -87,6 +86,7 @@ export function StickyNav() {
         'sticky top-16 z-40 w-full bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/80 transition-all duration-300 ease-in-out',
         isVisible ? 'transform-none opacity-100 border-b' : '-translate-y-full opacity-0 border-b-0'
       )}
+      dir={direction}
     >
       <div className="container mx-auto px-4 md:px-6 h-14 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <ul className="flex items-center justify-start md:justify-center h-full gap-4 md:gap-8">

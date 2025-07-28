@@ -27,17 +27,21 @@ const content = {
     ),
     subtitle: 'Discover luxury apartments where elegance meets comfort in the heart of Business Bay.',
     button: 'Explore Residences',
+    insightsTitle: 'Deeper Insights',
+    insightsSubtitle: 'Explore detailed information about the property and the surrounding community.',
   },
   ar: {
     title: (
       <>
-        عيش استثنائي.
+        عش استثنائيًا.
         <br />
         ارتقِ بأسلوب حياتك في أبراج ميغا.
       </>
     ),
-    subtitle: 'اكتشف شققاً فاخرة حيث تجتمع الأناقة والراحة في قلب الخليج التجاري.',
+    subtitle: 'اكتشف شققًا فاخرة حيث تجتمع الأناقة والراحة في قلب الخليج التجاري.',
     button: 'اكتشف الوحدات السكنية',
+    insightsTitle: 'رؤى أعمق',
+    insightsSubtitle: 'استكشف معلومات مفصلة عن العقار والمجتمع المحيط به.',
   },
 };
 
@@ -117,7 +121,7 @@ export default function Home() {
           </div>
       </section>
 
-      <main className="relative z-20 flex-1 bg-background">
+      <main className="relative z-20 flex-1 bg-background" dir={direction}>
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8">
@@ -126,9 +130,9 @@ export default function Home() {
             <aside className="lg:col-span-4 lg:sticky lg:top-32 self-start hidden lg:block">
               <div className="space-y-6">
                   <div className="text-left">
-                    <h2 className="text-2xl font-bold font-headline">Deeper Insights</h2>
+                    <h2 className="text-2xl font-bold font-headline">{t.insightsTitle}</h2>
                     <p className="text-muted-foreground mt-1">
-                      Explore detailed information about the property and the surrounding community.
+                      {t.insightsSubtitle}
                     </p>
                   </div>
                   <ResidentialInsightCard />
@@ -146,9 +150,9 @@ export default function Home() {
             <section id="insights" className="w-full py-16 md:py-24 bg-background">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-12 md:mb-16">
-                  <h2 className="text-3xl md:text-4xl font-bold font-headline">Deeper Insights</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold font-headline">{t.insightsTitle}</h2>
                   <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-lg">
-                    Explore detailed information about the property and the surrounding community.
+                    {t.insightsSubtitle}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">

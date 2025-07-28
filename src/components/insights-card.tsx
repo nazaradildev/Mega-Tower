@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
+import { useLanguage } from '@/context/language-context';
 
 type InsightCardProps = {
   link: string;
@@ -27,6 +28,7 @@ function InsightCard({ link, imageSrc, imageAlt, imageHint, title, subtitle, chi
             alt={imageAlt}
             data-ai-hint={imageHint}
             fill
+            sizes="100vw"
             className="object-cover"
           />
         </div>
@@ -42,16 +44,43 @@ function InsightCard({ link, imageSrc, imageAlt, imageHint, title, subtitle, chi
   )
 }
 
+const content = {
+  en: {
+    residentialTitle: "Residential Insights",
+    residentialSubtitle: "MEGA Residency Tower",
+    reviews: "Reviews",
+    priceRange: "Price Range:",
+    communityTitle: "Community Insights",
+    communitySubtitle: "Business Bay",
+    apartmentsBadge: "Mostly apartments",
+    luxuryBadge: "Luxury",
+    connectedBadge: "Well connected",
+  },
+  ar: {
+    residentialTitle: "رؤى سكنية",
+    residentialSubtitle: "برج ميغا السكني",
+    reviews: "تقييمات",
+    priceRange: "نطاق السعر:",
+    communityTitle: "رؤى المجتمع",
+    communitySubtitle: "الخليج التجاري",
+    apartmentsBadge: "شقق في الغالب",
+    luxuryBadge: "فاخر",
+    connectedBadge: "متصل جيدًا",
+  }
+};
+
 
 export function ResidentialInsightCard() {
+    const { language } = useLanguage();
+    const t = content[language];
     return (
         <InsightCard
             link="/building/mega-residency-tower"
             imageSrc="/mega tower1.png"
             imageAlt="MEGA Residency Tower"
             imageHint="dubai cityscape"
-            title="Residential Insights"
-            subtitle="MEGA Residency Tower"
+            title={t.residentialTitle}
+            subtitle={t.residentialSubtitle}
         >
             <div className="flex items-center gap-2 mb-2">
                 <div className="flex text-yellow-500">
@@ -63,9 +92,9 @@ export function ResidentialInsightCard() {
                 </div>
                 <span className="font-semibold">5.0/5</span>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">163 Reviews</p>
+            <p className="text-sm text-muted-foreground mb-4">163 {t.reviews}</p>
             <div className="mt-auto">
-                <p className="text-sm text-muted-foreground">Price Range:</p>
+                <p className="text-sm text-muted-foreground">{t.priceRange}</p>
                 <p className="font-semibold">80K - 220K AED</p>
             </div>
         </InsightCard>
@@ -73,24 +102,27 @@ export function ResidentialInsightCard() {
 }
 
 export function CommunityInsightCard() {
+    const { language } = useLanguage();
+    const t = content[language];
+
     return (
         <InsightCard
             link="/community/business-bay"
             imageSrc="https://lh3.googleusercontent.com/gps-cs-s/AC9h4noldjGXcXOg-uoslPy8Hjgq3WR9Y6IAIyKKM0JT0ydIvjOE0m9hQwHxdynDt9ndQ6pAnvTPPMJ5Y6UUDl23eU1FvAYjzhitCRy05lGw_uEvOLQU6_J9Rppag6swelRcuMPQk02q=s0"
             imageAlt="Business Bay Community"
             imageHint="dubai architecture"
-            title="Community Insights"
-            subtitle="Business Bay"
+            title={t.communityTitle}
+            subtitle={t.communitySubtitle}
         >
             <div className="flex-grow space-y-4">
                 <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">Mostly apartments</Badge>
-                    <Badge variant="secondary">Luxury</Badge>
-                    <Badge variant="secondary">Well connected</Badge>
+                    <Badge variant="secondary">{t.apartmentsBadge}</Badge>
+                    <Badge variant="secondary">{t.luxuryBadge}</Badge>
+                    <Badge variant="secondary">{t.connectedBadge}</Badge>
                 </div>
             </div>
             <div className="mt-4">
-                <p className="text-sm text-muted-foreground">Price Range:</p>
+                <p className="text-sm text-muted-foreground">{t.priceRange}</p>
                 <p className="font-semibold">70K - 300K AED</p>
             </div>
         </InsightCard>

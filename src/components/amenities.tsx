@@ -1,36 +1,75 @@
+
 "use client";
 
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ScrollAnimation } from "./scroll-animation";
 import * as React from "react";
+import { useLanguage } from "@/context/language-context";
 
-const featuredAmenities = [
-  {
-    name: "Breathtaking Infinity Pool",
-    description: "Immerse yourself in luxury with our stunning infinity pool, offering panoramic views of the Dubai skyline. The perfect escape from the city bustle.",
-    image: ["/swim1.jpg", "/swim2.jpg", "/swim3.jpg", "/swim4.jpg"],
-    aiHint: "luxury infinity pool",
+const content = {
+  en: {
+    title: "A Lifestyle Beyond Compare",
+    subtitle: "Experience a curated selection of world-class amenities designed for your comfort, leisure, and well-being.",
+    amenities: [
+      {
+        name: "Breathtaking Infinity Pool",
+        description: "Immerse yourself in luxury with our stunning infinity pool, offering panoramic views of the Dubai skyline. The perfect escape from the city bustle.",
+        image: ["/swim1.jpg", "/swim2.jpg", "/swim3.jpg", "/swim4.jpg"],
+        aiHint: "luxury infinity pool",
+      },
+      {
+        name: "State-of-the-Art Gymnasium",
+        description: "Achieve your fitness goals in our fully equipped, modern gymnasium. Featuring the latest Technogym equipment for a comprehensive workout experience.",
+        image: ["/gym2.jpg", "/gym3.jpg", "/gym4.jpg", "/gym1.jpg"],
+        aiHint: "modern gym interior",
+      },
+      {
+        name: "Serene Sauna & Steam Rooms",
+        description: "Rejuvenate your body and mind in our exclusive sauna and steam rooms. A sanctuary of tranquility designed for ultimate relaxation.",
+        image: "/sauna1.jpg",
+        aiHint: "luxury spa sauna",
+      },
+      {
+        name: "Lush Landscaped Gardens",
+        description: "Find your peaceful oasis within the city in our beautifully landscaped gardens. An ideal space for a quiet stroll or peaceful contemplation.",
+        image: ["/garden2.jpg", "/garden3.jpg", "/garden4.jpg", "/garden1.jpg"],
+        aiHint: "modern building garden",
+      },
+    ],
   },
-  {
-    name: "State-of-the-Art Gymnasium",
-    description: "Achieve your fitness goals in our fully equipped, modern gymnasium. Featuring the latest Technogym equipment for a comprehensive workout experience.",
-    image: ["/gym2.jpg", "/gym3.jpg", "/gym4.jpg", "/gym1.jpg"],
-    aiHint: "modern gym interior",
+  ar: {
+    title: "أسلوب حياة لا يضاهى",
+    subtitle: "استمتع بمجموعة منتقاة من وسائل الراحة عالمية المستوى المصممة لراحتك وترفيهك ورفاهيتك.",
+    amenities: [
+      {
+        name: "مسبح إنفينيتي يخطف الأنفاس",
+        description: "انغمس في الفخامة مع مسبحنا اللامتناهي المذهل، الذي يوفر إطلالات بانورامية على أفق دبي. المهرب المثالي من صخب المدينة.",
+        image: ["/swim1.jpg", "/swim2.jpg", "/swim3.jpg", "/swim4.jpg"],
+        aiHint: "luxury infinity pool",
+      },
+      {
+        name: "صالة رياضية على أحدث طراز",
+        description: "حقق أهداف لياقتك البدنية في صالة الألعاب الرياضية الحديثة والمجهزة بالكامل. تتميز بأحدث معدات تكنوجيم لتجربة تمرين شاملة.",
+        image: ["/gym2.jpg", "/gym3.jpg", "/gym4.jpg", "/gym1.jpg"],
+        aiHint: "modern gym interior",
+      },
+      {
+        name: "غرف الساونا والبخار الهادئة",
+        description: "جدد شباب جسمك وعقلك في غرف الساونا والبخار الحصرية لدينا. ملاذ من الهدوء مصمم للاسترخاء المطلق.",
+        image: "/sauna1.jpg",
+        aiHint: "luxury spa sauna",
+      },
+      {
+        name: "حدائق ذات مناظر طبيعية غناء",
+        description: "اعثر على واحتك الهادئة داخل المدينة في حدائقنا ذات المناظر الطبيعية الجميلة. مساحة مثالية لنزهة هادئة أو تأمل سلمي.",
+        image: ["/garden2.jpg", "/garden3.jpg", "/garden4.jpg", "/garden1.jpg"],
+        aiHint: "modern building garden",
+      },
+    ],
   },
-  {
-    name: "Serene Sauna & Steam Rooms",
-    description: "Rejuvenate your body and mind in our exclusive sauna and steam rooms. A sanctuary of tranquility designed for ultimate relaxation.",
-    image: "/sauna1.jpg",
-    aiHint: "luxury spa sauna",
-  },
-  {
-    name: "Lush Landscaped Gardens",
-    description: "Find your peaceful oasis within the city in our beautifully landscaped gardens. An ideal space for a quiet stroll or peaceful contemplation.",
-    image: ["/garden2.jpg", "/garden3.jpg", "/garden4.jpg", "/garden1.jpg"],
-    aiHint: "modern building garden",
-  },
-];
+};
+
 
 function FadeCarousel({ images, name, aiHint }: { images: string[]; name: string; aiHint: string; }) {
   const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -53,6 +92,7 @@ function FadeCarousel({ images, name, aiHint }: { images: string[]; name: string
           alt={`${name} ${i + 1}`}
           data-ai-hint={aiHint}
           fill
+          sizes="100vw"
           className={cn(
             "w-full h-full object-cover absolute inset-0 transition-opacity duration-1000 ease-in-out",
             i === currentIndex ? "opacity-100" : "opacity-0"
@@ -65,20 +105,23 @@ function FadeCarousel({ images, name, aiHint }: { images: string[]; name: string
 }
 
 export function Amenities() {
+  const { language, direction } = useLanguage();
+  const t = content[language];
+
   return (
-    <section id="amenities" className="w-full py-16 md:py-24 bg-secondary overflow-hidden">
+    <section id="amenities" className="w-full py-16 md:py-24 bg-secondary overflow-hidden" dir={direction}>
       <div className="container mx-auto px-4 md:px-6">
         <ScrollAnimation>
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-headline">A Lifestyle Beyond Compare</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-headline">{t.title}</h2>
             <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-lg">
-              Experience a curated selection of world-class amenities designed for your comfort, leisure, and well-being.
+              {t.subtitle}
             </p>
           </div>
         </ScrollAnimation>
         
         <div className="space-y-16 md:space-y-24">
-          {featuredAmenities.map((amenity, index) => (
+          {t.amenities.map((amenity, index) => (
             <ScrollAnimation key={amenity.name} delay={index * 150}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
                 <div className={cn("aspect-[4/3] overflow-hidden rounded-lg shadow-xl relative group", index % 2 === 0 ? 'md:order-last' : '')}>

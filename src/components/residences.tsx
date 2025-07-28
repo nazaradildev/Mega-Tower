@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -17,8 +16,14 @@ import { UnitCard } from './unit-card';
 import { Breadcrumb } from './breadcrumb';
 import nlp from 'compromise';
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from '@/context/language-context';
 
 const allAmenities = ['Maids Room', 'Balcony', 'Shared Pool', 'Shared Spa', 'Shared Gym', 'Central A/C', 'Concierge Service', 'Covered Parking', 'View of Water', 'View of Landmark', 'Pets Allowed', 'Children\'s Play Area', 'Children\'s Pool', 'Barbecue Area', 'Built in Wardrobes', 'Study', 'Walk-in Closet', 'Private Jacuzzi'];
+
+const arabicAmenitiesMap: { [key: string]: string } = {
+    'غرفة خادمة': 'Maids Room', 'شرفة': 'Balcony', 'بلكونة': 'Balcony', 'مسبح مشترك': 'Shared Pool', 'سبا مشترك': 'Shared Spa', 'جيم مشترك': 'Shared Gym', 'تكييف مركزي': 'Central A/C', 'خدمة كونسيرج': 'Concierge Service', 'موقف سيارات مغطى': 'Covered Parking', 'اطلالة على الماء': 'View of Water', 'اطلالة على معلم': 'View of Landmark', 'مسموح بالحيوانات الاليفة': 'Pets Allowed', 'منطقة لعب أطفال': 'Children\'s Play Area', 'مسبح أطفال': 'Children\'s Pool', 'منطقة للشواء': 'Barbecue Area', 'خزائن مدمجة': 'Built in Wardrobes', 'غرفة دراسة': 'Study', 'خزانة ملابس': 'Walk-in Closet', 'جاكوزي خاص': 'Private Jacuzzi'
+};
+const allArabicAmenities = Object.keys(arabicAmenitiesMap);
 
 type FilterKey = 'Rent' | 'Apartment' | 'Beds & Baths' | 'Price' | 'More Filters' | 'Sort';
 type FilterValues = {
@@ -31,26 +36,103 @@ type FilterButtonProps = React.ComponentProps<typeof Button> & {
   sortOption?: string;
 };
 
+const content = {
+    en: {
+        title: "Find Your Perfect Home",
+        subtitle: "Explore our collection of meticulously designed apartments, each offering a unique blend of luxury and comfort.",
+        searchInputPlaceholder: "e.g., furnished 2 bed apartment",
+        searchButton: "Search",
+        rentFilter: "Rent",
+        apartmentFilter: "Property Type",
+        bedsBathsFilter: "Beds & Baths",
+        priceFilter: "Price",
+        moreFilters: "More Filters",
+        sort: "Sort",
+        sortBy: "Sort by:",
+        sortOptions: ['Newest', 'Price (low to high)', 'Price (high to low)', 'Beds (most to least)', 'Beds (least to most)'],
+        clearButton: "Clear",
+        applyButton: "Apply",
+        minPricePlaceholder: "Min. Price (AED)",
+        maxPricePlaceholder: "Max. Price (AED)",
+        rentalPeriod: "Rental Period",
+        bedrooms: "Bedrooms",
+        bathrooms: "Bathrooms",
+        furnishing: "Furnishing",
+        propertySize: "Property Size (sq. ft.)",
+        minAreaPlaceholder: "Min. Area",
+        maxAreaPlaceholder: "Max. Area",
+        amenities: "Amenities",
+        showLess: "Show less",
+        showMore: "Show more",
+        clearAll: "Clear All",
+        showResults: "Show Results",
+        propertiesFound: "properties",
+        noUnits: "No units found matching your criteria.",
+        noUnitsDesc: "Please try adjusting your filters.",
+        apartmentsForRent: "Apartments for rent in MEGA Residency Tower",
+        searchComplete: "Search Complete",
+        searchCompleteDesc: "Filters have been updated based on your search.",
+    },
+    ar: {
+        title: "ابحث عن منزلك المثالي",
+        subtitle: "استكشف مجموعتنا من الشقق المصممة بدقة، كل منها يقدم مزيجًا فريدًا من الفخامة والراحة.",
+        searchInputPlaceholder: "مثال: شقة مفروشة غرفتين نوم",
+        searchButton: "بحث",
+        rentFilter: "الإيجار",
+        apartmentFilter: "نوع العقار",
+        bedsBathsFilter: "الغرف والحمامات",
+        priceFilter: "السعر",
+        moreFilters: "المزيد من الفلاتر",
+        sort: "ترتيب",
+        sortBy: "الترتيب حسب:",
+        sortOptions: ['الأحدث', 'السعر (من الأقل للأعلى)', 'السعر (من الأعلى للأقل)', 'الغرف (من الأكثر للأقل)', 'الغرف (من الأقل للأكثر)'],
+        clearButton: "مسح",
+        applyButton: "تطبيق",
+        minPricePlaceholder: "أقل سعر (درهم)",
+        maxPricePlaceholder: "أعلى سعر (درهم)",
+        rentalPeriod: "فترة الإيجار",
+        bedrooms: "غرف النوم",
+        bathrooms: "الحمامات",
+        furnishing: "الأثاث",
+        propertySize: "مساحة العقار (قدم مربع)",
+        minAreaPlaceholder: "أقل مساحة",
+        maxAreaPlaceholder: "أعلى مساحة",
+        amenities: "وسائل الراحة",
+        showLess: "عرض أقل",
+        showMore: "عرض المزيد",
+        clearAll: "مسح الكل",
+        showResults: "عرض النتائج",
+        propertiesFound: "عقارات",
+        noUnits: "لم يتم العثور على وحدات تطابق معاييرك.",
+        noUnitsDesc: "يرجى محاولة تعديل الفلاتر الخاصة بك.",
+        apartmentsForRent: "شقق للايجار في برج ميغا السكني",
+        searchComplete: "اكتمل البحث",
+        searchCompleteDesc: "تم تحديث الفلاتر بناءً على بحثك.",
+    }
+};
+
 function FilterButton({ filterKey, filters, sortOption, ...props }: FilterButtonProps) {
+    const { language } = useLanguage();
+    const t = content[language];
     
     const getButtonText = () => {
-        if (filterKey === 'Sort') return `Sort by: ${sortOption}`;
+        if (filterKey === 'Sort') return `${t.sortBy} ${sortOption}`;
         
         const data = filters[filterKey];
         if (!data || Object.keys(data).length === 0) {
-            if (filterKey === 'Apartment') return 'Property Type';
-            if (filterKey === 'Rent') return 'Rent';
-            if (filterKey === 'Beds & Baths') return 'Beds & Baths';
-            if (filterKey === 'Price') return 'Price';
-            return 'More Filters';
+            if (filterKey === 'Apartment') return t.apartmentFilter;
+            if (filterKey === 'Rent') return t.rentFilter;
+            if (filterKey === 'Beds & Baths') return t.bedsBathsFilter;
+            if (filterKey === 'Price') return t.priceFilter;
+            return t.moreFilters;
         }
 
         switch (filterKey) {
             case 'Apartment':
-                if (!data.type || data.type === 'Any') return 'Property Type';
+                if (!data.type || data.type === 'Any') return t.apartmentFilter;
                 return data.type;
             case 'Rent':
-                 if (!data.type || data.type === 'Any') return 'Rent';
+                 if (!data.type || data.type === 'Any') return t.rentFilter;
                 return data.type;
             case 'Price':
                 const parts = [];
@@ -61,14 +143,14 @@ function FilterButton({ filterKey, filters, sortOption, ...props }: FilterButton
                 const bedParts = [];
                 if (data.beds) bedParts.push(`${data.beds} ${data.beds === 'Studio' ? '' : 'Bed'}`);
                 if (data.baths) bedParts.push(`${data.baths} Bath`);
-                return bedParts.join(', ') || 'Beds & Baths';
+                return bedParts.join(', ') || t.bedsBathsFilter;
             default:
-                if (data && Object.values(data).flat().length > 0) return `More Filters (${Object.values(data).flat().length})`
-                return 'More Filters';
+                if (data && Object.values(data).flat().length > 0) return `${t.moreFilters} (${Object.values(data).flat().length})`
+                return t.moreFilters;
         }
     };
 
-    const isActive = (filterKey !== 'Sort' && filters[filterKey] && Object.values(filters[filterKey]).some(v => v && (Array.isArray(v) ? v.length > 0 : true))) || (filterKey === 'Sort' && sortOption !== 'Newest');
+    const isActive = (filterKey !== 'Sort' && filters[filterKey] && Object.values(filters[filterKey]).some(v => v && (Array.isArray(v) ? v.length > 0 : true))) || (filterKey === 'Sort' && sortOption !== t.sortOptions[0]);
     
     const iconMap: Record<FilterKey, React.ElementType> = {
       'Rent': KeyRound,
@@ -128,13 +210,16 @@ function ControlButton({ value, selectedValue, onSelect, children, className }: 
 }
 
 function RentFilterPopover({ onValueChange, values, onApply, isMobile, title }: FilterPopoverProps) {
-    const types = ['Any', 'Rent', 'Buy'];
-    const buttonContent = (type: string) => {
-        const isSelected = type === 'Any' ? !values.type : values.type === type;
+    const types = { en: ['Any', 'Rent', 'Buy'], ar: ['الكل', 'إيجار', 'شراء'] };
+    const { language } = useLanguage();
+
+    const buttonContent = (type: string, index: number) => {
+        const value = types.en[index];
+        const isSelected = value === 'Any' ? !values.type : values.type === value;
         const button = (
             <button
               onClick={() => { 
-                  onValueChange({ type: type === 'Any' ? undefined : type }); 
+                  onValueChange({ type: value === 'Any' ? undefined : value }); 
                   onApply(); 
               }} 
               className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
@@ -162,7 +247,7 @@ function RentFilterPopover({ onValueChange, values, onApply, isMobile, title }: 
         )}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
-                {types.map(buttonContent)}
+                {types[language].map(buttonContent)}
             </ul>
         </div>
       </>
@@ -170,13 +255,19 @@ function RentFilterPopover({ onValueChange, values, onApply, isMobile, title }: 
 };
 
 function UnitTypeFilterPopover({ onValueChange, values, onApply, isMobile, title }: FilterPopoverProps) {
-    const types = ['Any', 'Apartment', 'Penthouse', 'Villa', 'Townhouse'];
-    const buttonContent = (type: string) => {
-        const isSelected = type === 'Any' ? !values.type : values.type === type;
+    const types = { 
+        en: ['Any', 'Apartment', 'Penthouse', 'Villa', 'Townhouse'],
+        ar: ['الكل', 'شقة', 'بنتهاوس', 'فيلا', 'تاون هاوس']
+    };
+    const { language } = useLanguage();
+
+    const buttonContent = (type: string, index: number) => {
+        const value = types.en[index];
+        const isSelected = value === 'Any' ? !values.type : values.type === value;
         const button = (
             <button
               onClick={() => { 
-                  onValueChange({ type: type === 'Any' ? undefined : type });
+                  onValueChange({ type: value === 'Any' ? undefined : value });
                   onApply();
               }} 
               className={cn('flex justify-between items-center p-2 text-sm rounded-md w-full text-left', isSelected ? 'font-semibold text-primary' : 'hover:bg-accent' )}>
@@ -204,7 +295,7 @@ function UnitTypeFilterPopover({ onValueChange, values, onApply, isMobile, title
         )}
         <div className="p-2 w-64">
              <ul className="max-h-60 overflow-y-auto">
-                {types.map(buttonContent)}
+                {types[language].map(buttonContent)}
             </ul>
         </div>
       </>
@@ -212,10 +303,14 @@ function UnitTypeFilterPopover({ onValueChange, values, onApply, isMobile, title
 };
 
 function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+    const { language } = useLanguage();
+    const t = content[language];
+    const rentalPeriods = { en: ['Yearly', 'Monthly'], ar: ['سنوي', 'شهري'] };
+
     const footer = (
          <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-            <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
-            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+            <Button variant="ghost" onClick={onClear} className="rounded-lg">{t.clearButton}</Button>
+            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>{t.applyButton}</Button>
         </div>
     );
     return (
@@ -234,14 +329,14 @@ function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile,
         <div className="w-full sm:w-96">
             <div className="p-4 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <Input type="number" name="min_price" placeholder="Min. Price (AED)" value={values.min_price || ''} onChange={(e) => onValueChange({ min_price: e.target.value })} className="rounded-lg h-12"/>
-                     <Input type="number" name="max_price" placeholder="Max. Price (AED)" value={values.max_price || ''} onChange={(e) => onValueChange({ max_price: e.target.value })} className="rounded-lg h-12"/>
+                     <Input type="number" name="min_price" placeholder={t.minPricePlaceholder} value={values.min_price || ''} onChange={(e) => onValueChange({ min_price: e.target.value })} className="rounded-lg h-12"/>
+                     <Input type="number" name="max_price" placeholder={t.maxPricePlaceholder} value={values.max_price || ''} onChange={(e) => onValueChange({ max_price: e.target.value })} className="rounded-lg h-12"/>
                 </div>
                  <div>
-                    <h4 className="text-sm font-semibold text-foreground mb-2 block">Rental Period</h4>
+                    <h4 className="text-sm font-semibold text-foreground mb-2 block">{t.rentalPeriod}</h4>
                     <div className="flex flex-wrap gap-2">
-                        {['Yearly', 'Monthly'].map(period => (
-                            <ControlButton key={period} value={period} selectedValue={values.period} onSelect={(val) => onValueChange({ period: val })} className="rounded-lg flex-1">{period}</ControlButton>
+                        {rentalPeriods[language].map((period, index) => (
+                            <ControlButton key={period} value={rentalPeriods.en[index]} selectedValue={values.period} onSelect={(val) => onValueChange({ period: val })} className="rounded-lg flex-1">{period}</ControlButton>
                         ))}
                     </div>
                  </div>
@@ -249,10 +344,10 @@ function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile,
             {isMobile ? (
                  <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
                     <DialogClose asChild>
-                        <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
+                        <Button variant="ghost" onClick={onClear} className="rounded-lg">{t.clearButton}</Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+                        <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>{t.applyButton}</Button>
                     </DialogClose>
                 </div>
             ) : footer}
@@ -262,13 +357,15 @@ function PriceFilterPopover({ onValueChange, values, onApply, onClear, isMobile,
 }
 
 function BedBathFilterPopover({ onValueChange, values, onApply, onClear, isMobile, title }: FilterPopoverProps) {
+    const { language } = useLanguage();
+    const t = content[language];
     const bedOptions = ['1', '2', '3', '4+'];
     const bathOptions = ['1', '2', '3', '4', '5+'];
 
      const footer = (
          <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
-            <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
-            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+            <Button variant="ghost" onClick={onClear} className="rounded-lg">{t.clearButton}</Button>
+            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>{t.applyButton}</Button>
         </div>
     );
     return (
@@ -287,7 +384,7 @@ function BedBathFilterPopover({ onValueChange, values, onApply, onClear, isMobil
             <div className="w-full sm:w-80">
                 <div className="p-4 space-y-4">
                      <div>
-                        <h4 className="text-sm font-semibold text-foreground mb-2 block">Bedrooms</h4>
+                        <h4 className="text-sm font-semibold text-foreground mb-2 block">{t.bedrooms}</h4>
                         <div className="space-y-2">
                             <ControlButton value={'Studio'} selectedValue={values.beds} onSelect={(val) => onValueChange({ beds: val })} className="w-full rounded-lg">Studio</ControlButton>
                             <div className="flex flex-wrap gap-2">
@@ -296,7 +393,7 @@ function BedBathFilterPopover({ onValueChange, values, onApply, onClear, isMobil
                         </div>
                      </div>
                      <div>
-                        <h4 className="text-sm font-semibold text-foreground mb-2 block">Bathrooms</h4>
+                        <h4 className="text-sm font-semibold text-foreground mb-2 block">{t.bathrooms}</h4>
                         <div className="flex flex-wrap gap-2">
                             {bathOptions.map(o => <ControlButton key={o} value={o} selectedValue={values.baths} onSelect={(val) => onValueChange({ baths: val })} className="w-12 h-12 rounded-lg">{o}</ControlButton>)}
                         </div>
@@ -305,10 +402,10 @@ function BedBathFilterPopover({ onValueChange, values, onApply, onClear, isMobil
                 {isMobile ? (
                      <div className="px-4 py-3 bg-secondary/50 border-t flex justify-end gap-2">
                         <DialogClose asChild>
-                            <Button variant="ghost" onClick={onClear} className="rounded-lg">Clear</Button>
+                            <Button variant="ghost" onClick={onClear} className="rounded-lg">{t.clearButton}</Button>
                         </DialogClose>
                         <DialogClose asChild>
-                            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>Apply</Button>
+                            <Button className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={onApply}>{t.applyButton}</Button>
                         </DialogClose>
                     </div>
                 ) : footer}
@@ -327,6 +424,11 @@ type MoreFiltersModalProps = {
 };
 
 function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsExpanded }: MoreFiltersModalProps) {
+    const { language } = useLanguage();
+    const t = content[language];
+    const furnishingOptions = { en: ['Any', 'Furnished', 'Unfurnished'], ar: ['الكل', 'مفروشة', 'غير مفروشة'] };
+    const amenities = language === 'ar' ? allArabicAmenities : allAmenities;
+
     const [localFilters, setLocalFilters] = useState(initialValues || {});
 
     const handleValueChange = (key: string, value: any) => {
@@ -335,13 +437,14 @@ function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsEx
     
     const handleAmenityChange = (amenity: string, checked: boolean) => {
         const currentAmenities = localFilters.amenities || [];
+        const englishAmenity = language === 'ar' ? arabicAmenitiesMap[amenity] : amenity;
         const newAmenities = checked
-            ? [...currentAmenities, amenity]
-            : currentAmenities.filter((a: string) => a !== amenity);
+            ? [...currentAmenities, englishAmenity]
+            : currentAmenities.filter((a: string) => a !== englishAmenity);
         handleValueChange('amenities', newAmenities);
     }
     
-    const amenitiesToShow = isExpanded ? allAmenities : allAmenities.slice(0, 9);
+    const amenitiesToShow = isExpanded ? amenities : amenities.slice(0, 9);
     
     const clearAndClose = () => {
       setLocalFilters({});
@@ -351,7 +454,7 @@ function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsEx
     return (
          <>
             <DialogHeader className="p-6 border-b text-center relative">
-              <DialogTitle className="text-2xl font-headline">More Filters</DialogTitle>
+              <DialogTitle className="text-2xl font-headline">{t.moreFilters}</DialogTitle>
                 <DialogClose asChild>
                     <Button variant="ghost" size="icon" className="absolute right-6 top-1/2 -translate-y-1/2 rounded-full h-8 w-8 text-primary hover:text-primary hover:bg-primary/10">
                         <X className="h-4 w-4" />
@@ -362,46 +465,46 @@ function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsEx
 
             <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh]">
                  <div>
-                    <h4 className="font-semibold text-foreground mb-3">Furnishing</h4>
+                    <h4 className="font-semibold text-foreground mb-3">{t.furnishing}</h4>
                     <div className="flex flex-wrap gap-2">
-                         {['Any', 'Furnished', 'Unfurnished'].map(o => <ControlButton key={o} value={o} selectedValue={localFilters.furnishing || 'Any'} onSelect={(val) => handleValueChange('furnishing', val)} className="rounded-full px-4">{o}</ControlButton>)}
+                         {furnishingOptions[language].map((o, i) => <ControlButton key={o} value={furnishingOptions.en[i]} selectedValue={localFilters.furnishing || 'Any'} onSelect={(val) => handleValueChange('furnishing', val)} className="rounded-full px-4">{o}</ControlButton>)}
                     </div>
                 </div>
 
                 <div>
-                    <h4 className="font-semibold text-foreground mb-3">Property Size (sq. ft.)</h4>
+                    <h4 className="font-semibold text-foreground mb-3">{t.propertySize}</h4>
                     <div className="grid grid-cols-2 gap-4">
-                       <Input type="number" name="min_area" placeholder="Min. Area" value={localFilters.min_area || ''} onChange={e => handleValueChange('min_area', e.target.value)} className="rounded-lg h-12"/>
-                       <Input type="number" name="max_area" placeholder="Max. Area" value={localFilters.max_area || ''} onChange={e => handleValueChange('max_area', e.target.value)} className="rounded-lg h-12"/>
+                       <Input type="number" name="min_area" placeholder={t.minAreaPlaceholder} value={localFilters.min_area || ''} onChange={e => handleValueChange('min_area', e.target.value)} className="rounded-lg h-12"/>
+                       <Input type="number" name="max_area" placeholder={t.maxAreaPlaceholder} value={localFilters.max_area || ''} onChange={e => handleValueChange('max_area', e.target.value)} className="rounded-lg h-12"/>
                     </div>
                 </div>
                 
                 <div>
-                    <h4 className="font-semibold text-foreground mb-3">Amenities</h4>
+                    <h4 className="font-semibold text-foreground mb-3">{t.amenities}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                          {amenitiesToShow.map(o => (
                              <label key={o} className="flex items-center gap-3 p-1 rounded-md hover:bg-accent cursor-pointer">
                                  <Checkbox 
                                      id={`amenity-${o}`}
-                                     checked={localFilters.amenities?.includes(o) || false}
+                                     checked={localFilters.amenities?.includes(language === 'ar' ? arabicAmenitiesMap[o] : o) || false}
                                      onCheckedChange={(checked) => handleAmenityChange(o, !!checked)}
                                  />
                                  <span className="text-sm">{o}</span>
                              </label>
                          ))}
                     </div>
-                    {allAmenities.length > 9 && (
+                    {amenities.length > 9 && (
                         <Button variant="link" className="text-primary p-0 h-auto mt-4" onClick={() => setIsExpanded(!isExpanded)}>
-                            {isExpanded ? 'Show less' : 'Show more'}
+                            {isExpanded ? t.showLess : t.showMore}
                         </Button>
                     )}
                 </div>
             </div>
             
             <div className="p-4 bg-secondary/50 border-t flex justify-between items-center">
-                 <Button variant="ghost" onClick={clearAndClose}>Clear All</Button>
+                 <Button variant="ghost" onClick={clearAndClose}>{t.clearAll}</Button>
                  <DialogClose asChild>
-                    <Button size="lg" className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={() => onApply(localFilters)}>Show Results</Button>
+                    <Button size="lg" className="bg-primary-gradient text-primary-foreground rounded-lg" onClick={() => onApply(localFilters)}>{t.showResults}</Button>
                  </DialogClose>
             </div>
         </>
@@ -411,8 +514,10 @@ function MoreFiltersModal({ onApply, onClear, initialValues, isExpanded, setIsEx
 const arabicRegex = /[\u0600-\u06FF]/;
 
 export function Residences() {
+    const { language, direction } = useLanguage();
+    const t = content[language];
     const [filters, setFilters] = useState<FilterValues>({});
-    const [sortOption, setSortOption] = useState('Newest');
+    const [sortOption, setSortOption] = useState(t.sortOptions[0]);
     const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
     const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
     const isMobile = useIsMobile();
@@ -544,15 +649,7 @@ export function Residences() {
             }
         }
 
-        const arabicAmenities: { [key: string]: string } = {
-            'غرفة خادمة': 'Maids Room', 'بلكونة': 'Balcony', 'شرفة': 'Balcony', 'مسبح مشترك': 'Shared Pool',
-            'سبا مشترك': 'Shared Spa', 'جيم مشترك': 'Shared Gym', 'تكييف مركزي': 'Central A/C',
-            'خدمة كونسيرج': 'Concierge Service', 'موقف سيارات مغطى': 'Covered Parking', 'اطلالة على الماء': 'View of Water',
-            'اطلالة على معلم': 'View of Landmark', 'مسموح بالحيوانات الاليفة': 'Pets Allowed', 'منطقة لعب أطفال': "Children's Play Area",
-            'مسبح أطفال': "Children's Pool", 'منطقة للشواء': 'Barbecue Area', 'خزائن مدمجة': 'Built in Wardrobes',
-            'غرفة دراسة': 'Study', 'خزانة ملابس': 'Walk-in Closet', 'جاكوزي خاص': 'Private Jacuzzi'
-        };
-        const foundAmenities = Object.keys(arabicAmenities).filter(key => lowerQuery.includes(key)).map(key => arabicAmenities[key]);
+        const foundAmenities = Object.keys(arabicAmenitiesMap).filter(key => lowerQuery.includes(key)).map(key => arabicAmenitiesMap[key]);
         if(foundAmenities.length > 0) {
             const uniqueAmenities = [...new Set(foundAmenities)];
             newFilters['More Filters'] = { ...newFilters['More Filters'], amenities: uniqueAmenities };
@@ -570,8 +667,8 @@ export function Residences() {
         const result = isArabic ? parseArabicSearchQuery(searchQuery) : parseSearchQueryWithNLP(searchQuery);
         setFilters(result);
         toast({
-            title: isArabic ? "اكتمل البحث" : "Search Complete",
-            description: isArabic ? "تم تحديث الفلاتر بناءً على بحثك." : "Filters have been updated based on your search.",
+            title: t.searchComplete,
+            description: t.searchCompleteDesc,
         });
     };
 
@@ -651,25 +748,25 @@ export function Residences() {
     const sortedUnits = useMemo(() => {
         const unitsToSort = [...filteredUnits];
         switch (sortOption) {
-            case 'Price (low to high)':
+            case t.sortOptions[1]:
                 unitsToSort.sort((a, b) => a.rent - b.rent);
                 break;
-            case 'Price (high to low)':
+            case t.sortOptions[2]:
                 unitsToSort.sort((a, b) => b.rent - a.rent);
                 break;
-            case 'Beds (most to least)':
+            case t.sortOptions[3]:
                 unitsToSort.sort((a, b) => b.beds - a.beds);
                 break;
-            case 'Beds (least to most)':
+            case t.sortOptions[4]:
                 unitsToSort.sort((a, b) => a.beds - b.beds);
                 break;
-            case 'Newest':
+            case t.sortOptions[0]:
             default:
                 // The original order is assumed to be 'Newest'.
                 break;
         }
         return unitsToSort;
-    }, [filteredUnits, sortOption]);
+    }, [filteredUnits, sortOption, t.sortOptions]);
     
     const renderFilterPopoverContent = (filterKey: FilterKey) => {
         const closePopover = () => handlePopoverOpenChange(filterKey, false);
@@ -684,7 +781,7 @@ export function Residences() {
             },
             values: currentValues,
             isMobile: isMobile,
-            title: filterKey
+            title: t[`${filterKey.toLowerCase().replace(/ & /g, '')}Filter` as keyof typeof t]
         };
 
         switch (filterKey) {
@@ -704,12 +801,12 @@ export function Residences() {
     const filterButtons: FilterKey[] = ['Rent', 'Apartment', 'Beds & Baths', 'Price'];
     
     return (
-    <section id="residences" className="w-full py-16 md:py-24 bg-transparent">
+    <section id="residences" className="w-full py-16 md:py-24 bg-transparent" dir={direction}>
       <div className="space-y-8">
         <div className="text-center lg:text-left">
-          <h2 className="text-3xl md:text-4xl font-bold font-headline">Find Your Perfect Home</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-headline">{t.title}</h2>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto lg:mx-0">
-            Explore our collection of meticulously designed apartments, each offering a unique blend of luxury and comfort.
+            {t.subtitle}
           </p>
         </div>
 
@@ -719,14 +816,14 @@ export function Residences() {
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
                     <Input
                         type="text"
-                        placeholder="e.g., furnished 2 bed apartment"
+                        placeholder={t.searchInputPlaceholder}
                         className="h-12 pl-11 w-full rounded-lg"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
                 <Button type="submit" className="h-12 w-full sm:w-auto px-6 rounded-lg bg-primary-gradient text-primary-foreground font-semibold" disabled={!searchQuery.trim()}>
-                    {'Search'}
+                    {t.searchButton}
                 </Button>
             </form>
             <div className="flex flex-wrap gap-2">
@@ -786,11 +883,9 @@ export function Residences() {
                            <FilterButton filterKey="Sort" filters={filters} sortOption={sortOption} />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onSelect={() => setSortOption('Newest')}>Newest</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => setSortOption('Price (low to high)')}>Price (low to high)</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => setSortOption('Price (high to low)')}>Price (high to low)</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => setSortOption('Beds (most to least)')}>Beds (most to least)</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => setSortOption('Beds (least to most)')}>Beds (least to most)</DropdownMenuItem>
+                            {t.sortOptions.map(option => (
+                                <DropdownMenuItem key={option} onSelect={() => setSortOption(option)}>{option}</DropdownMenuItem>
+                            ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -802,8 +897,8 @@ export function Residences() {
           <Breadcrumb items={[]} className="mb-4" />
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">Apartments for rent in MEGA Residency Tower</h1>
-              <p className="mt-1 text-muted-foreground">{filteredUnits.length} properties</p>
+              <h1 className="text-2xl font-bold font-headline text-foreground leading-tight">{t.apartmentsForRent}</h1>
+              <p className="mt-1 text-muted-foreground">{filteredUnits.length} {t.propertiesFound}</p>
             </div>
           </div>
         </div>
@@ -817,8 +912,8 @@ export function Residences() {
             ))
           ) : (
             <div className="col-span-full text-center py-12">
-              <p className="text-lg text-muted-foreground">No units found matching your criteria.</p>
-              <p className="text-sm text-muted-foreground mt-1">Please try adjusting your filters.</p>
+              <p className="text-lg text-muted-foreground">{t.noUnits}</p>
+              <p className="text-sm text-muted-foreground mt-1">{t.noUnitsDesc}</p>
             </div>
           )}
         </div>
@@ -826,6 +921,3 @@ export function Residences() {
     </section>
   );
 }
-
-
-

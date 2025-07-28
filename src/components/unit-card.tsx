@@ -46,6 +46,7 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import type { Unit } from '@/data/units';
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from '@/context/language-context';
 
 function Icon360(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -68,11 +69,54 @@ function Icon360(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+const content = {
+  en: {
+    year: 'year',
+    beds: 'Beds',
+    baths: 'Baths',
+    furnished: 'Furnished',
+    unfurnished: 'Unfurnished',
+    virtualTour: 'Virtual Tour',
+    floorPlan: 'Floor Plan',
+    marketingBy: 'Marketing by',
+    call: 'Call',
+    email: 'Email',
+    whatsapp: 'WhatsApp',
+    addedToFav: 'Added to favourites!',
+    removedFromFav: 'Removed from favourites',
+    propertySaved: 'Property saved!',
+    propertySavedDesc: 'You can view your saved properties in your account.',
+    propertyRemoved: 'Removed from saved',
+    close: 'Close',
+  },
+  ar: {
+    year: 'سنويًا',
+    beds: 'غرف نوم',
+    baths: 'حمامات',
+    furnished: 'مفروشة',
+    unfurnished: 'غير مفروشة',
+    virtualTour: 'جولة افتراضية',
+    floorPlan: 'مخطط الطابق',
+    marketingBy: 'تسويق بواسطة',
+    call: 'اتصال',
+    email: 'بريد إلكتروني',
+    whatsapp: 'واتساب',
+    addedToFav: 'تمت الإضافة إلى المفضلة!',
+    removedFromFav: 'تمت الإزالة من المفضلة',
+    propertySaved: 'تم حفظ العقار!',
+    propertySavedDesc: 'يمكنك عرض عقاراتك المحفوظة في حسابك.',
+    propertyRemoved: 'تمت الإزالة من المحفوظات',
+    close: 'إغلاق',
+  },
+};
+
 type UnitCardProps = {
   unit: Unit;
 };
 
 export function UnitCard({ unit }: UnitCardProps) {
+  const { language, direction } = useLanguage();
+  const t = content[language];
   const [api, setApi] = useState<CarouselApi>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [planView, setPlanView] = useState('2D');
@@ -96,7 +140,7 @@ export function UnitCard({ unit }: UnitCardProps) {
     e.preventDefault();
     setIsLiked(!isLiked);
     toast({
-      title: isLiked ? "Removed from favourites" : "Added to favourites!",
+      title: isLiked ? t.removedFromFav : t.addedToFav,
       description: unit.title,
     });
   };
@@ -106,8 +150,8 @@ export function UnitCard({ unit }: UnitCardProps) {
     e.preventDefault();
     setIsBookmarked(!isBookmarked);
     toast({
-      title: isBookmarked ? "Removed from saved" : "Property saved!",
-      description: "You can view your saved properties in your account.",
+      title: isBookmarked ? t.propertyRemoved : t.propertySaved,
+      description: isBookmarked ? "" : t.propertySavedDesc,
     });
   };
 
@@ -144,7 +188,7 @@ export function UnitCard({ unit }: UnitCardProps) {
   }, [api]);
 
   return (
-    <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col">
+    <Card className="w-full mx-auto overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-background flex flex-col" dir={direction}>
       <div className="lg:grid lg:grid-cols-12">
         {/* Image Part */}
         <div className="relative group/image aspect-[4/3] flex-shrink-0 lg:col-span-5">
@@ -215,7 +259,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             <p className="text-2xl font-bold text-foreground my-1">
               AED {unit.rent.toLocaleString()}{' '}
               <span className="text-base font-normal text-muted-foreground">
-                / year
+                / {t.year}
               </span>
             </p>
             <span className="text-lg font-semibold text-foreground block truncate">
@@ -236,11 +280,11 @@ export function UnitCard({ unit }: UnitCardProps) {
               <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <Bed className="w-4 h-4" />
-                  <span>{unit.beds} Beds</span>
+                  <span>{unit.beds} {t.beds}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Bath className="w-4 h-4" />
-                  <span>{unit.baths} Baths</span>
+                  <span>{unit.baths} {t.baths}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Ruler className="w-4 h-4" />
@@ -250,7 +294,7 @@ export function UnitCard({ unit }: UnitCardProps) {
               <div className="flex items-center gap-x-4 gap-y-1 flex-wrap text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <Armchair className="w-4 h-4" />
-                  <span>{unit.furnished ? 'Furnished' : 'Unfurnished'}</span>
+                  <span>{unit.furnished ? t.furnished : t.unfurnished}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <View className="w-4 h-4" />
@@ -269,7 +313,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                   disabled={!unit.virtualTourUrl}
                 >
                   <Icon360 className="mr-1.5 h-4 w-4" />{' '}
-                  <span>Virtual Tour</span>
+                  <span>{t.virtualTour}</span>
                 </Button>
               </DialogTrigger>
               {unit.virtualTourUrl && (
@@ -282,7 +326,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                         className="bg-black/50 hover:bg-black/70 text-white rounded-full h-10 w-10"
                       >
                         <X className="h-5 w-5" />
-                        <span className="sr-only">Close</span>
+                        <span className="sr-only">{t.close}</span>
                       </Button>
                     </DialogClose>
                   </DialogHeader>
@@ -305,7 +349,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                   disabled={!unit.floorPlanImage}
                 >
                   <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" />{' '}
-                  <span>Floor Plan</span>
+                  <span>{t.floorPlan}</span>
                 </Button>
               </DialogTrigger>
               {unit.floorPlanImage && (
@@ -313,7 +357,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                     <DialogHeader className="p-4 border-b flex-shrink-0">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <DialogTitle className="text-lg font-semibold truncate text-left">
-                          Floor Plan: {unit.title}
+                          {t.floorPlan}: {unit.title}
                         </DialogTitle>
                         <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
                           <div className="p-1 bg-muted rounded-lg flex gap-1">
@@ -342,7 +386,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                               className="rounded-full h-9 w-9"
                             >
                               <X className="h-4 w-4" />
-                              <span className="sr-only">Close</span>
+                              <span className="sr-only">{t.close}</span>
                             </Button>
                           </DialogClose>
                         </div>
@@ -379,7 +423,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             <AvatarFallback>AE</AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-xs text-muted-foreground">Marketing by</p>
+            <p className="text-xs text-muted-foreground">{t.marketingBy}</p>
             <p className="font-semibold text-foreground text-sm">
               APEX
             </p>
@@ -393,7 +437,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = 'tel:12345'; }}
           >
             <Phone className="mr-1.5 h-3.5 w-3.5" />
-            <span>Call</span>
+            <span>{t.call}</span>
           </Button>
           <Button
             variant="outline"
@@ -402,7 +446,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = 'mailto:test@example.com'; }}
           >
             <Mail className="mr-1.5 h-3.5 w-3.5" />
-            <span>Email</span>
+            <span>{t.email}</span>
           </Button>
           <Button
             size="sm"
@@ -419,7 +463,7 @@ export function UnitCard({ unit }: UnitCardProps) {
             >
               <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z" />
             </svg>
-            <span>WhatsApp</span>
+            <span>{t.whatsapp}</span>
           </Button>
           <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary" onClick={handleShare}>
               <Share2 className="w-5 h-5" />
