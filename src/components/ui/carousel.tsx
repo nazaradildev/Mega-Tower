@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -19,6 +20,8 @@ type CarouselProps = {
   plugins?: CarouselPlugin
   orientation?: "horizontal" | "vertical"
   setApi?: (api: CarouselApi) => void
+  prevButtonLabel?: string
+  nextButtonLabel?: string
 }
 
 type CarouselContextProps = {
@@ -132,6 +135,7 @@ const Carousel = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
+          ...props
         }}
       >
         <div
@@ -198,7 +202,7 @@ const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const { orientation, scrollPrev, canScrollPrev, prevButtonLabel = 'Previous slide' } = useCarousel()
 
   return (
     <Button
@@ -217,7 +221,7 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       <ArrowLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">{prevButtonLabel}</span>
     </Button>
   )
 })
@@ -227,7 +231,7 @@ const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const { orientation, scrollNext, canScrollNext, nextButtonLabel = 'Next slide' } = useCarousel()
 
   return (
     <Button
@@ -246,7 +250,7 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       <ArrowRight className="h-4 w-4" />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">{nextButtonLabel}</span>
     </Button>
   )
 })

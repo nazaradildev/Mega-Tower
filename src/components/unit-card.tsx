@@ -88,6 +88,11 @@ const content = {
     propertySavedDesc: 'You can view your saved properties in your account.',
     propertyRemoved: 'Removed from saved',
     close: 'Close',
+    previousSlide: 'Previous slide',
+    nextSlide: 'Next slide',
+    imageAlt: (title: string, index: number) => `${title} - Image ${index + 1}`,
+    goToImage: (index: number) => `Go to image ${index + 1}`,
+    viewDetails: (title: string) => `View details for ${title}`,
   },
   ar: {
     year: 'سنويًا',
@@ -107,6 +112,11 @@ const content = {
     propertySavedDesc: 'يمكنك عرض عقاراتك المحفوظة في حسابك.',
     propertyRemoved: 'تمت الإزالة من المحفوظات',
     close: 'إغلاق',
+    previousSlide: 'الشريحة السابقة',
+    nextSlide: 'الشريحة التالية',
+    imageAlt: (title: string, index: number) => `${title} - صورة ${index + 1}`,
+    goToImage: (index: number) => `اذهب للصورة ${index + 1}`,
+    viewDetails: (title: string) => `عرض تفاصيل ${title}`,
   },
 };
 
@@ -197,14 +207,16 @@ export function UnitCard({ unit }: UnitCardProps) {
             className="w-full h-full"
             plugins={[autoplay.current]}
             opts={{ loop: true }}
+            prevButtonLabel={t.previousSlide}
+            nextButtonLabel={t.nextSlide}
           >
             <CarouselContent className="m-0 h-full">
               {unit.images.map((imgSrc, index) => (
                 <CarouselItem key={index} className="p-0">
-                   <Link href={`/property/${unit.id}`} className="block w-full h-full" aria-label={`View details for ${unit.title}`}>
+                   <Link href={`/property/${unit.id}`} className="block w-full h-full" aria-label={t.viewDetails(unit.title)}>
                     <img
                         src={imgSrc}
-                        alt={`${unit.title} - Image ${index + 1}`}
+                        alt={t.imageAlt(unit.title, index + 1)}
                         data-ai-hint={unit.aiHint}
                         className="w-full h-full object-cover"
                         loading={index === 0 ? 'eager' : 'lazy'}
@@ -224,7 +236,7 @@ export function UnitCard({ unit }: UnitCardProps) {
                     api?.scrollTo(index);
                   }}
                   className="p-1"
-                  aria-label={`Go to image ${index + 1}`}
+                  aria-label={t.goToImage(index + 1)}
                 >
                   <div
                     className={cn(
@@ -250,7 +262,7 @@ export function UnitCard({ unit }: UnitCardProps) {
            <Link
                 href={`/property/${unit.id}`}
                 className="absolute inset-0 z-0"
-                aria-label={`View details for ${unit.title}`}
+                aria-label={t.viewDetails(unit.title)}
             />
           <div className="flex-grow">
             <span className="text-sm text-muted-foreground">

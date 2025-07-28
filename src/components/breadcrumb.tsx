@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import { Home, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/context/language-context';
 
 type BreadcrumbItem = {
   label: string;
@@ -16,13 +17,15 @@ type BreadcrumbProps = {
 };
 
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
+  const { language } = useLanguage();
+
   return (
     <nav aria-label="Breadcrumb" className={cn('w-full', className)}>
       <ol className="flex items-center gap-1.5 text-sm text-muted-foreground flex-wrap">
         <li>
           <Link href="/" className="flex items-center gap-1 hover:text-primary transition-colors">
             <Home className="h-4 w-4" />
-            <span className="sr-only">Home</span>
+            <span className="sr-only">{language === 'ar' ? 'الرئيسية' : 'Home'}</span>
           </Link>
         </li>
         {items.map((item, index) => (

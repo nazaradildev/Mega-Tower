@@ -79,6 +79,7 @@ import Image from 'next/image';
 import { ResidentialInsightCard, CommunityInsightCard } from '@/components/insights-card';
 import dynamic from 'next/dynamic';
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from '@/context/language-context';
 
 const InteractiveMap = dynamic(() => import('@/components/interactive-map').then(mod => mod.InteractiveMap), {
     ssr: false,
@@ -88,6 +89,97 @@ const InteractiveMap = dynamic(() => import('@/components/interactive-map').then
         </div>
     )
 });
+
+const content = {
+  en: {
+    apartmentsForRent: 'Apartments for rent in Dubai',
+    businessBay: 'Business Bay',
+    megaResidencyTower: 'MEGA Residency Tower',
+    propertyImage: 'Property image',
+    previousSlide: 'Previous slide',
+    nextSlide: 'Next slide',
+    video: 'Video',
+    virtualTour: 'Virtual Tour',
+    virtualTourNotAvailable: 'Virtual tour not available.',
+    floorPlan: 'Floor Plan',
+    floorPlanTitle: 'Floor Plan:',
+    close: 'Close',
+    thumbnail: 'Thumbnail',
+    description: 'Description',
+    descriptionP1: (unit: (typeof units)[0]) => `Discover the pinnacle of urban living in this stunning ${unit.beds}-bedroom apartment located in the prestigious MEGA Residency Tower, Business Bay. Offering breathtaking views of the ${unit.view}, this residence combines luxury, comfort, and convenience. The spacious layout is perfect for both relaxation and entertaining, featuring high-end finishes and floor-to-ceiling windows that flood the space with natural light.`,
+    interiorExcellence: 'Interior Excellence',
+    descriptionP2: (unit: (typeof units)[0]) => `Step into a world of refined elegance. The expansive living and dining area, approximately 45 sqm, is adorned with premium Italian marble flooring that extends to a private balcony. The open-plan kitchen is a chef's dream, equipped with state-of-the-art integrated appliances from leading European brands, sleek custom cabinetry, and durable quartz countertops.`,
+    comfortAndPrivacy: 'Comfort and Privacy',
+    descriptionP3: (unit: (typeof units)[0]) => `Each of the ${unit.beds} bedrooms serves as a private sanctuary. The master suite (${unit.beds > 1 ? 'approx. 25 sqm' : 'approx. 20 sqm'}) features a generous walk-in closet and a spa-like en-suite bathroom with a rainfall shower and a separate soaking tub. All bathrooms are finished with designer fixtures and floor-to-ceiling porcelain tiles. Smart home technology allows for effortless control of lighting, climate, and security.`,
+    propertyDetails: 'Property Details',
+    propertyType: 'Property Type',
+    propertySize: 'Property Size',
+    bedrooms: 'Bedrooms',
+    bathrooms: 'Bathrooms',
+    serviceCharges: 'Service Charges',
+    sqft: 'sqft',
+    sqm: 'sqm',
+    perSqft: 'AED per sqft',
+    amenities: 'Amenities',
+    seeAllAmenities: (count: number) => `See all amenities (${count})`,
+    allAmenities: 'All Amenities',
+    location: 'Location',
+    insights: 'Insights',
+    priceInsights: 'Price Insights',
+    price: 'Price',
+    rentStartingFrom: 'Rent starting from',
+    year: '/year',
+    verifiedListing: 'Verified Listing',
+    marketingBy: 'Marketing by',
+    call: 'Call',
+    email: 'Email',
+    whatsApp: 'WhatsApp',
+  },
+  ar: {
+    apartmentsForRent: 'شقق للإيجار في دبي',
+    businessBay: 'الخليج التجاري',
+    megaResidencyTower: 'برج ميغا السكني',
+    propertyImage: 'صورة العقار',
+    previousSlide: 'الشريحة السابقة',
+    nextSlide: 'الشريحة التالية',
+    video: 'فيديو',
+    virtualTour: 'جولة افتراضية',
+    virtualTourNotAvailable: 'الجولة الافتراضية غير متاحة.',
+    floorPlan: 'مخطط الطابق',
+    floorPlanTitle: 'مخطط الطابق:',
+    close: 'إغلاق',
+    thumbnail: 'صورة مصغرة',
+    description: 'الوصف',
+    descriptionP1: (unit: (typeof units)[0]) => `اكتشف قمة الحياة الحضرية في هذه الشقة المذهلة المكونة من ${unit.beds} غرفة نوم والتي تقع في برج ميغا السكني المرموق في الخليج التجاري. يوفر هذا السكن إطلالات خلابة على ${unit.view}، ويجمع بين الفخامة والراحة والملاءمة. التصميم الفسيح مثالي للاسترخاء والترفيه، ويتميز بتشطيبات راقية ونوافذ ممتدة من الأرض حتى السقف تغمر المساحة بالضوء الطبيعي.`,
+    interiorExcellence: 'التميز الداخلي',
+    descriptionP2: (unit: (typeof units)[0]) => `ادخل إلى عالم من الأناقة الراقية. منطقة المعيشة وتناول الطعام الفسيحة، التي تبلغ مساحتها حوالي 45 مترًا مربعًا، مزينة بأرضيات من الرخام الإيطالي الفاخر تمتد إلى شرفة خاصة. المطبخ المفتوح هو حلم كل طاهٍ، ومجهز بأحدث الأجهزة المدمجة من العلامات التجارية الأوروبية الرائدة، وخزائن مخصصة أنيقة، وأسطح من الكوارتز المتين.`,
+    comfortAndPrivacy: 'الراحة والخصوصية',
+    descriptionP3: (unit: (typeof units)[0]) => `كل غرفة من غرف النوم الـ ${unit.beds} بمثابة ملاذ خاص. يحتوي الجناح الرئيسي (حوالي ${unit.beds > 1 ? '25 مترًا مربعًا' : '20 مترًا مربعًا'}) على خزانة ملابس واسعة وحمام داخلي يشبه السبا مع دش مطري وحوض استحمام منفصل. جميع الحمامات مزودة بتجهيزات من تصميم أشهر المصممين وبلاط بورسلين من الأرض حتى السقف. تتيح تقنية المنزل الذكي التحكم السهل في الإضاءة والمناخ والأمن.`,
+    propertyDetails: 'تفاصيل العقار',
+    propertyType: 'نوع العقار',
+    propertySize: 'مساحة العقار',
+    bedrooms: 'غرف النوم',
+    bathrooms: 'الحمامات',
+    serviceCharges: 'رسوم الخدمة',
+    sqft: 'قدم مربع',
+    sqm: 'متر مربع',
+    perSqft: 'درهم لكل قدم مربع',
+    amenities: 'وسائل الراحة',
+    seeAllAmenities: (count: number) => `عرض كل الوسائل (${count})`,
+    allAmenities: 'جميع وسائل الراحة',
+    location: 'الموقع',
+    insights: 'رؤى',
+    priceInsights: 'مؤشرات الأسعار',
+    price: 'السعر',
+    rentStartingFrom: 'الإيجار يبدأ من',
+    year: '/سنة',
+    verifiedListing: 'إعلان موثوق',
+    marketingBy: 'تسويق بواسطة',
+    call: 'اتصال',
+    email: 'بريد إلكتروني',
+    whatsApp: 'واتساب',
+  }
+};
 
 
 const priceData = [
@@ -110,6 +202,8 @@ export default function PropertyDetailsPage() {
   const [viewMode, setViewMode] = React.useState<'gallery' | 'video' | 'virtualTour'>('gallery');
   const [planView, setPlanView] = React.useState('2D');
   const { toast } = useToast();
+  const { language, direction } = useLanguage();
+  const t = content[language];
 
   const amenityIcons: Record<string, React.ElementType> = {
     Balcony: GalleryVerticalEnd,
@@ -169,14 +263,14 @@ export default function PropertyDetailsPage() {
   }
 
   const breadcrumbItems = [
-    { label: 'Apartments for rent in Dubai', href: '/#residences' },
-    { label: 'Business Bay', href: '/community/business-bay' },
-    { label: 'MEGA Residency Tower', href: '/building/mega-residency-tower' },
+    { label: t.apartmentsForRent, href: '/#residences' },
+    { label: t.businessBay, href: '/community/business-bay' },
+    { label: t.megaResidencyTower, href: '/building/mega-residency-tower' },
     { label: unit.title }
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-secondary/30">
+    <div className="flex flex-col min-h-screen bg-secondary/30" dir={direction}>
       <Header />
       <main className="flex-1 py-8 sm:py-12">
         <div className="container mx-auto px-4">
@@ -196,8 +290,7 @@ export default function PropertyDetailsPage() {
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <MapPin className="h-4 w-4" />
                           <span>
-                            MEGA Residency Tower, Business
-                            Bay
+                            {t.megaResidencyTower}, {t.businessBay}
                           </span>
                         </div>
                       </div>
@@ -214,7 +307,13 @@ export default function PropertyDetailsPage() {
                 <CardContent className="p-0">
                   <div className="aspect-[4/3] rounded-lg overflow-hidden">
                     {viewMode === 'gallery' && (
-                      <Carousel setApi={setApi} className="w-full h-full" opts={{ loop: true }}>
+                      <Carousel 
+                        setApi={setApi} 
+                        className="w-full h-full" 
+                        opts={{ loop: true }}
+                        nextButtonLabel={t.nextSlide}
+                        prevButtonLabel={t.previousSlide}
+                      >
                         <CarouselContent className="m-0 h-full">
                           {unit.images.map((img, index) => (
                             <CarouselItem
@@ -223,7 +322,7 @@ export default function PropertyDetailsPage() {
                             >
                               <img
                                 src={img}
-                                alt={`Property image ${index + 1}`}
+                                alt={`${t.propertyImage} ${index + 1}`}
                                 className="w-full h-full object-cover rounded-lg"
                               />
                             </CarouselItem>
@@ -244,7 +343,7 @@ export default function PropertyDetailsPage() {
                       />
                       ) : (
                       <div className="w-full h-full bg-muted flex items-center justify-center rounded-lg">
-                          <p className="text-muted-foreground">Virtual tour not available.</p>
+                          <p className="text-muted-foreground">{t.virtualTourNotAvailable}</p>
                       </div>
                       )
                     )}
@@ -273,7 +372,7 @@ export default function PropertyDetailsPage() {
                   className="rounded-lg"
                 >
                   <Video className="mr-2 h-4 w-4" />
-                  Video
+                  {t.video}
                 </Button>
                 <Button
                   variant={viewMode === 'virtualTour' ? 'default' : 'outline'}
@@ -282,7 +381,7 @@ export default function PropertyDetailsPage() {
                   className="rounded-lg"
                 >
                   <View className="mr-2 h-4 w-4" />
-                  Virtual Tour
+                  {t.virtualTour}
                 </Button>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -292,7 +391,7 @@ export default function PropertyDetailsPage() {
                       className="rounded-lg"
                     >
                       <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Floor Plan
+                      {t.floorPlan}
                     </Button>
                   </DialogTrigger>
                   {unit.floorPlanImage && (
@@ -300,7 +399,7 @@ export default function PropertyDetailsPage() {
                         <DialogHeader className="p-4 border-b flex-shrink-0">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <DialogTitle className="text-lg font-semibold truncate text-left">
-                              Floor Plan: {unit.title}
+                              {t.floorPlanTitle} {unit.title}
                             </DialogTitle>
                             <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
                               <div className="p-1 bg-muted rounded-lg flex gap-1">
@@ -329,7 +428,7 @@ export default function PropertyDetailsPage() {
                                   className="rounded-full h-9 w-9"
                                 >
                                   <X className="h-4 w-4" />
-                                  <span className="sr-only">Close</span>
+                                  <span className="sr-only">{t.close}</span>
                                 </Button>
                               </DialogClose>
                             </div>
@@ -380,7 +479,7 @@ export default function PropertyDetailsPage() {
                           <div className="relative h-full w-full overflow-hidden rounded-md">
                             <img
                               src={img}
-                              alt={`Thumbnail ${index + 1}`}
+                              alt={`${t.thumbnail} ${index + 1}`}
                               className="w-full h-full object-cover"
                               loading="lazy"
                             />
@@ -395,29 +494,16 @@ export default function PropertyDetailsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">
-                    Description
+                    {t.description}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-muted-foreground leading-relaxed space-y-4 prose prose-neutral dark:prose-invert max-w-none">
-                      <p>
-                        Discover the pinnacle of urban living in this stunning{' '}
-                        {unit.beds}-bedroom apartment located in the prestigious
-                        MEGA Residency Tower, Business Bay. Offering breathtaking
-                        views of the {unit.view}, this residence combines
-                        luxury, comfort, and convenience. The spacious layout
-                        is perfect for both relaxation and entertaining,
-                        featuring high-end finishes and floor-to-ceiling
-                        windows that flood the space with natural light.
-                      </p>
-                       <h4>Interior Excellence</h4>
-                        <p>
-                          Step into a world of refined elegance. The expansive living and dining area, approximately 45 sqm, is adorned with premium Italian marble flooring that extends to a private balcony. The open-plan kitchen is a chef's dream, equipped with state-of-the-art integrated appliances from leading European brands, sleek custom cabinetry, and durable quartz countertops.
-                        </p>
-                        <h4>Comfort and Privacy</h4>
-                        <p>
-                          Each of the {unit.beds} bedrooms serves as a private sanctuary. The master suite ({unit.beds > 1 ? 'approx. 25 sqm' : 'approx. 20 sqm'}) features a generous walk-in closet and a spa-like en-suite bathroom with a rainfall shower and a separate soaking tub. All bathrooms are finished with designer fixtures and floor-to-ceiling porcelain tiles. Smart home technology allows for effortless control of lighting, climate, and security.
-                        </p>
+                      <p>{t.descriptionP1(unit)}</p>
+                      <h4>{t.interiorExcellence}</h4>
+                      <p>{t.descriptionP2(unit)}</p>
+                      <h4>{t.comfortAndPrivacy}</h4>
+                      <p>{t.descriptionP3(unit)}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -425,7 +511,7 @@ export default function PropertyDetailsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">
-                    Property Details
+                    {t.propertyDetails}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -433,36 +519,36 @@ export default function PropertyDetailsPage() {
                      <div className="flex items-start gap-3">
                         <Building className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                         <div>
-                            <p className="text-sm text-muted-foreground">Property Type</p>
+                            <p className="text-sm text-muted-foreground">{t.propertyType}</p>
                             <p className="font-semibold">{unit.propertyType}</p>
                         </div>
                     </div>
                      <div className="flex items-start gap-3">
                         <Ruler className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                         <div>
-                            <p className="text-sm text-muted-foreground">Property Size</p>
-                            <p className="font-semibold">{unit.area.toLocaleString()} sqft / {Math.round(unit.area * 0.092903)} sqm</p>
+                            <p className="text-sm text-muted-foreground">{t.propertySize}</p>
+                            <p className="font-semibold">{unit.area.toLocaleString()} {t.sqft} / {Math.round(unit.area * 0.092903)} {t.sqm}</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-3">
                         <BedDouble className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                         <div>
-                            <p className="text-sm text-muted-foreground">Bedrooms</p>
+                            <p className="text-sm text-muted-foreground">{t.bedrooms}</p>
                             <p className="font-semibold">{unit.beds}</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-3">
                         <Bath className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                         <div>
-                            <p className="text-sm text-muted-foreground">Bathrooms</p>
+                            <p className="text-sm text-muted-foreground">{t.bathrooms}</p>
                             <p className="font-semibold">{unit.baths}</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-3">
                         <Wallet className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                         <div>
-                            <p className="text-sm text-muted-foreground">Service Charges</p>
-                            <p className="font-semibold">{unit.serviceCharges} AED per sqft</p>
+                            <p className="text-sm text-muted-foreground">{t.serviceCharges}</p>
+                            <p className="font-semibold">{unit.serviceCharges} {t.perSqft}</p>
                         </div>
                     </div>
                   </div>
@@ -472,7 +558,7 @@ export default function PropertyDetailsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">
-                    Amenities
+                    {t.amenities}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -494,11 +580,11 @@ export default function PropertyDetailsPage() {
                     </div>
                      <Dialog>
                         <DialogTrigger asChild>
-                           <Button variant="outline">See all amenities ({unit.amenities.length})</Button>
+                           <Button variant="outline">{t.seeAllAmenities(unit.amenities.length)}</Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-md">
                            <DialogHeader>
-                              <DialogTitle className="font-headline text-2xl">All Amenities</DialogTitle>
+                              <DialogTitle className="font-headline text-2xl">{t.allAmenities}</DialogTitle>
                            </DialogHeader>
                            <div className="py-4 grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
                               {unit.amenities.map((amenity) => {
@@ -514,7 +600,7 @@ export default function PropertyDetailsPage() {
                            <DialogClose asChild>
                               <Button variant="ghost" size="icon" className="absolute top-4 right-4 h-8 w-8 rounded-full">
                                   <X className="h-4 w-4" />
-                                  <span className="sr-only">Close</span>
+                                  <span className="sr-only">{t.close}</span>
                               </Button>
                             </DialogClose>
                         </DialogContent>
@@ -525,7 +611,7 @@ export default function PropertyDetailsPage() {
                <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">
-                    Location
+                    {t.location}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[500px] w-full p-0">
@@ -534,7 +620,7 @@ export default function PropertyDetailsPage() {
               </Card>
               
               <div>
-                <h2 className="text-2xl font-bold font-headline mb-4">Insights</h2>
+                <h2 className="text-2xl font-bold font-headline mb-4">{t.insights}</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                    <ResidentialInsightCard />
                    <CommunityInsightCard />
@@ -545,7 +631,7 @@ export default function PropertyDetailsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">
-                    Price Insights
+                    {t.priceInsights}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -584,7 +670,7 @@ export default function PropertyDetailsPage() {
                                 <div className="p-2 bg-background border rounded-lg shadow-sm">
                                   <p className="font-bold">{label}</p>
                                   <p className="text-primary">
-                                    {`Price: AED ${payload[0].value?.toLocaleString()}`}
+                                    {`${t.price}: AED ${payload[0].value?.toLocaleString()}`}
                                   </p>
                                 </div>
                               );
@@ -610,17 +696,17 @@ export default function PropertyDetailsPage() {
               <Card>
                 <CardContent className="p-6">
                   <div className="text-center">
-                    <p className="text-muted-foreground">Rent starting from</p>
+                    <p className="text-muted-foreground">{t.rentStartingFrom}</p>
                     <p className="text-4xl font-bold text-primary my-2">
                       AED {unit.rent.toLocaleString()}
                       <span className="text-xl font-normal text-muted-foreground">
-                        /year
+                        {t.year}
                       </span>
                     </p>
                     {unit.verified && (
                        <Badge variant="outline" className="border-green-600 bg-green-50 text-green-700">
                         <CheckCircle className="mr-1.5 h-4 w-4 text-green-600" />
-                        Verified Listing
+                        {t.verifiedListing}
                       </Badge>
                     )}
                   </div>
@@ -636,7 +722,7 @@ export default function PropertyDetailsPage() {
                     <div>
                       <p className="font-semibold">APEX</p>
                       <p className="text-sm text-muted-foreground">
-                        Marketing by
+                        {t.marketingBy}
                       </p>
                     </div>
                   </div>
@@ -655,15 +741,15 @@ export default function PropertyDetailsPage() {
                       >
                         <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-1.001.164-.521.164-.97.114-1.07l-.26-.065z" />
                       </svg>
-                      WhatsApp
+                      {t.whatsApp}
                     </Button>
                     <Button size="lg" className="w-full" variant="outline">
                       <Mail className="mr-2 h-5 w-5" />
-                      Email
+                      {t.email}
                     </Button>
                     <Button size="lg" className="w-full" variant="outline">
                       <Phone className="mr-2 h-5 w-5" />
-                      Call
+                      {t.call}
                     </Button>
                   </div>
                 </CardContent>
