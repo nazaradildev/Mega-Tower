@@ -51,15 +51,15 @@ import {
 } from "@/components/ui/dialog";
 
 const galleryImages = [
-  { src: "https://placehold.co/1280x720.png", alt: "Business Bay Canal", hint: "dubai canal boats" },
-  { src: "https://placehold.co/1280x720.png", alt: "Business Bay Overview", hint: "dubai business bay" },
-  { src: "https://placehold.co/1280x720.png", alt: "Dubai Canal", hint: "dubai canal" },
-  { src: "https://placehold.co/1280x720.png", alt: "Business Bay Skyline", hint: "dubai skyline" },
-  { src: "https://placehold.co/1280x720.png", alt: "Modern Architecture", hint: "dubai architecture" },
-  { src: "https://placehold.co/1280x720.png", alt: "Cityscape at Night", hint: "cityscape night" },
-  { src: "https://placehold.co/1280x720.png", alt: "Waterfront Promenade", hint: "waterfront promenade" },
-  { src: "https://placehold.co/1280x720.png", alt: "Bay Square", hint: "bay square" },
-  { src: "https://placehold.co/1280x720.png", alt: "JW Marriott Marquis", hint: "luxury hotel" },
+  { src: "/unnamed (1).jpg", alt: "Business Bay Canal", hint: "dubai canal boats" },
+  { src: "/unnamed (2).jpg", alt: "Business Bay Overview", hint: "dubai business bay" },
+  { src: "/unnamed (3).jpg", alt: "Dubai Canal", hint: "dubai canal" },
+  { src: "/unnamed (4).jpg", alt: "Business Bay Skyline", hint: "dubai skyline" },
+  { src: "/unnamed (5).jpg", alt: "Modern Architecture", hint: "dubai architecture" },
+  { src: "/unnamed (6).jpg", alt: "Cityscape at Night", hint: "cityscape night" },
+  { src: "/unnamed (7).jpg", alt: "Waterfront Promenade", hint: "waterfront promenade" },
+  { src: "/unnamed (8).jpg", alt: "Bay Square", hint: "bay square" },
+  { src: "/unnamed (9).jpg", alt: "JW Marriott Marquis", hint: "luxury hotel" },
 ];
 
 const content = {
@@ -570,6 +570,5 @@ export default function BusinessBayPage() {
       <Footer />
     </div>
   );
-}
 
     
