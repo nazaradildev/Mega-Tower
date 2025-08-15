@@ -51,15 +51,15 @@ import {
 } from "@/components/ui/dialog";
 
 const galleryImages = [
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no0yA7u_I7LnFzqEjYWD-ejKyaTiAX9x8tPUhJiMM3Alult-tXPIPZ75iFP7dWbAvY0cSVvIRbZouETUbFu3HeLOW-tOm_3UMR3pI41vT-AARn83MrnMDvAe19BUem8XT87qyz4jg=s0", alt: "Business Bay Canal", hint: "dubai canal boats" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrViHCTusE5CGgwfQNPJ4xtzSbuaPj-PhUwJ7z_uA_KDGNhrD1G3Ms6W8wEi5wzPBo2398al29La3sbYf70lBLxIUqGXkbrqEGYjFlnwOdFfTo6ctBpkfTVQW91ym5UthsXzLD5Kg=s0", alt: "Business Bay Overview", hint: "dubai business bay" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr5PhaqjuHv9tCDa96vbB322T9rjpm9U0Ncp6LMKJ3bhgfVQu1KLo3zDe-NimEB8gid3naxAIJbQa_SR1AWEkQ1w5qmyH1xfFAaWHXU8buUA_A8FIF1Tmx4V-l_kklR1qlkpsy9=s0", alt: "Dubai Canal", hint: "dubai canal" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npW89jZ6dCWeG_abHcKxR6z2Y-FKYP78HVTrzS9EpPAAuiNDSQq3hbt3sVKQggGwRfdtgb31wrcSPyQdPiu4mElQI652EW6UrT9xZyJb-87qw5wsOPCzb2X8r8THKE49WyA2dygtg=s0", alt: "Business Bay Skyline", hint: "dubai skyline" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noldjGXcXOg-uoslPy8Hjgq3WR9Y6IAIyKKM0JT0ydIvjOE0m9hQwHxdynDt9ndQ6pAnvTPPMJ5Y6UUDl23eU1FvAYjzhitCRy05lGw_uEvOLQU6_J9Rppag6swelRcuMPQk02q=s0", alt: "Modern Architecture", hint: "dubai architecture" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4np5LfgeP6zHGpgY6aZ26-bMsgkbJm60U7lYS6UPxZ9pLYCbFa_jp_I10vDurCK8Wm-6ewgfUxD24DdjG4XVUiPM5YLre3AE1VqABviynlhJ9vl_x3A_2G86gJxuRC97lJY18Bxa=s0", alt: "Cityscape at Night", hint: "cityscape night" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noGzCjuFgU5ATIqdlTcFkWW7ghapgntb2RpZ8tDsXO1QoVHPKElE7nk1ExbG9fNpqNQilTr0yW20D662rtrIVwV4WpdBgUH0Ag_LOF-qDngbfoOAon1GOxiEPrLYXssE39_1PMe=s0", alt: "Waterfront Promenade", hint: "waterfront promenade" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nreG_5vMkyFQaNAVRV10dvnh4gG1ZRsSF4lOqXuk4K-wZnlb3g3NwCjW1Fwt50taU8nbZhEEAaMs4KLqirxH1lq8WO6YhkIaK6O-Ni1QZSXm8n5fpt4dveOO2-Xcdh_NgYa5XK-6g=s0", alt: "Bay Square", hint: "bay square" },
-  { src: "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrAO_cpWb8HsE8kfjOKgW47nIq-rtPOpKfRpvtRK-gVFZH7XFVa70qVoQfAC4uH7KdQf3ba1FbnszQC40wZHbxqiziOvLTp93Dy4nPnCTLMDPJ_1lahJKhqlbfwUb4w0xWhufM=s0", alt: "JW Marriott Marquis", hint: "luxury hotel" },
+  { src: "https://placehold.co/1280x720.png", alt: "Business Bay Canal", hint: "dubai canal boats" },
+  { src: "https://placehold.co/1280x720.png", alt: "Business Bay Overview", hint: "dubai business bay" },
+  { src: "https://placehold.co/1280x720.png", alt: "Dubai Canal", hint: "dubai canal" },
+  { src: "https://placehold.co/1280x720.png", alt: "Business Bay Skyline", hint: "dubai skyline" },
+  { src: "https://placehold.co/1280x720.png", alt: "Modern Architecture", hint: "dubai architecture" },
+  { src: "https://placehold.co/1280x720.png", alt: "Cityscape at Night", hint: "cityscape night" },
+  { src: "https://placehold.co/1280x720.png", alt: "Waterfront Promenade", hint: "waterfront promenade" },
+  { src: "https://placehold.co/1280x720.png", alt: "Bay Square", hint: "bay square" },
+  { src: "https://placehold.co/1280x720.png", alt: "JW Marriott Marquis", hint: "luxury hotel" },
 ];
 
 const content = {
@@ -310,6 +310,7 @@ export default function BusinessBayPage() {
                                       fill
                                       className="object-cover"
                                       priority={index === 0}
+                                      sizes="100vw"
                                   />
                                    <Button
                                       variant="ghost"
@@ -358,6 +359,7 @@ export default function BusinessBayPage() {
                                           fill
                                           className="object-cover"
                                           loading="lazy"
+                                          sizes="15vw"
                                       />
                                   </div>
                               </div>
@@ -569,3 +571,5 @@ export default function BusinessBayPage() {
     </div>
   );
 }
+
+    
