@@ -108,7 +108,7 @@ export function CommunityInsightCard() {
     return (
         <InsightCard
             link="/community/business-bay"
-            imageSrc="https://lh3.googleusercontent.com/gps-cs-s/AC9h4noldjGXcXOg-uoslPy8Hjgq3WR9Y6IAIyKKM0JT0ydIvjOE0m9hQwHxdynDt9ndQ6pAnvTPPMJ5Y6UUDl23eU1FvAYjzhitCRy05lGw_uEvOLQU6_J9Rppag6swelRcuMPQk02q=s0"
+            imageSrc="/unnamed (5).jpg"
             imageAlt="Business Bay Community"
             imageHint="dubai architecture"
             title={t.communityTitle}
