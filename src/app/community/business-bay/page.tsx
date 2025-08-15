@@ -57,7 +57,7 @@ const galleryImages = [
   { src: "/unnamed (4).jpg", alt: "Business Bay Skyline", hint: "dubai skyline" },
   { src: "/unnamed (5).jpg", alt: "Modern Architecture", hint: "dubai architecture" },
   { src: "/unnamed (6).jpg", alt: "Cityscape at Night", hint: "cityscape night" },
-  { src: "/unnamed (7).jpg", alt: "Waterfront Promenade", hint: "waterfront promenade" },
+  { src: "/unnamed (7).jpg", alt: "Business Bay Community", hint: "dubai architecture" },
   { src: "/unnamed (8).jpg", alt: "Bay Square", hint: "bay square" },
   { src: "/unnamed (9).jpg", alt: "JW Marriott Marquis", hint: "luxury hotel" },
 ];
@@ -570,5 +570,5 @@ export default function BusinessBayPage() {
       <Footer />
     </div>
   );
-
+}
     
